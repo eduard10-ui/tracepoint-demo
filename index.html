@@ -1,0 +1,1794 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3B5D12">
+<title>TRACEPOINT — Field & Route Coordination</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{
+  /* Layered Botanical Green Surface Hierarchy */
+  --bg:#E4ECE0;              /* Main app canvas: rich soft sage-leaf green */
+  --bg-accent:#DCE6D6;       /* Subtle canvas depth */
+  --surface:#F4F8F0;         /* Outer card & panel surface: warm botanical mist */
+  --surface-inner:#E9F1E2;   /* Inner list rows, activity cards & recessed wells */
+  --surface-deep:#DCE7D3;    /* Table headers, badges & active wells */
+  --surface-pure:#FAFDF8;    /* Crisp highlight cards */
+  --obsidian:#141713;        /* Reserved exclusively for Quick Action squircles & primary hero */
+  --obsidian-2:#1F241D;
+  --ink:#162112;
+  --muted:#53634D;
+  --line:#C9D8BF;
+  --line-soft:#D7E3CE;
+  --olive-deep:#2F4F0E;
+  --olive:#4B7A18;
+  --lime:#7CB52B;
+  --lime-neon:#A3E635;
+  --lime-soft:#DFF0C8;
+  --lime-border:#B5D68B;
+  --green:#146C43;
+  --green-soft:#D6F2E3;
+  --orange:#A6530A;
+  --orange-soft:#FBEAD4;
+  --red:#BD2D2D;
+  --red-soft:#FADDDD;
+  --shadow-xs:0 2px 8px rgba(24,42,16,.05);
+  --shadow-sm:0 6px 18px rgba(24,42,16,.07);
+  --shadow-md:0 12px 30px rgba(24,42,16,.10);
+  --shadow-lg:0 22px 54px rgba(18,32,12,.16);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --smooth:cubic-bezier(.22,1,.36,1);
+  --pill:999px;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#E1EADC 0%,#E8EFE3 45%,#DFE8D9 100%);
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.45;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;transition:transform .22s var(--spring),background-color .18s var(--smooth),box-shadow .2s var(--smooth),border-color .18s}
+button:active{transform:scale(.96)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+svg.lucide{width:17px;height:17px;stroke-width:2.1;flex:none}
+
+/* === EXCLUSIVE DARK SQUIRCLE LOGO (ONLY FOR QUICK ACTION TILES) === */
+.qa-squircle{
+  width:48px;height:48px;border-radius:15px;
+  background:linear-gradient(145deg,var(--obsidian-2) 0%,var(--obsidian) 100%);
+  color:var(--lime-neon);
+  display:grid;place-items:center;
+  box-shadow:0 6px 14px rgba(20,23,19,.20),inset 0 1px 0 rgba(255,255,255,.12);
+  flex:none;
+  transition:transform .22s var(--spring),box-shadow .2s;
+}
+.qa-squircle svg{width:20px;height:20px}
+
+/* === BOTANICAL GREEN ICON BADGES (USED EVERYWHERE ELSE) === */
+.green-badge{
+  width:38px;height:38px;border-radius:13px;
+  background:linear-gradient(145deg,#D8ECC4 0%,#C7E3AD 100%);
+  color:var(--olive-deep);
+  border:1px solid var(--lime-border);
+  display:grid;place-items:center;
+  font-weight:800;font-size:12.5px;flex:none;
+}
+.green-badge.sm{width:32px;height:32px;border-radius:10px;font-size:11px}
+.green-badge.sm svg{width:15px;height:15px}
+.green-badge.solid{
+  background:linear-gradient(145deg,#3C6213 0%,#5B8E20 100%);
+  color:#F7FEE7;
+  border-color:transparent;
+  box-shadow:0 4px 10px rgba(60,98,19,.22);
+}
+
+@keyframes shimmerSweep{
+  0%{transform:translateX(-120%) skewX(-20deg)}
+  100%{transform:translateX(260%) skewX(-20deg)}
+}
+@keyframes pulseRadar{
+  0%{box-shadow:0 0 0 0 rgba(163,230,53,.65)}
+  70%{box-shadow:0 0 0 8px rgba(163,230,53,0)}
+  100%{box-shadow:0 0 0 0 rgba(163,230,53,0)}
+}
+.radar-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--lime-neon);
+  display:inline-block;
+  animation:pulseRadar 2s infinite;
+}
+.radar-dot.red{background:#EF4444;animation:none}
+
+.btn-shimmer{
+  position:relative;overflow:hidden;
+  width:100%;border:0;border-radius:var(--pill);
+  padding:15px 22px;font-weight:750;font-size:15px;letter-spacing:-.01em;
+  color:#fff;
+  background:linear-gradient(95deg,#33520F 0%,#56861C 52%,#7FB62E 100%);
+  box-shadow:0 10px 24px rgba(51,82,15,.28),inset 0 1px 0 rgba(255,255,255,.28);
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+}
+.btn-shimmer::after{
+  content:"";position:absolute;top:0;left:0;width:40%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.26),transparent);
+  animation:shimmerSweep 3.4s infinite ease-in-out;
+  pointer-events:none;
+}
+.btn-shimmer:hover{filter:brightness(1.05);transform:translateY(-1px)}
+
+/* === LOGIN SCREEN === */
+#login{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:
+    radial-gradient(circle at 18% 12%,#CFE2BE 0%,transparent 48%),
+    radial-gradient(circle at 85% 88%,#C6DCBA 0%,transparent 52%),
+    #DCE7D5;
+}
+.login-shell{
+  width:min(416px,100%);
+  background:var(--surface);
+  border-radius:38px;
+  overflow:hidden;
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--line);
+}
+.login-hero{
+  background:linear-gradient(150deg,#32500E 0%,#53811A 56%,#7CB42D 100%);
+  color:#fff;
+  padding:28px 26px 26px;
+  border-bottom-left-radius:36px;
+  border-bottom-right-radius:36px;
+  position:relative;
+  overflow:hidden;
+}
+.login-hero-top{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:relative;z-index:2;
+}
+.brand-wordmark{
+  font-size:25px;font-weight:850;letter-spacing:-.035em;
+  display:flex;align-items:center;gap:10px;
+}
+.brand-wordmark .dot{color:var(--lime-neon)}
+.login-hero-grid{
+  display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:8px;position:relative;z-index:2;
+}
+.login-hero h2{
+  margin:0 0 12px;font-size:15px;font-weight:500;color:rgba(255,255,255,.94);line-height:1.42;
+}
+.hero-pills{display:flex;flex-wrap:wrap;gap:6px}
+.hero-chip{
+  background:rgba(24,42,12,.30);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.22);
+  color:#ECFCCB;font-size:11px;font-weight:650;
+  padding:5px 10px;border-radius:var(--pill);
+  display:inline-flex;align-items:center;gap:5px;
+}
+.hero-illustration{width:100%;max-width:155px;justify-self:end;filter:drop-shadow(0 10px 18px rgba(15,24,8,.24))}
+
+.login-body{padding:26px 26px 28px;background:var(--surface)}
+.login-body h3{margin:0 0 4px;font-size:23px;font-weight:800;letter-spacing:-.03em}
+.login-sub{margin:0 0 18px;color:var(--muted);font-size:13px}
+
+.pill-input-wrap{
+  display:flex;align-items:center;gap:11px;
+  background:var(--surface-inner);
+  border:1.5px solid var(--line);
+  border-radius:var(--pill);
+  padding:6px 16px 6px 8px;
+  margin-bottom:14px;
+  transition:all .2s var(--smooth);
+}
+.pill-input-wrap:focus-within{
+  background:var(--surface-pure);
+  border-color:var(--olive);
+  box-shadow:0 0 0 4px rgba(124,181,43,.18);
+}
+.pill-input-wrap select{
+  width:100%;border:0;background:transparent;padding:9px 0;
+  font-weight:650;font-size:13.5px;color:var(--ink);outline:none;
+}
+.login-meta-row{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--muted);margin:2px 6px 20px;
+}
+.login-check{display:inline-flex;align-items:center;gap:8px;font-weight:650;color:var(--ink)}
+.login-check-box{
+  width:18px;height:18px;border-radius:6px;
+  background:var(--olive);color:#fff;
+  display:grid;place-items:center;
+}
+.login-divider{
+  display:flex;align-items:center;gap:10px;
+  font-size:11.5px;color:var(--muted);margin:18px 0 14px;
+}
+.login-divider::before,.login-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.login-roles-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.role-quick{
+  border:1px solid var(--line);background:var(--surface-inner);
+  border-radius:var(--pill);padding:10px 8px;
+  font-size:12px;font-weight:700;color:var(--ink);
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+}
+.role-quick svg{color:var(--olive)}
+.role-quick:hover{
+  background:var(--olive);border-color:var(--olive);color:#fff;
+  transform:translateY(-2px);box-shadow:var(--shadow-sm);
+}
+.role-quick:hover svg{color:var(--lime-neon)}
+
+/* === DESKTOP SIDEBAR (SOFT BOTANICAL GREEN) === */
+.app{display:none;min-height:100vh}
+.sidebar{
+  width:258px;position:fixed;inset:0 auto 0 0;
+  background:linear-gradient(180deg,#EEF4E8 0%,#E5EFE0 100%);
+  border-right:1px solid var(--line);
+  padding:20px 15px;display:flex;flex-direction:column;z-index:20;
+}
+.side-brand-card{
+  background:linear-gradient(145deg,#33520F 0%,#56861C 100%);
+  color:#fff;padding:15px;border-radius:22px;margin-bottom:18px;
+  box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:12px;
+}
+.side-brand-logo{
+  width:40px;height:40px;border-radius:13px;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+  color:#ECFCCB;display:grid;place-items:center;flex:none;
+}
+.side-brand-title{font-size:17px;font-weight:850;letter-spacing:-.02em}
+.side-brand-title span{color:var(--lime-neon)}
+.side-company{font-size:11.5px;color:#DCFCE7;margin-top:2px;opacity:.9}
+.nav-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:750;padding:8px 12px 6px}
+.nav{display:grid;gap:5px}
+.nav button{
+  width:100%;text-align:left;border:1px solid transparent;background:transparent;color:#3E4F38;
+  padding:10px 12px;border-radius:16px;font-weight:650;
+  display:flex;align-items:center;gap:12px;
+}
+.nav-icon-pill{
+  width:32px;height:32px;border-radius:11px;
+  background:var(--surface-deep);color:var(--olive-deep);
+  display:grid;place-items:center;transition:all .2s var(--spring);
+}
+.nav button:hover{background:var(--surface);border-color:var(--line-soft);color:var(--ink)}
+.nav button.active{
+  background:var(--surface-pure);color:var(--olive-deep);font-weight:750;
+  border-color:var(--lime-border);
+  box-shadow:var(--shadow-xs);
+}
+.nav button.active .nav-icon-pill{
+  background:var(--olive);color:#fff;
+}
+.sidebar-bottom{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);display:grid;gap:10px}
+.user-mini{
+  background:var(--surface);border:1px solid var(--line);padding:10px 12px;border-radius:18px;
+  display:flex;gap:10px;align-items:center;
+}
+
+/* === CURVED TOP HEADER (CLEANLY SEPARATED — ZERO OVERLAP) === */
+.main{margin-left:258px;min-width:0;padding-bottom:44px}
+.ios-top-banner{
+  background:linear-gradient(148deg,#33520F 0%,#54831B 58%,#7AB02E 100%);
+  color:#fff;
+  padding:18px 28px 24px;
+  border-bottom-left-radius:30px;
+  border-bottom-right-radius:30px;
+  box-shadow:0 10px 26px rgba(51,82,15,.16);
+}
+.ios-top-bar{
+  max-width:1340px;margin:auto;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.ios-loc-pill{display:flex;align-items:center;gap:12px;min-width:0}
+.top-avatar-pill{
+  width:42px;height:42px;border-radius:14px;
+  background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);
+  color:#fff;font-weight:850;font-size:14px;display:grid;place-items:center;flex:none;
+}
+.ios-loc-text{min-width:0}
+.ios-loc-label{font-size:11.5px;color:#ECFCCB;display:flex;align-items:center;gap:5px;font-weight:650}
+.ios-loc-label svg{width:13px;height:13px;color:var(--lime-neon)}
+.ios-loc-main{font-size:14.5px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.ios-top-right{display:flex;align-items:center;gap:10px}
+.clock-chip{
+  background:rgba(22,38,10,.26);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.22);
+  padding:8px 14px;border-radius:var(--pill);
+  font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.icon-circle-btn{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.26);
+  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);
+  color:#fff;display:grid;place-items:center;
+}
+.icon-circle-btn:hover{background:rgba(255,255,255,.28)}
+
+/* Positive top margin ensures ZERO overlap with the curved green header on all pages */
+.content{max-width:1340px;margin:22px auto 0;padding:0 28px 60px;position:relative;z-index:5}
+
+/* === SPOTLIGHT HERO CARD === */
+.spotlight-card{
+  background:linear-gradient(125deg,#182414 0%,#26381E 58%,#3E6118 100%);
+  color:#fff;
+  border-radius:26px;
+  padding:22px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  margin-bottom:22px;
+  box-shadow:var(--shadow-md);
+  border:1px solid rgba(163,230,53,.22);
+  position:relative;overflow:hidden;
+}
+.spotlight-card::before{
+  content:"";position:absolute;right:-20px;top:-30px;width:210px;height:210px;border-radius:50%;
+  background:radial-gradient(circle,rgba(163,230,53,.24) 0%,transparent 70%);
+  pointer-events:none;
+}
+.spotlight-left{display:flex;align-items:center;gap:16px;z-index:1}
+.spotlight-icon{
+  width:52px;height:52px;border-radius:17px;
+  background:rgba(163,230,53,.16);border:1.5px solid rgba(163,230,53,.4);
+  color:var(--lime-neon);display:grid;place-items:center;flex:none;
+}
+.spotlight-icon svg{width:24px;height:24px}
+.spotlight-eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--lime-neon);margin-bottom:5px;
+}
+.spotlight-card h2{margin:0;font-size:21px;font-weight:800;letter-spacing:-.025em}
+.spotlight-card p{margin:4px 0 0;color:#D5E2CE;font-size:13px}
+.spotlight-actions{display:flex;gap:10px;flex-wrap:wrap;z-index:1}
+
+/* === QUICK ACTION TILES (THE ONLY PLACE WITH DARK SQUIRCLE ICONS) === */
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px;
+}
+.section-header h3{margin:0;font-size:16.5px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.link-btn{
+  border:0;background:transparent;color:var(--olive-deep);font-weight:750;font-size:12.5px;
+  display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:var(--pill);
+}
+.link-btn:hover{background:var(--surface-deep)}
+
+.quick-actions-row{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:22px;
+}
+.qa-tile{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:22px;
+  padding:15px 10px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
+  box-shadow:var(--shadow-xs);
+}
+.qa-tile:hover{
+  border-color:var(--olive);
+  background:var(--surface-pure);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+}
+.qa-tile:hover .qa-squircle{
+  box-shadow:0 8px 18px rgba(20,23,19,.24),0 0 0 3px var(--lime-soft);
+}
+.qa-tile span{font-size:12px;font-weight:750;color:var(--ink);letter-spacing:-.01em}
+
+/* === HORIZONTAL CHECKPOINT CARDS === */
+.h-scroll-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:22px;
+}
+.checkpoint-mini-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:13px 14px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:var(--shadow-xs);
+  transition:transform .2s var(--spring),border-color .18s;
+}
+.checkpoint-mini-card:hover{border-color:var(--olive);background:var(--surface-pure);transform:translateY(-2px)}
+.checkpoint-mini-info{min-width:0;flex:1}
+.checkpoint-mini-info strong{display:block;font-size:13.5px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.checkpoint-mini-info span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-trace-btn{
+  width:36px;height:36px;border-radius:12px;border:1px solid var(--lime-border);
+  background:var(--lime-soft);color:var(--olive-deep);
+  display:grid;place-items:center;flex:none;
+}
+.mini-trace-btn:hover{background:var(--olive);color:#fff;border-color:var(--olive)}
+
+/* === BUTTONS & PILLS === */
+.btn{
+  border:1.5px solid var(--line);background:var(--surface-pure);border-radius:var(--pill);
+  padding:9px 16px;font-weight:700;font-size:13px;color:var(--ink);
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+}
+.btn:hover{background:var(--surface-deep);border-color:#B4C8A6}
+.btn.primary{
+  background:linear-gradient(135deg,#3A5E12 0%,#639722 100%);
+  border-color:transparent;color:#fff;
+  box-shadow:0 6px 16px rgba(58,94,18,.24);
+}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.lime{
+  background:var(--lime-neon);border-color:transparent;color:#142009;font-weight:800;
+  box-shadow:0 6px 18px rgba(163,230,53,.30);
+}
+.btn.lime:hover{background:#B5F04A}
+.btn.subtle{background:var(--lime-soft);border-color:var(--lime-border);color:var(--olive-deep)}
+.btn.subtle:hover{background:#D2EAB3}
+.btn.danger{background:var(--red-soft);border-color:#F2B8B8;color:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.pill{
+  display:inline-flex;align-items:center;gap:5px;border-radius:var(--pill);
+  padding:5px 11px;background:var(--surface-deep);color:var(--olive-deep);
+  font-size:11.5px;font-weight:700;white-space:nowrap;
+}
+.pill svg{width:13px;height:13px}
+.pill.green{background:var(--green-soft);color:var(--green)}
+.pill.lime{background:var(--lime-soft);color:var(--olive-deep);border:1px solid var(--lime-border)}
+.pill.orange{background:var(--orange-soft);color:var(--orange)}
+.pill.red{background:var(--red-soft);color:var(--red)}
+.pill.forest{background:var(--olive-deep);color:#ECFCCB}
+
+/* === STAT CARDS (FOUR DISTINCT BOTANICAL GREEN SHADES) === */
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:22px}
+.stat{
+  border:1px solid var(--line);border-radius:24px;
+  padding:18px;box-shadow:var(--shadow-xs);position:relative;
+}
+.stat:nth-child(1){background:linear-gradient(155deg,#F5F9F0 0%,#E5F1D8 100%)}
+.stat:nth-child(2){background:linear-gradient(155deg,#F2F8F3 0%,#DCF0E4 100%)}
+.stat:nth-child(3){background:linear-gradient(155deg,#F6F9EE 0%,#E9F2D4 100%)}
+.stat:nth-child(4){
+  background:linear-gradient(155deg,#33520F 0%,#4E7B19 100%);
+  color:#fff;border-color:#446D15;
+}
+.stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.stat .label{color:var(--muted);font-size:12px;font-weight:750}
+.stat:nth-child(4) .label{color:#DCFCE7}
+.stat strong{display:block;font-size:27px;font-weight:850;letter-spacing:-.035em}
+.stat .hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+.stat:nth-child(4) .hint{color:#D9F99D}
+
+/* === PANELS & LAYERED INNER SURFACES === */
+.cols{grid-template-columns:minmax(0,1.45fr) minmax(300px,.85fr)}
+.panel{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:26px;
+  box-shadow:var(--shadow-sm);
+  overflow:hidden;
+}
+.panel-head{
+  padding:15px 20px;
+  background:linear-gradient(180deg,#EBF3E4 0%,#E2ECD9 100%);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+.panel-head h3{font-size:15px;font-weight:800;margin:0;display:flex;align-items:center;gap:10px;color:var(--ink)}
+.panel-body{padding:18px 20px;background:var(--surface)}
+
+.page-head{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap;
+}
+.page-head h2{font-size:22px;font-weight:850;letter-spacing:-.03em;margin:0;color:var(--ink)}
+.page-head p{color:var(--muted);margin:3px 0 0;font-size:13px}
+
+/* === LIST ROWS & ACTIVITY CARDS (RECESSED GREEN CARDS INSIDE PANELS) === */
+.list-row{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:9px;
+  background:var(--surface-inner);border:1px solid var(--line-soft);border-radius:18px;
+}
+.list-row:last-child{margin-bottom:0}
+.list-main{min-width:0;flex:1}
+.list-main strong{display:block;font-size:13.5px;font-weight:750}
+.list-main span{display:block;color:var(--muted);font-size:12px;margin-top:2px;overflow-wrap:anywhere}
+
+.activity{
+  padding:16px;margin-bottom:12px;
+  background:var(--surface-inner);
+  border:1px solid var(--line-soft);border-radius:20px;
+}
+.activity:last-child{margin-bottom:0}
+.activity-top{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.activity-text{margin:11px 0;line-height:1.55;white-space:pre-wrap;font-size:13.5px}
+.activity-photo{
+  width:100%;max-width:400px;border-radius:16px;border:1px solid var(--line);
+  margin:6px 0 11px;display:block;
+}
+.activity-meta{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:11.5px;color:var(--muted);
+  padding-top:9px;border-top:1px dashed var(--line);
+}
+.meta-item{display:inline-flex;align-items:center;gap:5px}
+
+/* === TABLES === */
+.table-wrap{overflow:auto}
+.tbl{width:100%;border-collapse:collapse;min-width:620px}
+.tbl th{
+  text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--olive-deep);background:var(--surface-deep);padding:12px 16px;border-bottom:1px solid var(--line);
+}
+.tbl td{padding:13px 16px;border-bottom:1px solid var(--line-soft);font-size:13px;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr:hover{background:var(--surface-inner)}
+
+/* === MAP & OSRM ROUTE TRACING === */
+.map-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.map-select{
+  border:1.5px solid var(--line);background:var(--surface-pure);border-radius:var(--pill);
+  padding:8px 15px;font-size:12.5px;font-weight:700;color:var(--ink);outline:none;
+}
+.map-select:focus{border-color:var(--olive)}
+.route-summary-banner{
+  background:linear-gradient(135deg,#2F4F0E 0%,#4B7A18 100%);
+  color:#fff;padding:13px 16px;border-radius:18px;
+  margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+.route-summary-banner strong{color:var(--lime-neon);font-size:13.5px;display:block}
+.route-summary-banner span{font-size:11.5px;color:#ECFCCB}
+.map-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px}
+.map-box{height:520px;border-radius:0 0 26px 26px;overflow:hidden;position:relative;z-index:1}
+.map-side{max-height:520px;overflow:auto;background:var(--surface)}
+.map-note{
+  padding:11px 16px;background:var(--surface-deep);border-top:1px solid var(--line);
+  font-size:11.5px;color:var(--olive-deep);display:flex;align-items:center;gap:7px;font-weight:600;
+}
+.map-pin{
+  width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  background:var(--olive);border:2.5px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.28);
+}
+.map-pin span{display:block;transform:rotate(45deg);color:#fff;text-align:center;line-height:27px;font-weight:850;font-size:10.5px}
+.map-pin.office{background:var(--olive-deep);border-color:var(--lime-neon)}
+.map-pin.trace{background:#146C43;border-color:#fff}
+
+/* === FORMS & MODALS === */
+.field{display:grid;gap:6px;margin:14px 0}
+.field label{font-size:11.5px;color:var(--olive-deep);font-weight:750;letter-spacing:.04em;text-transform:uppercase}
+.field input,.field select,.field textarea{
+  width:100%;border:1.5px solid var(--line);border-radius:16px;
+  padding:11px 14px;background:var(--surface-inner);color:var(--ink);
+}
+.field input:focus,.field select:focus,.field textarea:focus{background:var(--surface-pure);border-color:var(--olive);outline:none}
+.field textarea{min-height:92px;resize:vertical}
+
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(18,32,12,.55);backdrop-filter:blur(6px);
+  z-index:40;display:grid;place-items:center;padding:16px;
+}
+.modal{
+  background:var(--surface);border-radius:28px;width:min(540px,100%);
+  max-height:90vh;overflow:auto;box-shadow:var(--shadow-lg);border:1px solid var(--line);
+}
+.modal-head{
+  padding:18px 20px;background:var(--surface-deep);border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-head h3{margin:0;font-size:16px;font-weight:800;color:var(--ink)}
+.modal-body{padding:18px 20px;background:var(--surface)}
+.modal-foot{
+  padding:14px 20px;background:var(--surface-inner);border-top:1px solid var(--line);
+  display:flex;justify-content:flex-end;gap:8px;
+}
+
+/* === LIVE CAMERA BOX === */
+.cam-box{border:1.5px solid var(--line);border-radius:20px;background:#1A2416;overflow:hidden;position:relative}
+.cam-box video,.cam-box img{width:100%;max-height:260px;object-fit:cover;display:block}
+.cam-controls{
+  display:flex;gap:8px;padding:11px 12px;background:var(--surface-deep);
+  border-top:1px solid var(--line);flex-wrap:wrap;align-items:center;
+}
+.cam-badge{
+  position:absolute;top:12px;left:12px;background:rgba(24,36,20,.82);color:#fff;
+  font-size:11px;font-weight:750;padding:5px 11px;border-radius:var(--pill);
+  display:inline-flex;align-items:center;gap:6px;
+}
+
+.empty{padding:32px 14px;text-align:center;color:var(--muted);font-size:13px}
+.hidden{display:none!important}
+.small{font-size:12px}
+.muted{color:var(--muted)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.toast{
+  position:fixed;bottom:88px;left:50%;transform:translateX(-50%);
+  background:var(--olive-deep);color:#fff;padding:11px 18px;border-radius:var(--pill);
+  z-index:60;box-shadow:var(--shadow-md);font-size:12.5px;font-weight:650;
+  display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(163,230,53,.4);
+}
+
+/* === IOS LIQUID GLASS BOTTOM TAB BAR === */
+.ios-tabbar{
+  display:none;position:fixed;inset:auto 0 0 0;
+  background:rgba(240,246,235,.90);
+  backdrop-filter:blur(22px) saturate(180%);
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  border-top:1px solid var(--line);
+  padding:6px 8px calc(8px + env(safe-area-inset-bottom));
+  z-index:30;justify-content:space-around;
+}
+.ios-tabbar button{
+  border:0;background:transparent;color:var(--muted);
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  font-size:10.5px;font-weight:700;padding:4px 8px;min-width:58px;position:relative;
+}
+.ios-tabbar button::before{
+  content:"";position:absolute;top:-6px;width:24px;height:3px;border-radius:99px;
+  background:transparent;transition:background .2s;
+}
+.ios-tabbar button.active{color:var(--olive-deep)}
+.ios-tabbar button.active::before{background:var(--olive)}
+.ios-tabbar button.active .tab-icon-wrap{
+  background:var(--olive);color:#fff;
+  box-shadow:0 4px 10px rgba(75,122,24,.28);
+}
+.tab-icon-wrap{
+  width:36px;height:30px;border-radius:11px;display:grid;place-items:center;
+  transition:all .2s var(--spring);
+}
+
+@media(max-width:960px){
+  .sidebar{width:225px}
+  .main{margin-left:225px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cols{grid-template-columns:1fr}
+  .map-layout{grid-template-columns:1fr}
+  .map-side{max-height:none}
+  .map-box{height:410px}
+}
+@media(max-width:720px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding-bottom:88px}
+  .ios-tabbar{display:flex}
+  .ios-top-banner{padding:16px 16px 20px;border-bottom-left-radius:26px;border-bottom-right-radius:26px}
+  .clock-chip{display:none}
+  .content{margin-top:16px;padding:0 15px 32px}
+  .spotlight-card{flex-direction:column;align-items:flex-start;padding:18px}
+  .quick-actions-row{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+  .qa-tile{padding:10px 4px;border-radius:18px}
+  .qa-squircle{width:42px;height:42px;border-radius:14px}
+  .qa-tile span{font-size:10.5px}
+  .stats{gap:10px}
+  .stat{padding:14px;border-radius:20px}
+  .stat strong{font-size:23px}
+  .page-head{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- === LOGIN SCREEN === -->
+<section id="login">
+  <div class="login-shell">
+    <div class="login-hero">
+      <div class="login-hero-top">
+        <div class="brand-wordmark">
+          <span class="side-brand-logo" style="width:36px;height:36px;border-radius:11px"><i data-lucide="route"></i></span>
+          <span>TRACEPOINT<span class="dot">.</span></span>
+        </div>
+        <span class="hero-chip"><span class="radar-dot"></span> Live GPS</span>
+      </div>
+      <div class="login-hero-grid">
+        <div>
+          <h2>Field routing, live camera proof, and shift tracking in real time.</h2>
+          <div class="hero-pills">
+            <span class="hero-chip"><i data-lucide="camera" style="width:12px;height:12px"></i> Live Cam</span>
+            <span class="hero-chip"><i data-lucide="navigation" style="width:12px;height:12px"></i> OSRM</span>
+          </div>
+        </div>
+        <svg class="hero-illustration" viewBox="0 0 180 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="95" cy="72" r="56" fill="#A3E635" fill-opacity="0.20"/>
+          <circle cx="95" cy="72" r="38" stroke="#D9F99D" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <path d="M34 106C54 106 58 76 84 76C110 76 112 42 142 42" stroke="#182414" stroke-width="10" stroke-linecap="round"/>
+          <path d="M34 106C54 106 58 76 84 76C110 76 112 42 142 42" stroke="#A3E635" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="6 6"/>
+          <rect x="20" y="92" width="28" height="28" rx="9" fill="#182414"/>
+          <circle cx="34" cy="106" r="5" fill="#A3E635"/>
+          <rect x="70" y="62" width="28" height="28" rx="9" fill="#182414"/>
+          <path d="M84 70V82M78 76H90" stroke="#A3E635" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M142 16C132.6 16 125 23.6 125 33C125 45.2 142 60 142 60C142 60 159 45.2 159 33C159 23.6 151.4 16 142 16Z" fill="#182414" stroke="#A3E635" stroke-width="2.5"/>
+          <circle cx="142" cy="33" r="6" fill="#A3E635"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="login-body">
+      <h3>Welcome Back</h3>
+      <p class="login-sub">Choose your workspace profile to enter TRACEPOINT.</p>
+
+      <div class="pill-input-wrap">
+        <span class="green-badge sm solid"><i data-lucide="user-check"></i></span>
+        <select id="loginUser">
+          <option value="a1">Company Admin / HR — Alex Morgan</option>
+          <option value="s1">Supervisor — Jamie Reyes</option>
+          <option value="e1">Employee — Taylor Santos</option>
+          <option value="e2">Employee — Jordan Cruz</option>
+          <option value="e3">Employee — Casey Dela Cruz</option>
+        </select>
+      </div>
+
+      <div class="login-meta-row">
+        <span class="login-check">
+          <span class="login-check-box"><i data-lucide="check" style="width:12px;height:12px"></i></span>
+          Keep session active
+        </span>
+        <span>San Marcelino HQ</span>
+      </div>
+
+      <button class="btn-shimmer" onclick="login()">
+        <span>Log In</span>
+        <i data-lucide="arrow-right"></i>
+      </button>
+
+      <div class="login-divider">Or continue with quick role</div>
+      <div class="login-roles-preview">
+        <button type="button" class="role-quick" onclick="quickLogin('a1')"><i data-lucide="briefcase"></i> Admin</button>
+        <button type="button" class="role-quick" onclick="quickLogin('s1')"><i data-lucide="users"></i> Supervisor</button>
+        <button type="button" class="role-quick" onclick="quickLogin('e1')"><i data-lucide="route"></i> Field</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- === MAIN WORKSPACE === -->
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="side-brand-card">
+      <span class="side-brand-logo"><i data-lucide="route"></i></span>
+      <div>
+        <div class="side-brand-title">TRACEPOINT<span>.</span></div>
+        <div class="side-company" id="sideCompany">San Marcelino Services</div>
+      </div>
+    </div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-bottom">
+      <div class="user-mini">
+        <span class="green-badge sm solid" id="sideAvatar">A</span>
+        <div style="min-width:0;flex:1">
+          <strong id="sideName" style="display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></strong>
+          <span id="sideRole" class="small muted"></span>
+        </div>
+      </div>
+      <button class="btn" style="width:100%" onclick="logout()"><i data-lucide="log-out"></i> Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="ios-top-banner">
+      <div class="ios-top-bar">
+        <div class="ios-loc-pill">
+          <div class="top-avatar-pill" id="topAvatar">A</div>
+          <div class="ios-loc-text">
+            <div class="ios-loc-label"><i data-lucide="map-pin"></i> <span id="topCompanyLabel">San Marcelino Services</span></div>
+            <div class="ios-loc-main" id="topOfficeLabel">Main Office · San Marcelino, Zambales</div>
+          </div>
+        </div>
+        <div class="ios-top-right">
+          <span class="clock-chip"><span class="radar-dot"></span> <span id="liveClock"></span></span>
+          <button class="icon-circle-btn" title="Sign Out" onclick="logout()"><i data-lucide="log-out"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <div class="content" id="content"></div>
+  </main>
+
+  <nav class="ios-tabbar" id="mobileTabbar"></nav>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+'use strict';
+const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtTime=d=>new Date(d).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const fmtDate=d=>new Date(d).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'});
+const ago=d=>{let m=Math.max(0,Math.floor((Date.now()-new Date(d))/60000));return m<1?'just now':m<60?m+' min ago':Math.floor(m/60)+' hr ago'};
+const initials=n=>n.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();
+const OFFICE_DEFAULT={name:'Main Office',address:'San Marcelino, Zambales, Philippines',lat:14.9792,lng:120.0897};
+
+const seed={
+  company:'San Marcelino Services',
+  office:{...OFFICE_DEFAULT},
+  departments:[{id:'d1',name:'Operations'},{id:'d2',name:'Field Services'},{id:'d3',name:'Administration'}],
+  users:[
+    {id:'a1',name:'Alex Morgan',role:'admin',dept:'d3',supervisor:null,phone:'0917 000 0001'},
+    {id:'s1',name:'Jamie Reyes',role:'supervisor',dept:'d1',supervisor:null,phone:'0917 000 0002'},
+    {id:'s2',name:'Robin Garcia',role:'supervisor',dept:'d2',supervisor:null,phone:'0917 000 0003'},
+    {id:'e1',name:'Taylor Santos',role:'employee',dept:'d1',supervisor:'s1',phone:'0917 000 0004'},
+    {id:'e2',name:'Jordan Cruz',role:'employee',dept:'d1',supervisor:'s1',phone:'0917 000 0005'},
+    {id:'e3',name:'Casey Dela Cruz',role:'employee',dept:'d2',supervisor:'s2',phone:'0917 000 0006'}
+  ],
+  attendance:[],
+  locations:[],
+  activities:[
+    {id:'u0',userId:'e1',text:'Departed San Marcelino Public Market heading south along Zambales Highway.',created:Date.now()-75*60000,location:{lat:14.9788,lng:120.0884,address:'San Marcelino Public Market, San Marcelino, Zambales'},photo:null},
+    {id:'u1',userId:'e1',text:'Checkpoint reached at San Antonio town proper. Verified line transformers.',created:Date.now()-25*60000,location:{lat:14.9464,lng:120.0876,address:'San Antonio, Zambales, Philippines'},photo:null},
+    {id:'u2',userId:'e3',text:'Arrived at Castillejos field substation. Preparing diagnostic tools.',created:Date.now()-55*60000,location:{lat:14.9331,lng:120.1995,address:'Castillejos, Zambales, Philippines'},photo:null}
+  ],
+  tasks:[
+    {id:'t1',title:'Complete equipment inspection',dept:'d1',supervisor:'s1',assignee:'e1',status:'In progress',due:'Today'},
+    {id:'t2',title:'Submit field service update',dept:'d2',supervisor:'s2',assignee:'e3',status:'Pending',due:'Today'}
+  ]
+};
+
+let db=loadDB(),current=null,map=null,roadLayer=null,pathCoordinates=[],selectedTraceUser='all',activePage='dashboard',watchId=null,locShare=false;
+let camStream=null,capturedPhotoData=null,camFacing='environment';
+
+function refreshIcons(){if(window.lucide)lucide.createIcons()}
+function loadDB(){try{return JSON.parse(localStorage.getItem('tracepoint_demo_db'))||structuredClone(seed)}catch(e){return structuredClone(seed)}}
+function saveDB(){localStorage.setItem('tracepoint_demo_db',JSON.stringify(db))}
+function user(id){return db.users.find(x=>x.id===id)}
+function dept(id){return db.departments.find(x=>x.id===id)?.name||'Unassigned'}
+function teamForSupervisor(id){return db.users.filter(x=>x.role==='employee'&&x.supervisor===id)}
+function scopedEmployees(){if(current.role==='supervisor')return teamForSupervisor(current.id);return db.users.filter(x=>x.role==='employee')}
+function toast(msg){
+  let el=document.createElement('div');
+  el.className='toast';
+  el.innerHTML=`<span class="radar-dot"></span><span>${esc(msg)}</span>`;
+  $('#toastRoot').append(el);
+  setTimeout(()=>el.remove(),2700);
+}
+
+function quickLogin(id){$('#loginUser').value=id;login()}
+function login(){
+  current=user($('#loginUser').value);
+  selectedTraceUser=current.role==='employee'?current.id:'all';
+  activePage='dashboard';
+  $('#login').style.display='none';
+  $('#app').style.display='block';
+  render();
+}
+function logout(){
+  stopLocation();
+  stopCamera();
+  current=null;
+  $('#app').style.display='none';
+  $('#login').style.display='grid';
+  refreshIcons();
+}
+
+function navItems(){
+  if(current.role==='employee')return [
+    ['dashboard','Home','layout-grid'],
+    ['attendance','Attendance','clock'],
+    ['activities','Updates','camera'],
+    ['location','My Route','route'],
+    ['tasks','Tasks','check-square']
+  ];
+  if(current.role==='supervisor')return [
+    ['dashboard','Overview','layout-grid'],
+    ['map','Team Route','route'],
+    ['activities','Updates','camera'],
+    ['attendance','Attendance','clock'],
+    ['tasks','Tasks','check-square']
+  ];
+  return [
+    ['dashboard','Overview','layout-grid'],
+    ['map','Live Route','route'],
+    ['employees','Team','users'],
+    ['activities','Updates','camera'],
+    ['attendance','Attendance','clock'],
+    ['settings','Settings','settings']
+  ];
+}
+
+function renderNav(){
+  let items=navItems();
+  $('#nav').innerHTML=items.map(([id,label,icon])=>`
+    <button class="${activePage===id?'active':''}" onclick="go('${id}')">
+      <span class="nav-icon-pill"><i data-lucide="${icon}"></i></span>
+      <span>${label}</span>
+    </button>
+  `).join('');
+  $('#mobileTabbar').innerHTML=items.slice(0,5).map(([id,label,icon])=>`
+    <button class="${activePage===id?'active':''}" onclick="go('${id}')">
+      <span class="tab-icon-wrap"><i data-lucide="${icon}"></i></span>
+      <span>${label}</span>
+    </button>
+  `).join('');
+}
+
+function go(p){activePage=p;render();window.scrollTo({top:0,behavior:'smooth'})}
+
+function render(){
+  renderNav();
+  $('#sideName').textContent=current.name;
+  $('#sideRole').textContent=roleName(current.role);
+  $('#sideAvatar').textContent=initials(current.name);
+  $('#topAvatar').textContent=initials(current.name);
+  $('#sideCompany').textContent=db.company;
+  $('#topCompanyLabel').textContent=`${db.company} · ${roleName(current.role)}`;
+  $('#topOfficeLabel').textContent=`${db.office.name} — ${db.office.address}`;
+  $('#content').innerHTML=pages[activePage]();
+  refreshIcons();
+  if(activePage==='map'||activePage==='location')setTimeout(initMap,60);
+}
+
+function roleName(r){return r==='admin'?'Admin / HR':r==='supervisor'?'Supervisor':'Field Employee'}
+
+const pages={
+  dashboard(){
+    let employees=scopedEmployees();
+    let recent=db.activities.filter(a=>employees.some(e=>e.id===a.userId)).slice().sort((a,b)=>b.created-a.created).slice(0,4);
+    let myStatus=todayStatus(current.id);
+    let activeLocCount=db.locations.filter(l=>l.active&&employees.some(e=>e.id===l.userId)).length;
+    let pendingTasks=db.tasks.filter(t=>employees.some(e=>e.id===t.assignee)&&t.status!=='Completed').length;
+    let todayUpdates=db.activities.filter(a=>new Date(a.created).toDateString()===new Date().toDateString()&&employees.some(e=>e.id===a.userId)).length;
+
+    let spotlight=current.role==='employee'
+      ? `<div class="spotlight-card">
+          <div class="spotlight-left">
+            <div class="spotlight-icon"><i data-lucide="route"></i></div>
+            <div>
+              <div class="spotlight-eyebrow"><span class="radar-dot"></span> Active Shift · ${new Date().toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric'})}</div>
+              <h2>Hello, ${esc(current.name.split(' ')[0])}</h2>
+              <p>Shift: <strong>${myStatus}</strong> · ${locShare?'Live route telemetry active':'Live GPS paused'}</p>
+            </div>
+          </div>
+          <div class="spotlight-actions">
+            ${myStatus==='Not clocked in'?`<button class="btn lime" onclick="clockAction('in')"><i data-lucide="log-in"></i> Clock In</button>`:myStatus==='Clocked in'?`<button class="btn lime" onclick="clockAction('out')"><i data-lucide="log-out"></i> Clock Out</button>`:''}
+            <button class="btn" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.24)" onclick="openActivity()"><i data-lucide="camera"></i> Live Photo</button>
+          </div>
+        </div>`
+      : `<div class="spotlight-card">
+          <div class="spotlight-left">
+            <div class="spotlight-icon"><i data-lucide="route"></i></div>
+            <div>
+              <div class="spotlight-eyebrow"><span class="radar-dot"></span> Live Operations · ${esc(db.company)}</div>
+              <h2>${current.role==='supervisor'?'Team Route & Field Hub':'Company Operations Hub'}</h2>
+              <p>${activeLocCount} live GPS pin(s) · ${todayUpdates} timestamped update(s) today</p>
+            </div>
+          </div>
+          <div class="spotlight-actions">
+            <button class="btn lime" onclick="go('map')"><i data-lucide="route"></i> Trace Routes</button>
+            <button class="btn" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.24)" onclick="openTask()"><i data-lucide="plus"></i> Assign Task</button>
+          </div>
+        </div>`;
+
+    // ONLY Quick Action buttons have the dark .qa-squircle icon badge
+    let quickTiles=current.role==='employee'
+      ? `<div class="quick-actions-row">
+          <button class="qa-tile" onclick="openActivity()"><div class="qa-squircle"><i data-lucide="camera"></i></div><span>Live Photo</span></button>
+          <button class="qa-tile" onclick="go('location')"><div class="qa-squircle"><i data-lucide="route"></i></div><span>My Route</span></button>
+          <button class="qa-tile" onclick="go('attendance')"><div class="qa-squircle"><i data-lucide="clock"></i></div><span>Attendance</span></button>
+          <button class="qa-tile" onclick="go('tasks')"><div class="qa-squircle"><i data-lucide="check-square"></i></div><span>My Tasks</span></button>
+          <button class="qa-tile" onclick="go('activities')"><div class="qa-squircle"><i data-lucide="file-text"></i></div><span>Feed</span></button>
+        </div>`
+      : `<div class="quick-actions-row">
+          <button class="qa-tile" onclick="go('map')"><div class="qa-squircle"><i data-lucide="route"></i></div><span>Route Map</span></button>
+          <button class="qa-tile" onclick="go('activities')"><div class="qa-squircle"><i data-lucide="camera"></i></div><span>Reports</span></button>
+          <button class="qa-tile" onclick="go('attendance')"><div class="qa-squircle"><i data-lucide="clock"></i></div><span>Attendance</span></button>
+          <button class="qa-tile" onclick="openTask()"><div class="qa-squircle"><i data-lucide="clipboard-plus"></i></div><span>New Task</span></button>
+          <button class="qa-tile" onclick="go('${current.role==='admin'?'employees':'tasks'}')"><div class="qa-squircle"><i data-lucide="users"></i></div><span>${current.role==='admin'?'Team':'Tasks'}</span></button>
+        </div>`;
+
+    let checkpointStrip=recent.filter(a=>a.location).slice(0,2).map(a=>{
+      let u=user(a.userId)||{name:'Employee'};
+      return `
+        <div class="checkpoint-mini-card">
+          <span class="green-badge"><i data-lucide="map-pin"></i></span>
+          <div class="checkpoint-mini-info">
+            <strong>${esc(a.location.address||'GPS Checkpoint')}</strong>
+            <span>${esc(u.name)} · ${ago(a.created)}</span>
+          </div>
+          <button class="mini-trace-btn" title="Trace on Map" onclick="showTrace('${a.id}')"><i data-lucide="route" style="width:16px;height:16px"></i></button>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      ${spotlight}
+      <div class="section-header"><h3>Quick Actions</h3><span class="small muted" style="font-weight:650">${new Date().toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'})}</span></div>
+      ${quickTiles}
+
+      ${checkpointStrip?`
+        <div class="section-header"><h3>Recent Checkpoints</h3><button class="link-btn" onclick="go('${current.role==='employee'?'location':'map'}')">Open Map <i data-lucide="chevron-right" style="width:14px;height:14px"></i></button></div>
+        <div class="h-scroll-row">${checkpointStrip}</div>
+      `:''}
+
+      <div class="grid stats">
+        <div class="stat">
+          <div class="stat-top"><span class="label">${current.role==='employee'?'Shift Status':'Team Scope'}</span><span class="green-badge sm"><i data-lucide="user-check"></i></span></div>
+          <strong>${current.role==='employee'?myStatus:employees.length}</strong>
+          <div class="hint">${current.role==='employee'?'Current attendance state':'Assigned field personnel'}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-top"><span class="label">Updates Today</span><span class="green-badge sm"><i data-lucide="camera"></i></span></div>
+          <strong>${todayUpdates}</strong>
+          <div class="hint">Timestamped reports</div>
+        </div>
+        <div class="stat">
+          <div class="stat-top"><span class="label">Open Tasks</span><span class="green-badge sm"><i data-lucide="list-todo"></i></span></div>
+          <strong>${pendingTasks}</strong>
+          <div class="hint">Pending completion</div>
+        </div>
+        <div class="stat">
+          <div class="stat-top"><span class="label">Live GPS Active</span><span class="green-badge sm" style="background:rgba(255,255,255,.16);color:#BEF264;border-color:rgba(255,255,255,.25)"><i data-lucide="radio"></i></span></div>
+          <strong>${activeLocCount}</strong>
+          <div class="hint">Sharing real-time location</div>
+        </div>
+      </div>
+
+      <div class="grid cols">
+        <section class="panel">
+          <div class="panel-head">
+            <h3><span class="green-badge sm solid"><i data-lucide="activity"></i></span> Latest Field Updates</h3>
+            <button class="link-btn" onclick="go('activities')">See All <i data-lucide="chevron-right" style="width:14px;height:14px"></i></button>
+          </div>
+          <div class="panel-body">${recent.length?recent.map(activityCard).join(''):'<div class="empty">No activity updates yet.</div>'}</div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3><span class="green-badge sm solid"><i data-lucide="clock"></i></span> ${current.role==='employee'?'My Attendance':'Team Status'}</h3>
+            <button class="link-btn" onclick="go('attendance')">Details <i data-lucide="chevron-right" style="width:14px;height:14px"></i></button>
+          </div>
+          <div class="panel-body">
+            ${current.role==='employee'
+              ? attendanceActions()
+              : employees.slice(0,6).map(e=>`
+                <div class="list-row">
+                  <span class="green-badge sm solid">${initials(e.name)}</span>
+                  <div class="list-main"><strong>${esc(e.name)}</strong><span>${esc(dept(e.dept))}</span></div>
+                  <span class="pill ${todayStatus(e.id)==='Clocked in'?'green':''}">${todayStatus(e.id)}</span>
+                </div>
+              `).join('')}
+          </div>
+        </section>
+      </div>
+    `;
+  },
+
+  map(){
+    let people=current.role==='employee'?[current]:scopedEmployees();
+    return `
+      <div class="page-head">
+        <div>
+          <h2>${current.role==='employee'?'My Route & Live GPS':'Employee Route & Live Map'}</h2>
+          <p>OSRM road-snapped polyline tracing & Nominatim geocoded checkpoints.</p>
+        </div>
+        <div class="map-toolbar">
+          ${current.role!=='employee'?`
+            <select id="traceEmployeeSelect" class="map-select" onchange="changeTraceFilter(this.value)">
+              <option value="all" ${selectedTraceUser==='all'?'selected':''}>All Employees (Overview)</option>
+              ${people.map(e=>`<option value="${e.id}" ${selectedTraceUser===e.id?'selected':''}>Trace: ${esc(e.name)}</option>`).join('')}
+            </select>
+          `:''}
+          <button class="btn subtle" onclick="locateRoute()"><i data-lucide="crosshair"></i> Re-center</button>
+          ${current.role==='employee'?`<button class="btn ${locShare?'danger':'primary'}" onclick="toggleShare()"><i data-lucide="${locShare?'square':'navigation'}"></i> ${locShare?'Stop Sharing':'Share Live GPS'}</button>`:''}
+        </div>
+      </div>
+      <section class="panel">
+        <div class="panel-head">
+          <h3><span class="green-badge sm solid"><i data-lucide="route"></i></span> OSRM Highway Trace</h3>
+          <span class="pill forest" id="osrmStatusPill"><span class="radar-dot"></span> Ready</span>
+        </div>
+        <div class="map-layout">
+          <div>
+            <div id="map" class="map-box"></div>
+            <div class="map-note"><i data-lucide="info"></i> Powered by Leaflet, OpenStreetMap, OSRM Routing & Nominatim Geocoding.</div>
+          </div>
+          <div class="map-side panel-body" id="mapSide">${mapSideList()}</div>
+        </div>
+      </section>
+    `;
+  },
+  location(){return this.map()},
+
+  employees(){
+    let rows=db.users.filter(x=>x.role!=='admin');
+    return `
+      <div class="page-head">
+        <div><h2>Employees & Teams</h2><p>Manage departments, supervisors, and assigned field members.</p></div>
+        <button class="btn primary" onclick="openUser()"><i data-lucide="user-plus"></i> Add Person</button>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3><span class="green-badge sm solid"><i data-lucide="users"></i></span> Directory</h3><span class="pill forest">${rows.length} members</span></div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Supervisor</th><th>Contact</th><th></th></tr></thead>
+            <tbody>
+              ${rows.map(u=>`
+                <tr>
+                  <td><div style="display:flex;align-items:center;gap:10px"><span class="green-badge sm solid">${initials(u.name)}</span><strong>${esc(u.name)}</strong></div></td>
+                  <td><span class="pill ${u.role==='supervisor'?'forest':'lime'}">${roleName(u.role)}</span></td>
+                  <td>${esc(dept(u.dept))}</td>
+                  <td>${u.supervisor?esc(user(u.supervisor)?.name||'—'):'—'}</td>
+                  <td>${esc(u.phone||'—')}</td>
+                  <td><button class="btn" onclick="editUser('${u.id}')"><i data-lucide="edit-2"></i> Edit</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="panel-head">
+          <h3><span class="green-badge sm solid"><i data-lucide="layers"></i></span> Department Structure</h3>
+          <button class="btn subtle" onclick="openDept()"><i data-lucide="plus"></i> Add Department</button>
+        </div>
+        <div class="panel-body">
+          ${db.departments.map(d=>{
+            let sups=db.users.filter(u=>u.role==='supervisor'&&u.dept===d.id);
+            return `
+              <div class="activity">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                  <strong style="font-size:14.5px">${esc(d.name)}</strong>
+                  <span class="pill lime">${sups.length} supervisor(s) · ${db.users.filter(u=>u.role==='employee'&&u.dept===d.id).length} employee(s)</span>
+                </div>
+                ${sups.map(s=>`
+                  <div class="list-row" style="background:var(--surface)">
+                    <span class="green-badge sm solid">${initials(s.name)}</span>
+                    <div class="list-main"><strong>${esc(s.name)}</strong><span>Supervisor · ${teamForSupervisor(s.id).length} assigned employee(s)</span></div>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  },
+
+  activities(){
+    let acts=db.activities.filter(a=>current.role==='employee'?a.userId===current.id:current.role==='supervisor'?teamForSupervisor(current.id).some(e=>e.id===a.userId):true).sort((a,b)=>b.created-a.created);
+    return `
+      <div class="page-head">
+        <div><h2>Activity Updates</h2><p>Real-time work reports, live camera captures, and OSRM route checkpoints.</p></div>
+        ${current.role==='employee'?'<button class="btn primary" onclick="openActivity()"><i data-lucide="camera"></i> New Live Update</button>':''}
+      </div>
+      <div class="panel"><div class="panel-body">${acts.length?acts.map(activityCard).join(''):'<div class="empty">No updates available.</div>'}</div></div>
+    `;
+  },
+
+  attendance(){
+    let people=current.role==='employee'?[current]:scopedEmployees();
+    return `
+      <div class="page-head">
+        <div><h2>Attendance</h2><p>Daily shift clock-in and clock-out logs.</p></div>
+        ${current.role==='employee'?attendanceActions():''}
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3><span class="green-badge sm solid"><i data-lucide="clock"></i></span> ${current.role==='employee'?'My Attendance Record':'Team Attendance Today'}</h3></div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Employee</th><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Status</th></tr></thead>
+            <tbody>
+              ${people.map(e=>{
+                let rec=db.attendance.filter(a=>a.userId===e.id&&a.date===new Date().toDateString());
+                let inn=rec.find(a=>a.type==='in'),out=rec.find(a=>a.type==='out');
+                return `
+                  <tr>
+                    <td><div style="display:flex;align-items:center;gap:10px"><span class="green-badge sm solid">${initials(e.name)}</span><strong>${esc(e.name)}</strong></div></td>
+                    <td>${new Date().toLocaleDateString('en-PH')}</td>
+                    <td>${inn?fmtTime(inn.time):'—'}</td>
+                    <td>${out?fmtTime(out.time):'—'}</td>
+                    <td><span class="pill ${inn&&!out?'green':''}">${out?'Clocked out':inn?'Clocked in':'No record'}</span></td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  },
+
+  tasks(){
+    let tasks=db.tasks.filter(t=>current.role==='employee'?t.assignee===current.id:current.role==='supervisor'?teamForSupervisor(current.id).some(e=>e.id===t.assignee):true);
+    return `
+      <div class="page-head">
+        <div><h2>Tasks</h2><p>Assigned field deliverables and completion status.</p></div>
+        ${current.role!=='employee'?'<button class="btn primary" onclick="openTask()"><i data-lucide="plus"></i> Assign Task</button>':''}
+      </div>
+      <div class="panel">
+        <div class="panel-body">
+          ${tasks.length?tasks.map(t=>`
+            <div class="list-row">
+              <span class="green-badge sm ${t.status==='Completed'?'solid':''}"><i data-lucide="${t.status==='Completed'?'check-circle-2':'clock'}"></i></span>
+              <div class="list-main">
+                <strong>${esc(t.title)}</strong>
+                <span>${esc(user(t.assignee)?.name||'Unassigned')} · ${esc(dept(t.dept))} · Due ${esc(t.due)}</span>
+              </div>
+              <span class="pill ${t.status==='Completed'?'green':'orange'}">${esc(t.status)}</span>
+              ${current.role==='employee'&&t.status!=='Completed'?`<button class="btn primary" onclick="completeTask('${t.id}')"><i data-lucide="check"></i> Complete</button>`:''}
+            </div>
+          `).join(''):'<div class="empty">No tasks assigned.</div>'}
+        </div>
+      </div>
+    `;
+  },
+
+  settings(){
+    return `
+      <div class="page-head"><div><h2>Company Settings</h2><p>Configure your organization name and headquarters GPS anchor.</p></div></div>
+      <div class="panel">
+        <div class="panel-head"><h3><span class="green-badge sm solid"><i data-lucide="settings"></i></span> Organization & Headquarters</h3></div>
+        <div class="panel-body">
+          <div class="field"><label>Company Name</label><input id="companyInput" value="${esc(db.company)}"></div>
+          <div class="field"><label>Office Address</label><input id="officeAddress" value="${esc(db.office.address)}"></div>
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <div class="field"><label>Office Latitude</label><input id="officeLat" type="number" step="any" value="${db.office.lat}"></div>
+            <div class="field"><label>Office Longitude</label><input id="officeLng" type="number" step="any" value="${db.office.lng}"></div>
+          </div>
+          <div class="toolbar" style="margin-top:8px">
+            <button class="btn primary" onclick="saveSettings()"><i data-lucide="save"></i> Save Settings</button>
+            <button class="btn" onclick="resetOffice()"><i data-lucide="rotate-ccw"></i> Restore San Marcelino Default</button>
+          </div>
+          <p class="small muted" style="margin-top:14px">Default coordinates represent San Marcelino town center. Update with exact building coordinates for precise OSRM distance metrics.</p>
+        </div>
+      </div>
+    `;
+  }
+};
+
+function todayStatus(id){
+  let rec=db.attendance.filter(a=>a.userId===id&&a.date===new Date().toDateString());
+  return rec.some(a=>a.type==='out')?'Clocked out':rec.some(a=>a.type==='in')?'Clocked in':'Not clocked in';
+}
+function attendanceActions(){
+  let status=todayStatus(current.id);
+  return `
+    <div class="toolbar">
+      <span class="pill ${status==='Clocked in'?'green':''}">${status}</span>
+      ${status==='Not clocked in'?`<button class="btn primary" onclick="clockAction('in')"><i data-lucide="log-in"></i> Clock In</button>`:status==='Clocked in'?`<button class="btn" onclick="clockAction('out')"><i data-lucide="log-out"></i> Clock Out</button>`:''}
+    </div>
+  `;
+}
+
+function activityCard(a){
+  let u=user(a.userId)||{name:'Unknown'};
+  return `
+    <article class="activity">
+      <div class="activity-top">
+        <span class="green-badge sm solid">${initials(u.name)}</span>
+        <div class="list-main"><strong>${esc(u.name)}</strong><span>${esc(dept(u.dept))} · ${ago(a.created)}</span></div>
+        ${a.photo?'<span class="pill forest"><i data-lucide="camera"></i> Live Cam</span>':''}
+        ${a.location?'<span class="pill lime"><i data-lucide="map-pin"></i> GPS</span>':''}
+      </div>
+      <div class="activity-text">${esc(a.text)}</div>
+      ${a.photo?`<img class="activity-photo" src="${a.photo}" alt="Real-time camera capture">`:''}
+      <div class="activity-meta">
+        <span class="meta-item"><i data-lucide="clock" style="width:13px;height:13px"></i> ${fmtDate(a.created)}</span>
+        ${a.location?`<span class="meta-item"><i data-lucide="map-pin" style="width:13px;height:13px"></i> ${esc(a.location.address||'Coordinates attached')}</span><button class="btn subtle" style="padding:5px 12px;font-size:11.5px;margin-left:auto" onclick="showTrace('${a.id}')"><i data-lucide="route"></i> Trace Route</button>`:''}
+      </div>
+    </article>
+  `;
+}
+
+function mapSideList(routeStats=null){
+  let people=current.role==='employee'?[current]:scopedEmployees();
+  let banner=routeStats?`
+    <div class="route-summary-banner">
+      <div>
+        <strong>${esc(routeStats.label)}</strong>
+        <span>${routeStats.stops} checkpoint(s) · ${routeStats.km.toFixed(2)} km road distance · ~${Math.max(1,Math.round(routeStats.mins))} min</span>
+      </div>
+      <span class="pill lime">OSRM Live</span>
+    </div>
+  `:'';
+
+  return `
+    ${banner}
+    <div class="small muted" style="font-weight:750;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Headquarters Anchor</div>
+    <div class="list-row">
+      <span class="green-badge sm solid"><i data-lucide="building-2"></i></span>
+      <div class="list-main"><strong>${esc(db.office.name)}</strong><span>${esc(db.office.address)}</span></div>
+    </div>
+    <div class="small muted" style="font-weight:750;text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px">Personnel & Route Trace</div>
+    ${people.map(e=>{
+      let l=db.locations.find(x=>x.userId===e.id&&x.active);
+      let d=l?distance(db.office.lat,db.office.lng,l.lat,l.lng):null;
+      let actCount=db.activities.filter(a=>a.userId===e.id&&a.location).length;
+      return `
+        <div class="list-row" style="cursor:pointer" onclick="changeTraceFilter('${e.id}')">
+          <span class="green-badge sm solid">${initials(e.name)}</span>
+          <div class="list-main">
+            <strong>${esc(e.name)}</strong>
+            <span>${l?esc(l.address||'Resolving address…'):`${actCount} recorded checkpoint(s)`}</span>
+            ${l?`<span>Live GPS · ${ago(l.updated)} · ±${Math.round(l.accuracy||0)} m</span>`:''}
+          </div>
+          ${l?`<span class="pill green">${d.toFixed(2)} km</span>`:`<span class="pill lime"><i data-lucide="route"></i> Trace</span>`}
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+function distance(lat1,lon1,lat2,lon2){
+  const R=6371,toRad=x=>x*Math.PI/180;
+  let dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1);
+  let a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+/* ==================== NON-BLOCKING LEAFLET + OSRM + NOMINATIM ROUTE TRACING ==================== */
+function changeTraceFilter(userId){
+  selectedTraceUser=userId;
+  let sel=$('#traceEmployeeSelect');
+  if(sel)sel.value=userId;
+  traceEmployeeHistory();
+}
+
+function initMap(){
+  if(!window.L||!$('#map'))return;
+  if(map){map.remove();map=null}
+  map=L.map('map').setView([db.office.lat,db.office.lng],13);
+  roadLayer=L.layerGroup().addTo(map);
+  pathCoordinates=[];
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:19,
+    attribution:'&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  traceEmployeeHistory();
+  setTimeout(()=>map.invalidateSize(),120);
+}
+
+async function geocodeAddress(query){
+  try{
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`);
+    if(!res.ok)return null;
+    const data=await res.json();
+    if(data&&data[0])return [parseFloat(data[0].lat),parseFloat(data[0].lon)];
+  }catch(e){}
+  return null;
+}
+
+async function traceEmployeeHistory(){
+  if(!map||!roadLayer)return;
+  roadLayer.clearLayers();
+  pathCoordinates=[];
+
+  const pill=$('#osrmStatusPill');
+  if(pill){pill.innerHTML='<span class="radar-dot"></span> Tracing…';refreshIcons()}
+
+  L.marker([db.office.lat,db.office.lng],{icon:pinIcon('office')})
+    .addTo(roadLayer)
+    .bindPopup(`<b>${esc(db.office.name)}</b><br>${esc(db.office.address)}`);
+  pathCoordinates.push([db.office.lat,db.office.lng]);
+
+  const scoped=current.role==='employee'?[current]:scopedEmployees();
+  const targetUsers=selectedTraceUser==='all'?scoped:scoped.filter(e=>e.id===selectedTraceUser);
+
+  targetUsers.forEach(e=>{
+    const l=db.locations.find(x=>x.userId===e.id&&x.active);
+    if(l){
+      const km=distance(db.office.lat,db.office.lng,l.lat,l.lng);
+      L.marker([l.lat,l.lng],{icon:pinIcon('employee')})
+        .addTo(roadLayer)
+        .bindPopup(`<b>${esc(e.name)} (Live GPS)</b><br>${esc(l.address||'Address unavailable')}<br>${km.toFixed(2)} km from office<br>Accuracy: ±${Math.round(l.accuracy||0)} m`);
+      pathCoordinates.push([l.lat,l.lng]);
+    }
+  });
+
+  let totalRoadKm=0,totalRoadMins=0,totalStops=0;
+
+  const routeTasks=targetUsers.map(async (emp)=>{
+    const empActs=db.activities
+      .filter(a=>a.userId===emp.id&&a.location)
+      .slice()
+      .sort((a,b)=>a.created-b.created);
+
+    const resolvedActs=await Promise.all(empActs.map(async (act)=>{
+      if(typeof act.location.lat==='number'&&typeof act.location.lng==='number'){
+        return {act,pt:[act.location.lat,act.location.lng]};
+      }
+      if(act.location.address){
+        const pt=await geocodeAddress(act.location.address);
+        if(pt){
+          act.location.lat=pt[0];act.location.lng=pt[1];saveDB();
+          return {act,pt};
+        }
+      }
+      return null;
+    }));
+
+    const validStops=resolvedActs.filter(Boolean);
+    const empWaypoints=[];
+
+    if(selectedTraceUser!=='all'&&validStops.length>0){
+      empWaypoints.push([db.office.lat,db.office.lng]);
+    }
+
+    validStops.forEach(({act,pt},i)=>{
+      totalStops++;
+      const isFirst=i===0;
+      const isLast=i===validStops.length-1;
+      const markerColor=isLast?'#2F4F0E':(isFirst?'#56861C':'#146C43');
+      const borderColor=isLast?'#A3E635':'#ffffff';
+
+      L.circleMarker(pt,{
+        radius:isLast?10:7,
+        color:borderColor,
+        weight:2.5,
+        fillColor:markerColor,
+        fillOpacity:1
+      })
+        .addTo(roadLayer)
+        .bindPopup(`<b>${esc(emp.name)} · Stop #${i+1}</b><br>${esc(act.text)}<br><small>${esc(act.location.address||'')}<br>${fmtDate(act.created)}</small>`);
+
+      empWaypoints.push(pt);
+      pathCoordinates.push(pt);
+    });
+
+    const live=db.locations.find(x=>x.userId===emp.id&&x.active);
+    if(live&&empWaypoints.length>0){
+      empWaypoints.push([live.lat,live.lng]);
+    }
+
+    if(empWaypoints.length>=2){
+      const coordString=empWaypoints.map(p=>`${p[1]},${p[0]}`).join(';');
+      try{
+        const osrmUrl=`https://router.project-osrm.org/route/v1/driving/${coordString}?overview=full&geometries=geojson`;
+        const routeRes=await fetch(osrmUrl);
+        const routeData=await routeRes.json();
+
+        if(routeData.routes&&routeData.routes[0]){
+          const r0=routeData.routes[0];
+          totalRoadKm+=(r0.distance||0)/1000;
+          totalRoadMins+=(r0.duration||0)/60;
+          const coords=r0.geometry.coordinates.map(c=>[c[1],c[0]]);
+
+          L.polyline(coords,{color:'#2F4F0E',weight:8,opacity:0.42,lineJoin:'round'}).addTo(roadLayer);
+          L.polyline(coords,{color:'#DC2626',weight:5,opacity:0.9,lineJoin:'round'}).addTo(roadLayer);
+        }else{
+          throw new Error('No OSRM route');
+        }
+      }catch(err){
+        L.polyline(empWaypoints,{color:'#DC2626',weight:4,opacity:0.7,dashArray:'8,8'}).addTo(roadLayer);
+      }
+    }
+  });
+
+  await Promise.all(routeTasks);
+  locateRoute();
+
+  const side=$('#mapSide');
+  if(side){
+    const label=selectedTraceUser==='all'?'All Active Field Routes':`${user(selectedTraceUser)?.name||'Employee'} Route`;
+    side.innerHTML=mapSideList({label,stops:totalStops,km:totalRoadKm,mins:totalRoadMins});
+    refreshIcons();
+  }
+  if(pill){
+    pill.innerHTML=`<span class="radar-dot"></span> ${totalRoadKm.toFixed(1)} km traced`;
+    refreshIcons();
+  }
+}
+
+function locateRoute(){
+  if(!map||pathCoordinates.length===0)return;
+  if(pathCoordinates.length===1){
+    map.setView(pathCoordinates[0],14);
+  }else{
+    map.fitBounds(L.latLngBounds(pathCoordinates).pad(0.18),{maxZoom:15});
+  }
+}
+
+function pinIcon(type){
+  return L.divIcon({className:'',html:`<div class="map-pin ${type}"><span>${type==='office'?'HQ':type==='trace'?'T':'E'}</span></div>`,iconSize:[32,32],iconAnchor:[16,31],popupAnchor:[0,-28]});
+}
+
+function showTrace(id){
+  let a=db.activities.find(x=>x.id===id);
+  if(!a?.location)return;
+  selectedTraceUser=a.userId;
+  go(current.role==='employee'?'location':'map');
+  setTimeout(()=>{
+    if(map&&a.location.lat&&a.location.lng){
+      map.setView([a.location.lat,a.location.lng],15);
+      L.popup().setLatLng([a.location.lat,a.location.lng]).setContent(`<b>Activity Checkpoint</b><br>${esc(a.text)}<br><small>${esc(a.location.address||'')}</small>`).openOn(map);
+    }
+  },450);
+}
+
+function modal(title,body,foot){
+  $('#modalRoot').innerHTML=`
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h3>${title}</h3><button class="btn" style="padding:6px 10px" onclick="closeModal()"><i data-lucide="x"></i></button></div>
+        <div class="modal-body">${body}</div>
+        <div class="modal-foot">${foot||'<button class="btn" onclick="closeModal()">Cancel</button>'}</div>
+      </div>
+    </div>
+  `;
+  refreshIcons();
+}
+function closeModal(){stopCamera();$('#modalRoot').innerHTML=''}
+
+/* === REAL-TIME CAMERA CAPTURE === */
+function openActivity(){
+  capturedPhotoData=null;
+  modal('Post Activity Update',`
+    <div class="field">
+      <label>What are you working on?</label>
+      <textarea id="actText" placeholder="Describe your site progress, task status, or field condition..."></textarea>
+    </div>
+    <div class="field">
+      <label>Real-Time Camera Photo (Live Capture Only)</label>
+      <div class="cam-box" id="camBox">
+        <div id="camPlaceholder" style="padding:26px 16px;text-align:center;color:#D5E2CE;font-size:12.5px">
+          Gallery uploads are disabled. Open your camera to capture a live timestamped photo.
+        </div>
+        <div id="camLiveWrap" class="hidden">
+          <span class="cam-badge"><span class="radar-dot red"></span>LIVE</span>
+          <video id="camVideo" autoplay playsinline muted></video>
+        </div>
+        <img id="camPreview" class="hidden" alt="Captured live photo">
+        <div class="cam-controls">
+          <button type="button" class="btn subtle" id="btnStartCam" onclick="startCamera()"><i data-lucide="camera"></i> Open Camera</button>
+          <button type="button" class="btn primary hidden" id="btnSnapCam" onclick="captureCamera()"><i data-lucide="aperture"></i> Take Photo</button>
+          <button type="button" class="btn hidden" id="btnSwitchCam" onclick="switchCamera()"><i data-lucide="refresh-cw"></i> Flip</button>
+          <button type="button" class="btn hidden" id="btnRetakeCam" onclick="retakeCamera()"><i data-lucide="rotate-ccw"></i> Retake</button>
+          <button type="button" class="btn danger hidden" id="btnRemoveCam" onclick="removePhoto()"><i data-lucide="trash-2"></i> Remove</button>
+        </div>
+      </div>
+    </div>
+    <label class="small" style="display:flex;align-items:center;gap:8px;font-weight:650;margin-top:8px">
+      <input id="actAttachLoc" type="checkbox" checked> Attach my current GPS coordinates for OSRM route tracing
+    </label>
+  `,`
+    <button class="btn" onclick="closeModal()">Cancel</button>
+    <button class="btn primary" onclick="submitActivity()"><i data-lucide="send"></i> Submit Update</button>
+  `);
+}
+
+async function startCamera(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    toast('Camera API unavailable. Serve via localhost or HTTPS.');
+    return;
+  }
+  stopCamera();
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:{ideal:camFacing},width:{ideal:1280},height:{ideal:720}},
+      audio:false
+    });
+    let video=$('#camVideo');
+    video.srcObject=camStream;
+    $('#camPlaceholder').classList.add('hidden');
+    $('#camPreview').classList.add('hidden');
+    $('#camLiveWrap').classList.remove('hidden');
+    $('#btnStartCam').classList.add('hidden');
+    $('#btnSnapCam').classList.remove('hidden');
+    $('#btnSwitchCam').classList.remove('hidden');
+    $('#btnRetakeCam').classList.add('hidden');
+    $('#btnRemoveCam').classList.add('hidden');
+  }catch(err){
+    toast('Camera access denied or unavailable.');
+  }
+}
+
+function switchCamera(){
+  camFacing=camFacing==='environment'?'user':'environment';
+  startCamera();
+}
+
+function captureCamera(){
+  let video=$('#camVideo');
+  if(!video||!video.videoWidth)return;
+  let canvas=document.createElement('canvas');
+  canvas.width=video.videoWidth;
+  canvas.height=video.videoHeight;
+  let ctx=canvas.getContext('2d');
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+  let stamp=`LIVE · ${current.name} · ${new Date().toLocaleString('en-PH')}`;
+  let pad=12,fontSize=Math.max(14,Math.round(canvas.width*0.022));
+  ctx.font=`600 ${fontSize}px sans-serif`;
+  let textW=ctx.measureText(stamp).width;
+  ctx.fillStyle='rgba(24,36,20,0.80)';
+  ctx.fillRect(pad,canvas.height-fontSize-pad*2.2,textW+pad*1.6,fontSize+pad*1.2);
+  ctx.fillStyle='#A3E635';
+  ctx.fillText(stamp,pad*1.8,canvas.height-pad*1.4);
+
+  capturedPhotoData=canvas.toDataURL('image/jpeg',0.85);
+  stopCamera();
+
+  let prev=$('#camPreview');
+  prev.src=capturedPhotoData;
+  prev.classList.remove('hidden');
+  $('#camLiveWrap').classList.add('hidden');
+  $('#btnSnapCam').classList.add('hidden');
+  $('#btnSwitchCam').classList.add('hidden');
+  $('#btnRetakeCam').classList.remove('hidden');
+  $('#btnRemoveCam').classList.remove('hidden');
+  toast('Live photo captured');
+}
+
+function retakeCamera(){capturedPhotoData=null;startCamera()}
+function removePhoto(){
+  stopCamera();
+  capturedPhotoData=null;
+  $('#camPreview').classList.add('hidden');
+  $('#camLiveWrap').classList.add('hidden');
+  $('#camPlaceholder').classList.remove('hidden');
+  $('#btnStartCam').classList.remove('hidden');
+  $('#btnSnapCam').classList.add('hidden');
+  $('#btnSwitchCam').classList.add('hidden');
+  $('#btnRetakeCam').classList.add('hidden');
+  $('#btnRemoveCam').classList.add('hidden');
+}
+function stopCamera(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}}
+
+async function submitActivity(){
+  let text=$('#actText').value.trim();
+  if(!text){toast('Please enter an activity description.');return}
+  if(camStream){toast('Please take the photo or close the camera first.');return}
+  let loc=null;
+  if($('#actAttachLoc').checked){
+    try{
+      let p=await getPosition();
+      let c=p.coords;
+      loc={lat:c.latitude,lng:c.longitude,accuracy:c.accuracy,address:await reverseAddress(c.latitude,c.longitude)};
+    }catch(e){
+      toast('GPS unavailable. Submitting without coordinates.');
+    }
+  }
+  db.activities.unshift({
+    id:'a'+Date.now(),
+    userId:current.id,
+    text,
+    created:Date.now(),
+    location:loc,
+    photo:capturedPhotoData
+  });
+  capturedPhotoData=null;
+  saveDB();
+  closeModal();
+  render();
+  toast('Activity update published');
+}
+
+function getPosition(){return new Promise((resolve,reject)=>{if(!navigator.geolocation)return reject(new Error('unsupported'));navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:18000,maximumAge:0})})}
+async function reverseAddress(lat,lng){
+  try{
+    let r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
+    if(!r.ok)throw 0;
+    let j=await r.json(),a=j.address||{};
+    let street=[a.house_number,a.road||a.pedestrian||a.footway].filter(Boolean).join(' ');
+    let parts=[street,a.neighbourhood||a.suburb||a.quarter||a.village,a.barangay,a.city_district||a.town||a.city||a.municipality,a.state,a.country].filter(Boolean);
+    return parts.length?parts.join(', '):j.display_name||'Address details unavailable';
+  }catch(e){
+    return `GPS: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }
+}
+
+async function toggleShare(){
+  if(locShare){stopLocation();toast('Location sharing stopped');render();return}
+  if(!navigator.geolocation){toast('GPS is not supported by this browser.');return}
+  try{
+    let p=await getPosition();
+    await saveCurrentLocation(p);
+    locShare=true;
+    watchId=navigator.geolocation.watchPosition(async pos=>{await saveCurrentLocation(pos)},err=>toast('GPS update stopped: '+err.message),{enableHighAccuracy:true,maximumAge:10000,timeout:20000});
+    toast('Live location sharing started');
+    render();
+  }catch(e){
+    toast(e.code===1?'Location permission denied.':'Could not retrieve GPS. Use localhost or HTTPS.');
+  }
+}
+
+async function saveCurrentLocation(pos){
+  let c=pos.coords,old=db.locations.find(x=>x.userId===current.id);
+  let address=await reverseAddress(c.latitude,c.longitude);
+  let item={userId:current.id,lat:c.latitude,lng:c.longitude,accuracy:c.accuracy,address,updated:Date.now(),active:true,source:'browser GPS'};
+  if(old)Object.assign(old,item);else db.locations.push(item);
+  saveDB();
+  if(activePage==='map'||activePage==='location'){
+    traceEmployeeHistory();
+  }
+}
+
+function stopLocation(){
+  if(watchId!==null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId);
+  watchId=null;locShare=false;
+  let l=db.locations.find(x=>x.userId===current?.id);
+  if(l){l.active=false;l.updated=Date.now();saveDB()}
+}
+
+function clockAction(type){
+  let date=new Date().toDateString();
+  if(type==='in'){
+    if(todayStatus(current.id)!=='Not clocked in'){toast('Already clocked in today.');return}
+    db.attendance.push({userId:current.id,type:'in',time:Date.now(),date});
+  }else{
+    if(todayStatus(current.id)!=='Clocked in'){toast('Clock in first.');return}
+    db.attendance.push({userId:current.id,type:'out',time:Date.now(),date});
+  }
+  saveDB();render();toast(type==='in'?'Clocked in successfully':'Clocked out successfully');
+}
+
+function openUser(id=null){
+  let u=id?user(id):null;
+  let isEdit=!!u;
+  modal(isEdit?'Edit Person':'Add Employee or Supervisor',`
+    <div class="field"><label>Full Name</label><input id="personName" value="${esc(u?.name||'')}"></div>
+    <div class="field"><label>Role</label><select id="personRole" onchange="updatePersonForm()"><option value="employee" ${u?.role==='employee'?'selected':''}>Employee</option><option value="supervisor" ${u?.role==='supervisor'?'selected':''}>Supervisor</option></select></div>
+    <div class="field"><label>Department</label><select id="personDept">${db.departments.map(d=>`<option value="${d.id}" ${u?.dept===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></div>
+    <div class="field" id="supervisorField"><label>Assigned Supervisor</label><select id="personSupervisor"><option value="">Select supervisor</option>${db.users.filter(s=>s.role==='supervisor'&&s.id!==id).map(s=>`<option value="${s.id}" ${u?.supervisor===s.id?'selected':''}>${esc(s.name)} — ${esc(dept(s.dept))}</option>`).join('')}</select></div>
+    <div class="field"><label>Contact Number</label><input id="personPhone" value="${esc(u?.phone||'')}"></div>
+  `,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="savePerson('${id||''}')">Save Person</button>`);
+  updatePersonForm();
+}
+function updatePersonForm(){let role=$('#personRole').value;$('#supervisorField').classList.toggle('hidden',role!=='employee')}
+function editUser(id){openUser(id)}
+function savePerson(id){
+  let name=$('#personName').value.trim(),role=$('#personRole').value,deptId=$('#personDept').value,sup=$('#personSupervisor')?.value||'';
+  if(!name){toast('Enter a name.');return}
+  if(role==='employee'&&!sup){toast('Assign this employee to a supervisor.');return}
+  if(role==='employee'&&user(sup)?.dept!==deptId){toast('Supervisor must belong to the same department.');return}
+  let u=id?user(id):{id:'p'+Date.now()};
+  Object.assign(u,{name,role,dept:deptId,supervisor:role==='employee'?sup:null,phone:$('#personPhone').value.trim()});
+  if(!id)db.users.push(u);
+  saveDB();closeModal();render();toast('Person saved');
+}
+
+function openDept(){
+  modal('Add Department',`<div class="field"><label>Department Name</label><input id="deptName" placeholder="e.g. Logistics"></div>`,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveDept()">Add Department</button>`);
+}
+function saveDept(){
+  let n=$('#deptName').value.trim();
+  if(!n){toast('Enter a department name.');return}
+  db.departments.push({id:'d'+Date.now(),name:n});
+  saveDB();closeModal();render();toast('Department added');
+}
+
+function openTask(){
+  modal('Assign Task',`
+    <div class="field"><label>Task Title</label><input id="taskTitle" placeholder="e.g. Inspect Substation B"></div>
+    <div class="field"><label>Assign To</label><select id="taskEmployee">${scopedEmployees().map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
+    <div class="field"><label>Due Date</label><input id="taskDue" type="date"></div>
+  `,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveTask()">Assign Task</button>`);
+}
+function saveTask(){
+  let title=$('#taskTitle').value.trim(),assignee=$('#taskEmployee').value;
+  if(!title||!assignee){toast('Complete the task details.');return}
+  let e=user(assignee);
+  db.tasks.push({id:'t'+Date.now(),title,dept:e.dept,supervisor:e.supervisor,assignee,status:'Pending',due:$('#taskDue').value||'Today'});
+  saveDB();closeModal();render();toast('Task assigned');
+}
+function completeTask(id){
+  let t=db.tasks.find(x=>x.id===id);
+  if(t){t.status='Completed';saveDB();render();toast('Task marked completed')}
+}
+
+function saveSettings(){
+  let lat=Number($('#officeLat').value),lng=Number($('#officeLng').value);
+  if(!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180){toast('Enter valid coordinates.');return}
+  db.company=$('#companyInput').value.trim()||db.company;
+  db.office.address=$('#officeAddress').value.trim();
+  db.office.lat=lat;
+  db.office.lng=lng;
+  saveDB();render();toast('Settings saved');
+}
+function resetOffice(){db.office={...OFFICE_DEFAULT};saveDB();render();toast('Default HQ restored')}
+
+setInterval(()=>{
+  let el=$('#liveClock');
+  if(el)el.textContent=fmtTime(Date.now());
+},1000);
+refreshIcons();
+window.addEventListener('beforeunload',()=>{stopLocation();stopCamera()});
+</script>
+</body>
+</html>
