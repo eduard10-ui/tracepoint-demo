@@ -54,7 +54,7 @@ body{
 button,input,select,textarea{font:inherit}
 button{cursor:pointer;transition:transform .2s var(--spring),background-color .16s var(--smooth),box-shadow .18s var(--smooth),border-color .16s}
 button:active{transform:scale(.96)}
-button:disabled{opacity:.48;cursor:not-allowed;transform:none}
+button:disabled{opacity:.52;cursor:not-allowed;transform:none}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
 .ico{width:17px;height:17px;flex:none;display:block}
 
@@ -103,6 +103,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   animation:pulseRadar 2s infinite;
 }
 .radar-dot.red{background:#EF4444;animation:none}
+.radar-dot.amber{background:#F59E0B}
 
 .btn-shimmer{
   position:relative;overflow:hidden;
@@ -381,7 +382,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   display:flex;align-items:center;justify-content:space-between;gap:8px;
   font-size:11px;font-weight:650;color:var(--muted);padding-top:8px;border-top:1px dashed var(--line);
 }
-.meta-stack{display:grid;gap:2px;min-width:0;flex:1}
+.meta-stack{display:grid;gap:3px;min-width:0;flex:1}
 .meta-item{display:flex;align-items:center;gap:4px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .meta-item .ico{width:12px;height:12px;color:var(--olive)}
 
@@ -390,35 +391,56 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .dept-head-row strong{font-size:14px;font-weight:850;line-height:1.15}
 
-/* === TABLES & ATTENDANCE CELLS === */
+/* === VERIFICATION GPS CARD IN TIME-IN/OUT & ACTIVITY MODALS === */
+.gps-verify-box{
+  display:flex;align-items:flex-start;gap:10px;padding:11px 12px;
+  background:var(--surface-inner);border:1.5px solid var(--lime-border);border-radius:16px;
+}
+.gps-verify-box.warn{border-color:#F3C68F;background:var(--orange-soft)}
+.gps-verify-box.error{border-color:#F2B8B8;background:var(--red-soft)}
+.gps-verify-info{min-width:0;flex:1}
+.gps-verify-info strong{display:block;font-size:12.5px;font-weight:850;line-height:1.2;color:var(--ink)}
+.gps-verify-info span{display:block;font-size:11px;font-weight:600;color:var(--muted);line-height:1.25;margin-top:2px}
+.gps-coords-tag{
+  display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:5px;padding:4px 9px;
+  background:var(--surface-pure);border:1px solid var(--line);border-radius:10px;
+  font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--olive-deep);
+  word-break:break-all;
+}
+.gps-telemetry-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:7px;
+}
+.gps-tel-pill{
+  background:var(--surface-pure);border:1px solid var(--line);border-radius:9px;
+  padding:4px 7px;font-size:10px;font-weight:750;color:var(--ink);font-variant-numeric:tabular-nums;
+}
+.gps-tel-pill span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+
+/* === ATTENDANCE PROOF CARDS & TABLE === */
+.att-cell-stack{display:grid;gap:3px;white-space:normal;min-width:215px;max-width:290px}
+.att-cell-stack strong{font-size:12.5px;font-weight:850;color:var(--ink);line-height:1.15}
+.att-loc-line{display:flex;align-items:flex-start;gap:4px;font-size:11px;font-weight:600;color:var(--muted);line-height:1.2}
+.att-loc-line .ico{width:11px;height:11px;color:var(--olive);margin-top:1px}
+.att-acc-badge{
+  font-size:10px;font-weight:800;color:var(--olive-deep);background:var(--lime-soft);
+  padding:2px 6px;border-radius:6px;display:inline-block;width:fit-content;font-variant-numeric:tabular-nums;
+}
+.att-acc-badge.warn{background:var(--orange-soft);color:var(--orange)}
+.att-acc-badge.bad{background:var(--red-soft);color:var(--red)}
+.proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.proof-card{background:var(--surface-inner);border:1px solid var(--line);border-radius:16px;padding:12px}
+.proof-card img{width:100%;border-radius:12px;border:1px solid var(--line);margin:8px 0;display:block}
+.proof-meta-list{display:grid;gap:4px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-size:11px;font-weight:650;color:var(--ink)}
+
+/* === TABLES === */
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tbl{width:100%;border-collapse:collapse;min-width:640px}
+.tbl{width:100%;border-collapse:collapse;min-width:680px}
 .tbl th{
   text-align:left;font-size:10.5px;font-weight:850;letter-spacing:.05em;text-transform:uppercase;
   color:var(--olive-deep);background:var(--surface-deep);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;
 }
-.tbl td{padding:10px 12px;border-bottom:1px solid var(--line-soft);font-size:12.5px;font-weight:600;vertical-align:middle}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--line-soft);font-size:12.5px;font-weight:600;vertical-align:middle;white-space:nowrap}
 .tbl tr:last-child td{border-bottom:0}
-.att-cell{display:grid;gap:2px;min-width:165px;max-width:225px}
-.att-ts{font-weight:850;color:var(--ink);font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.att-loc{font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:flex-start;gap:4px;line-height:1.22}
-.att-loc .ico{width:12px;height:12px;color:var(--olive);margin-top:1px}
-.att-coords{font-size:10px;font-weight:700;color:var(--olive-deep);font-variant-numeric:tabular-nums}
-.proof-thumb{
-  width:42px;height:42px;border-radius:10px;object-fit:cover;
-  border:1.5px solid var(--lime-border);display:block;flex:none;
-}
-
-/* === GPS VERIFICATION TELEMETRY CARD === */
-.gps-lock-card{
-  background:var(--surface-inner);border:1.5px solid var(--line);border-radius:16px;
-  padding:11px 13px;display:flex;align-items:center;gap:10px;
-}
-.gps-lock-card.locked{background:var(--green-soft);border-color:#98D8B6}
-.gps-lock-card.error{background:var(--red-soft);border-color:#F2B8B8}
-.gps-lock-info{min-width:0;flex:1}
-.gps-lock-info strong{display:block;font-size:12.5px;font-weight:850;line-height:1.2}
-.gps-lock-info span{display:block;font-size:11px;font-weight:600;color:var(--muted);line-height:1.25;margin-top:2px;overflow-wrap:anywhere}
 
 /* === MAP & OSRM ROUTE TRACING === */
 .map-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%}
@@ -433,7 +455,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .route-summary-banner strong{color:var(--lime-neon);font-size:13px;font-weight:850;display:block;line-height:1.15}
 .route-summary-banner span{font-size:11px;font-weight:600;color:#ECFCCB;line-height:1.2}
-.map-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px}
+.map-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px}
 .map-box{height:480px;border-radius:0 0 22px 22px;overflow:hidden;position:relative;z-index:1}
 .map-side{max-height:480px;overflow:auto;background:var(--surface)}
 .map-note{
@@ -446,6 +468,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .map-pin span{display:block;transform:rotate(45deg);color:#fff;text-align:center;line-height:25px;font-weight:850;font-size:10px}
 .map-pin.office{background:var(--olive-deep);border-color:var(--lime-neon)}
+.map-pin.stale{background:#737373;border-color:#E5E5E5}
 
 /* === FORMS & MODALS === */
 .field{display:grid;gap:5px;margin:12px 0}
@@ -459,17 +482,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .modal-head{padding:14px 18px;background:var(--surface-deep);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
 .modal-head h3{margin:0;font-size:15.5px;font-weight:850}
 .modal-body{padding:15px 18px;background:var(--surface)}
-.modal-foot{padding:12px 18px;background:var(--surface-inner);border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+.modal-foot{padding:12px 18px;background:var(--surface-inner);border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
 
 /* === LIVE CAMERA BOX === */
 .cam-box{border:1.5px solid var(--line);border-radius:18px;background:#1A2416;overflow:hidden;position:relative}
-.cam-box video,.cam-box img{width:100%;max-height:250px;object-fit:cover;display:block}
+.cam-box video,.cam-box img{width:100%;max-height:240px;object-fit:cover;display:block}
 .cam-controls{display:flex;gap:7px;padding:10px;background:var(--surface-deep);border-top:1px solid var(--line);flex-wrap:wrap;align-items:center}
-.cam-badge{position:absolute;top:10px;left:10px;background:rgba(24,36,20,.84);color:#fff;font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:var(--pill);display:inline-flex;align-items:center;gap:5px}
-
-.proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.proof-card{background:var(--surface-inner);border:1px solid var(--line);border-radius:18px;padding:12px}
-.proof-card img{width:100%;border-radius:12px;border:1px solid var(--line);margin:8px 0;display:block}
+.cam-badge{position:absolute;top:10px;left:10px;background:rgba(24,36,20,.82);color:#fff;font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:var(--pill);display:inline-flex;align-items:center;gap:5px}
 
 .empty{padding:24px 12px;text-align:center;color:var(--muted);font-size:12.5px;font-weight:600}
 .hidden{display:none!important}
@@ -481,7 +500,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   position:fixed;bottom:84px;left:50%;transform:translateX(-50%);
   background:var(--olive-deep);color:#fff;padding:10px 16px;border-radius:var(--pill);
   z-index:60;box-shadow:var(--shadow-md);font-size:12px;font-weight:750;
-  display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(163,230,53,.4);white-space:nowrap;
+  display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(163,230,53,.4);max-width:92vw;text-align:center;
 }
 
 /* === IOS LIQUID GLASS BOTTOM TAB BAR === */
@@ -545,11 +564,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
           <span class="side-brand-logo" style="width:34px;height:34px;border-radius:10px" id="loginBrandIcon"></span>
           <span>TRACEPOINT<span class="dot">.</span></span>
         </div>
-        <span class="hero-chip"><span class="radar-dot"></span> Live GPS</span>
+        <span class="hero-chip"><span class="radar-dot"></span> GNSS Engine</span>
       </div>
       <div class="login-hero-grid">
         <div>
-          <h2>Field routing, live photo Time In/Out verification, and shift tracking in real time.</h2>
+          <h2>Field routing, live camera proof, and shift time-in tracking in real time.</h2>
           <div class="hero-pills">
             <span class="hero-chip" id="chipCam"></span>
             <span class="hero-chip" id="chipNav"></span>
@@ -657,10 +676,227 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtTime=d=>new Date(d).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 const fmtDate=d=>new Date(d).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'medium'});
-const fmtDateShort=d=>new Date(d).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
 const ago=d=>{let m=Math.max(0,Math.floor((Date.now()-new Date(d))/60000));return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h ago'};
 const initials=n=>n.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();
 const OFFICE_DEFAULT={name:'Main Office',address:'San Marcelino, Zambales, Philippines',lat:14.9792,lng:120.0897};
+
+/* === FULL PRECISION COORDINATE FORMATTER (8 DECIMAL PLACES WITHOUT MUTATING RAW FLOAT) === */
+function fmtCoord(val,decimals=8){
+  return typeof val==='number'&&Number.isFinite(val)?val.toFixed(decimals):'—';
+}
+function fmtCoordPair(lat,lng,decimals=8){
+  return `${fmtCoord(lat,decimals)}, ${fmtCoord(lng,decimals)}`;
+}
+
+/* === GEOLOCATION ENGINE CONFIGURATION & QUALITY TIERS === */
+const GPS_CONFIG={
+  ATTENDANCE_TARGET_ACCURACY_M:20,   // Excellent (<=5m), Good (5-10m), Acceptable (10-20m)
+  ATTENDANCE_HARD_MAX_ACCURACY_M:35, // Above 35m is Poor and rejected for standard verification
+  LIVE_MAX_ACCEPTED_ACCURACY_M:50,   // Reject erratic cell-tower jumps (>50m) during live tracking
+  STALE_THRESHOLD_MS:25000,          // Reading older than 25s is considered stale for action capture
+  LIVE_SIGNAL_LOSS_MS:45000,         // Flag live tracking as signal-lost/outdated after 45s without fix
+  MIN_MEANINGFUL_MOVE_M:5,           // Avoid redundant DB writes when stationary (<5m) unless accuracy improved significantly
+  MAX_PLAUSIBLE_SPEED_MPS:55,        // ~198 km/h ceiling to catch impossible teleportation spikes
+  MIN_STABILITY_READINGS:2,          // Require >=2 consistent consecutive fixes when accuracy is 10-20m
+  BUFFER_MAX_SIZE:20
+};
+
+function classifyAccuracy(accuracyM){
+  if(typeof accuracyM!=='number'||!Number.isFinite(accuracyM)||accuracyM<=0){
+    return {tier:'Unavailable',rank:0,pill:'red',verified:false,desc:'No valid horizontal accuracy'};
+  }
+  if(accuracyM<=5)return {tier:'Excellent',rank:5,pill:'green',verified:true,desc:'≤ 5m high-precision GNSS fix'};
+  if(accuracyM<=10)return {tier:'Good',rank:4,pill:'green',verified:true,desc:'5–10m strong GNSS fix'};
+  if(accuracyM<=20)return {tier:'Acceptable',rank:3,pill:'lime',verified:true,desc:'10–20m verified field fix'};
+  if(accuracyM<=35)return {tier:'Weak',rank:2,pill:'orange',verified:false,desc:'20–35m degraded signal'};
+  return {tier:'Poor',rank:1,pill:'red',verified:false,desc:'> 35m coarse / network estimate'};
+}
+
+/* === HAVERSINE DISTANCE IN METERS & KILOMETERS === */
+function distanceMeters(lat1,lon1,lat2,lon2){
+  const R=6371000,toRad=x=>x*Math.PI/180;
+  const dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function distance(lat1,lon1,lat2,lon2){
+  return distanceMeters(lat1,lon1,lat2,lon2)/1000;
+}
+
+/* === CONTINUOUS GPS TELEMETRY ENGINE === */
+const gpsEngine={
+  buffer:[],               // Recent valid Position objects normalized with metadata
+  bestReading:null,        // Highest-score valid reading in current session
+  activeWatchId:null,      // Dedicated acquisition watcher
+  subscribers:new Set(),   // UI listeners notified on every sample
+  lastError:null,
+  signalState:'idle',      // 'idle' | 'acquiring' | 'locked' | 'weak' | 'error'
+  sampleCount:0,
+
+  isValidCoords(c){
+    if(!c)return false;
+    const {latitude:lat,longitude:lng,accuracy:acc}=c;
+    if(typeof lat!=='number'||typeof lng!=='number'||typeof acc!=='number')return false;
+    if(!Number.isFinite(lat)||!Number.isFinite(lng)||!Number.isFinite(acc))return false;
+    if(Math.abs(lat)>90||Math.abs(lng)>180)return false;
+    if(lat===0&&lng===0)return false;
+    if(acc<=0||acc>5000)return false;
+    return true;
+  },
+
+  normalizePosition(pos,sourceLabel='browser GNSS'){
+    const c=pos.coords;
+    const acquiredAt=typeof pos.timestamp==='number'&&pos.timestamp>0?pos.timestamp:Date.now();
+    const cls=classifyAccuracy(c.accuracy);
+    return {
+      lat:c.latitude,                         // Full IEEE-754 float preserved
+      lng:c.longitude,                        // Full IEEE-754 float preserved
+      accuracy:c.accuracy,                    // Horizontal accuracy in meters
+      altitude:typeof c.altitude==='number'?c.altitude:null,
+      altitudeAccuracy:typeof c.altitudeAccuracy==='number'?c.altitudeAccuracy:null,
+      heading:typeof c.heading==='number'?c.heading:null,
+      speed:typeof c.speed==='number'?c.speed:null,
+      acquiredAt,
+      source:sourceLabel,
+      classification:cls.tier,
+      classificationRank:cls.rank,
+      verified:cls.verified,
+      address:null
+    };
+  },
+
+  evaluateReading(candidate){
+    const prev=this.buffer[this.buffer.length-1]||null;
+    let consistent=true;
+    let jumpMeters=0;
+    let impliedSpeedMps=0;
+
+    if(prev){
+      jumpMeters=distanceMeters(prev.lat,prev.lng,candidate.lat,candidate.lng);
+      const dtSec=Math.max(0.5,(candidate.acquiredAt-prev.acquiredAt)/1000);
+      impliedSpeedMps=jumpMeters/dtSec;
+      // Reject wild teleportation spikes if jump exceeds combined error radii + physical travel envelope
+      const allowedEnvelope=(prev.accuracy+candidate.accuracy)*1.5+(GPS_CONFIG.MAX_PLAUSIBLE_SPEED_MPS*dtSec);
+      if(jumpMeters>allowedEnvelope&&candidate.accuracy>15){
+        consistent=false;
+      }
+    }
+
+    // Check consecutive stability across recent readings
+    const recent=this.buffer.slice(-3);
+    let maxSpreadM=0;
+    if(recent.length>=1){
+      for(const r of recent){
+        const d=distanceMeters(r.lat,r.lng,candidate.lat,candidate.lng);
+        if(d>maxSpreadM)maxSpreadM=d;
+      }
+    }
+    const isStabilized=candidate.accuracy<=10||(recent.length>=(GPS_CONFIG.MIN_STABILITY_READINGS-1)&&maxSpreadM<=Math.max(25,candidate.accuracy*1.5));
+
+    return {
+      ...candidate,
+      consistent,
+      isStabilized,
+      spreadMeters:Math.round(maxSpreadM),
+      impliedSpeedMps:Number(impliedSpeedMps.toFixed(2))
+    };
+  },
+
+  ingest(pos,sourceLabel='browser GNSS'){
+    if(!this.isValidCoords(pos?.coords))return null;
+    this.sampleCount++;
+    this.lastError=null;
+
+    const raw=this.normalizePosition(pos,sourceLabel);
+    const evaluated=this.evaluateReading(raw);
+
+    // Ignore inconsistent outlier jumps when we already have a much better fresh fix
+    if(!evaluated.consistent&&this.bestReading&&(Date.now()-this.bestReading.acquiredAt)<GPS_CONFIG.STALE_THRESHOLD_MS&&this.bestReading.accuracy<evaluated.accuracy){
+      this.notify();
+      return this.bestReading;
+    }
+
+    this.buffer.push(evaluated);
+    if(this.buffer.length>GPS_CONFIG.BUFFER_MAX_SIZE)this.buffer.shift();
+
+    // Update bestReading: prefer fresher reading if accuracy is better or comparable; never let poor overwrite good unless previous is stale
+    if(!this.bestReading){
+      this.bestReading=evaluated;
+    }else{
+      const bestAge=Date.now()-this.bestReading.acquiredAt;
+      const isBestStale=bestAge>GPS_CONFIG.STALE_THRESHOLD_MS;
+      const accuracyImproved=evaluated.accuracy<=this.bestReading.accuracy;
+      const comparableAndFresher=evaluated.accuracy<=(this.bestReading.accuracy*1.25)&&evaluated.verified;
+      if(isBestStale||accuracyImproved||comparableAndFresher){
+        this.bestReading=evaluated;
+      }
+    }
+
+    this.signalState=evaluated.verified?'locked':'weak';
+    this.notify();
+    return evaluated;
+  },
+
+  handleError(err){
+    this.lastError=err;
+    this.signalState='error';
+    this.notify();
+  },
+
+  getFreshestReliable(maxAgeMs=GPS_CONFIG.STALE_THRESHOLD_MS){
+    const now=Date.now();
+    const fresh=this.buffer.filter(r=>(now-r.acquiredAt)<=maxAgeMs&&r.consistent);
+    if(!fresh.length)return null;
+    // Sort by verified status first, then lowest accuracy (meters), then most recent timestamp
+    fresh.sort((a,b)=>{
+      if(a.verified!==b.verified)return a.verified?-1:1;
+      if(Math.abs(a.accuracy-b.accuracy)>2)return a.accuracy-b.accuracy;
+      return b.acquiredAt-a.acquiredAt;
+    });
+    return fresh[0];
+  },
+
+  getFreshestAny(maxAgeMs=GPS_CONFIG.STALE_THRESHOLD_MS){
+    const now=Date.now();
+    const fresh=this.buffer.filter(r=>(now-r.acquiredAt)<=maxAgeMs);
+    if(!fresh.length)return null;
+    fresh.sort((a,b)=>a.accuracy-b.accuracy||b.acquiredAt-a.acquiredAt);
+    return fresh[0];
+  },
+
+  startContinuousWatch(){
+    if(!navigator.geolocation){
+      this.handleError({code:2,message:'Geolocation API unavailable in this browser.'});
+      return;
+    }
+    if(this.activeWatchId!==null)return;
+    this.signalState='acquiring';
+    this.notify();
+
+    this.activeWatchId=navigator.geolocation.watchPosition(
+      pos=>this.ingest(pos,'GNSS watchPosition'),
+      err=>this.handleError(err),
+      {enableHighAccuracy:true,maximumAge:0,timeout:25000}
+    );
+  },
+
+  stopContinuousWatch(){
+    if(this.activeWatchId!==null&&navigator.geolocation){
+      navigator.geolocation.clearWatch(this.activeWatchId);
+    }
+    this.activeWatchId=null;
+    if(!locShare)this.signalState='idle';
+  },
+
+  subscribe(fn){
+    this.subscribers.add(fn);
+    return ()=>this.subscribers.delete(fn);
+  },
+
+  notify(){
+    this.subscribers.forEach(fn=>{try{fn(this)}catch(e){}});
+  }
+};
 
 /* === BUILT-IN CRISP INLINE SVG ICONS === */
 const ICONS={
@@ -723,9 +959,9 @@ const seed={
   attendance:[],
   locations:[],
   activities:[
-    {id:'u0',userId:'e1',text:'Departed San Marcelino Public Market heading south along Zambales Highway.',created:Date.now()-75*60000,location:{lat:14.9788,lng:120.0884,address:'San Marcelino Public Market, San Marcelino, Zambales'},photo:null},
-    {id:'u1',userId:'e1',text:'Checkpoint reached at San Antonio town proper. Verified line transformers.',created:Date.now()-25*60000,location:{lat:14.9464,lng:120.0876,address:'San Antonio, Zambales, Philippines'},photo:null},
-    {id:'u2',userId:'e3',text:'Arrived at Castillejos field substation. Preparing diagnostic tools.',created:Date.now()-55*60000,location:{lat:14.9331,lng:120.1995,address:'Castillejos, Zambales, Philippines'},photo:null}
+    {id:'u0',userId:'e1',text:'Departed San Marcelino Public Market heading south along Zambales Highway.',created:Date.now()-75*60000,location:{lat:14.97880000,lng:120.08840000,accuracy:8,classification:'Good',verified:true,acquiredAt:Date.now()-75*60000,source:'seeded field checkpoint',address:'San Marcelino Public Market, San Marcelino, Zambales'},photo:null},
+    {id:'u1',userId:'e1',text:'Checkpoint reached at San Antonio town proper. Verified line transformers.',created:Date.now()-25*60000,location:{lat:14.94640000,lng:120.08760000,accuracy:7,classification:'Good',verified:true,acquiredAt:Date.now()-25*60000,source:'seeded field checkpoint',address:'San Antonio, Zambales, Philippines'},photo:null},
+    {id:'u2',userId:'e3',text:'Arrived at Castillejos field substation. Preparing diagnostic tools.',created:Date.now()-55*60000,location:{lat:14.93310000,lng:120.19950000,accuracy:9,classification:'Good',verified:true,acquiredAt:Date.now()-55*60000,source:'seeded field checkpoint',address:'Castillejos, Zambales, Philippines'},photo:null}
   ],
   tasks:[
     {id:'t1',title:'Complete equipment inspection',dept:'d1',supervisor:'s1',assignee:'e1',status:'In progress',due:'Today'},
@@ -735,11 +971,12 @@ const seed={
 
 let db=loadDB(),current=null,map=null,roadLayer=null,pathCoordinates=[],selectedTraceUser='all',activePage='dashboard',watchId=null,locShare=false;
 let camStream=null,capturedPhotoData=null,camFacing='environment';
-let lockedTimeLogGPS=null,lockedCaptureTimestamp=null,gpsWatchLockId=null;
+let activeClockModalType=null,verifiedClockLoc=null,verifiedPhotoTime=null,modalGpsUnsub=null,activityModalGpsUnsub=null,liveMonitorInterval=null;
+let lastGeocodeCoord=null,lastGeocodeAddress='';
 
 function initStaticIcons(){
   $('#loginBrandIcon').innerHTML=ico('route');
-  $('#chipCam').innerHTML=`${ico('camera')} Photo Proof`;
+  $('#chipCam').innerHTML=`${ico('camera')} Live Cam`;
   $('#chipNav').innerHTML=`${ico('navigation')} OSRM`;
   $('#loginUserIcon').innerHTML=ico('user-check');
   $('#loginCheckIcon').innerHTML=ico('check');
@@ -755,10 +992,7 @@ function initStaticIcons(){
 }
 
 function loadDB(){try{return JSON.parse(localStorage.getItem('tracepoint_demo_db'))||structuredClone(seed)}catch(e){return structuredClone(seed)}}
-function saveDB(){
-  try{localStorage.setItem('tracepoint_demo_db',JSON.stringify(db))}
-  catch(e){toast('Storage almost full — older photos may need cleanup.')}
-}
+function saveDB(){localStorage.setItem('tracepoint_demo_db',JSON.stringify(db))}
 function user(id){return db.users.find(x=>x.id===id)}
 function dept(id){return db.departments.find(x=>x.id===id)?.name||'Unassigned'}
 function teamForSupervisor(id){return db.users.filter(x=>x.role==='employee'&&x.supervisor===id)}
@@ -768,7 +1002,7 @@ function toast(msg){
   el.className='toast';
   el.innerHTML=`<span class="radar-dot"></span><span>${esc(msg)}</span>`;
   $('#toastRoot').append(el);
-  setTimeout(()=>el.remove(),2800);
+  setTimeout(()=>el.remove(),3200);
 }
 
 function quickLogin(id){$('#loginUser').value=id;login()}
@@ -778,11 +1012,22 @@ function login(){
   activePage='dashboard';
   $('#login').style.display='none';
   $('#app').style.display='block';
+
+  // Restore continuous live tracking if employee had an active shift/sharing session before reload
+  if(current.role==='employee'){
+    const existingLive=db.locations.find(x=>x.userId===current.id&&x.active);
+    if(existingLive||todayStatus(current.id)==='Timed In'){
+      startLiveTrackingSession(true);
+    }
+  }
+  startLiveFreshnessMonitor();
   render();
 }
 function logout(){
   stopLocation();
   stopCamera();
+  gpsEngine.stopContinuousWatch();
+  if(liveMonitorInterval){clearInterval(liveMonitorInterval);liveMonitorInterval=null}
   current=null;
   $('#app').style.display='none';
   $('#login').style.display='grid';
@@ -846,6 +1091,21 @@ function render(){
 
 function roleName(r){return r==='admin'?'Admin / HR':r==='supervisor'?'Supervisor':'Field Employee'}
 
+function getLiveLocationStatus(locRecord){
+  if(!locRecord||!locRecord.active){
+    return {state:'unavailable',label:'Offline',pill:'',dot:'red',detail:'GPS sharing inactive'};
+  }
+  const ageMs=Date.now()-(locRecord.updated||0);
+  const cls=classifyAccuracy(locRecord.accuracy);
+  if(ageMs>GPS_CONFIG.LIVE_SIGNAL_LOSS_MS){
+    return {state:'outdated',label:`Signal Lost (${ago(locRecord.updated)})`,pill:'red',dot:'red',detail:`Last fix ${ago(locRecord.updated)} · ±${Math.round(locRecord.accuracy||0)}m`};
+  }
+  if(!cls.verified){
+    return {state:'weak',label:`Weak (${cls.tier} · ±${Math.round(locRecord.accuracy)}m)`,pill:'orange',dot:'amber',detail:`${cls.desc} · ${ago(locRecord.updated)}`};
+  }
+  return {state:'current',label:`Current (${cls.tier} · ±${Math.round(locRecord.accuracy)}m)`,pill:'green',dot:'',detail:`Verified fix · ${ago(locRecord.updated)}`};
+}
+
 const pages={
   dashboard(){
     let employees=scopedEmployees();
@@ -854,20 +1114,22 @@ const pages={
     let activeLocCount=db.locations.filter(l=>l.active&&employees.some(e=>e.id===l.userId)).length;
     let pendingTasks=db.tasks.filter(t=>employees.some(e=>e.id===t.assignee)&&t.status!=='Completed').length;
     let todayUpdates=db.activities.filter(a=>new Date(a.created).toDateString()===new Date().toDateString()&&employees.some(e=>e.id===a.userId)).length;
+    let myLive=db.locations.find(l=>l.userId===current.id);
+    let myLiveStatus=getLiveLocationStatus(myLive);
 
     let spotlight=current.role==='employee'
       ? `<div class="spotlight-card">
           <div class="spotlight-left">
             <div class="spotlight-icon">${ico('route')}</div>
             <div>
-              <div class="spotlight-eyebrow"><span class="radar-dot"></span> Active Shift · ${new Date().toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric'})}</div>
+              <div class="spotlight-eyebrow"><span class="radar-dot ${myLiveStatus.dot}"></span> Active Shift · ${new Date().toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric'})}</div>
               <h2>Hello, ${esc(current.name.split(' ')[0])}</h2>
-              <p>Status: <strong style="color:#fff">${myStatus}</strong> · ${locShare?'Live GPS active':'GPS paused'}</p>
+              <p>Status: <strong style="color:#fff">${myStatus}</strong> · GPS: <strong style="color:#fff">${esc(myLiveStatus.label)}</strong></p>
             </div>
           </div>
           <div class="spotlight-actions">
-            ${myStatus==='No Time In'?`<button class="btn lime" onclick="openTimeLogModal('in')">${ico('camera')} Time In</button>`:myStatus==='Timed In'?`<button class="btn lime" onclick="openTimeLogModal('out')">${ico('camera')} Time Out</button>`:''}
-            <button class="btn" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.24)" onclick="openActivity()">${ico('camera')} Site Update</button>
+            ${myStatus==='No Time In'?`<button class="btn lime" onclick="openClockModal('in')">${ico('camera')} Time In (Photo + GPS)</button>`:myStatus==='Timed In'?`<button class="btn lime" onclick="openClockModal('out')">${ico('camera')} Time Out (Photo + GPS)</button>`:''}
+            <button class="btn" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.24)" onclick="openActivity()">${ico('camera')} Field Update</button>
           </div>
         </div>`
       : `<div class="spotlight-card">
@@ -903,12 +1165,13 @@ const pages={
 
     let checkpointStrip=recent.filter(a=>a.location).slice(0,2).map(a=>{
       let u=user(a.userId)||{name:'Employee'};
+      let accStr=typeof a.location.accuracy==='number'?` · ±${Math.round(a.location.accuracy)}m`:'';
       return `
         <div class="checkpoint-mini-card">
           <span class="green-badge">${ico('map-pin')}</span>
           <div class="checkpoint-mini-info">
-            <strong>${esc(a.location.address||'GPS Checkpoint')}</strong>
-            <span><strong>${esc(u.name)}</strong> · ${ago(a.created)}</span>
+            <strong>${esc(a.location.address||fmtCoordPair(a.location.lat,a.location.lng,8))}</strong>
+            <span><strong>${esc(u.name)}</strong> · ${ago(a.created)}${accStr}</span>
           </div>
           <button class="mini-trace-btn" title="Trace on Map" onclick="showTrace('${a.id}')">${ico('route')}</button>
         </div>
@@ -917,7 +1180,7 @@ const pages={
 
     return `
       ${spotlight}
-      <div class="section-header"><h3>Quick Actions</h3><span class="small muted" style="font-weight:700">${fmtDateShort(Date.now())}</span></div>
+      <div class="section-header"><h3>Quick Actions</h3><span class="small muted" style="font-weight:700">${new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</span></div>
       ${quickTiles}
 
       ${checkpointStrip?`
@@ -964,14 +1227,27 @@ const pages={
           </div>
           <div class="panel-body">
             ${current.role==='employee'
-              ? myTodaySummaryCard()
-              : employees.slice(0,6).map(e=>`
-                <div class="list-row">
-                  <span class="green-badge sm solid">${initials(e.name)}</span>
-                  <div class="list-main"><strong>${esc(e.name)}</strong><span>${esc(dept(e.dept))}</span></div>
-                  <span class="pill ${todayStatus(e.id)==='Timed In'?'green':''}">${todayStatus(e.id)}</span>
-                </div>
-              `).join('')}
+              ? attendanceActions()
+              : employees.slice(0,6).map(e=>{
+                let rec=db.attendance.filter(a=>a.userId===e.id&&a.date===new Date().toDateString());
+                let latest=rec[rec.length-1];
+                let liveLoc=db.locations.find(l=>l.userId===e.id&&l.active);
+                let subLine=latest?.location
+                  ? `${fmtCoordPair(latest.location.lat,latest.location.lng,8)} (±${Math.round(latest.location.accuracy||0)}m)`
+                  : liveLoc
+                    ? `${fmtCoordPair(liveLoc.lat,liveLoc.lng,8)} (±${Math.round(liveLoc.accuracy||0)}m)`
+                    : esc(dept(e.dept));
+                return `
+                  <div class="list-row">
+                    <span class="green-badge sm solid">${initials(e.name)}</span>
+                    <div class="list-main">
+                      <strong>${esc(e.name)}</strong>
+                      <span>${subLine}</span>
+                    </div>
+                    <span class="pill ${todayStatus(e.id)==='Timed In'?'green':''}">${todayStatus(e.id)}</span>
+                  </div>
+                `;
+              }).join('')}
           </div>
         </section>
       </div>
@@ -983,8 +1259,8 @@ const pages={
     return `
       <div class="page-head">
         <div>
-          <h2>${current.role==='employee'?'My Route & Live GPS':'Employee Route & Live Map'}</h2>
-          <p>OSRM road-snapped polyline tracing & Nominatim checkpoints.</p>
+          <h2>${current.role==='employee'?'My Route & Live GNSS':'Employee Route & Live GNSS Map'}</h2>
+          <p>Exact WGS84 coordinates, horizontal accuracy circles, and OSRM road-snapped checkpoints.</p>
         </div>
         <div class="map-toolbar">
           ${current.role!=='employee'?`
@@ -999,13 +1275,13 @@ const pages={
       </div>
       <section class="panel">
         <div class="panel-head">
-          <h3><span class="green-badge sm solid">${ico('route')}</span> OSRM Highway Trace</h3>
+          <h3><span class="green-badge sm solid">${ico('route')}</span> Live GNSS & OSRM Highway Trace</h3>
           <span class="pill forest" id="osrmStatusPill"><span class="radar-dot"></span> Ready</span>
         </div>
         <div class="map-layout">
           <div>
             <div id="map" class="map-box"></div>
-            <div class="map-note">${ico('info')} Leaflet, OpenStreetMap, OSRM & Nominatim</div>
+            <div class="map-note">${ico('info')} Markers plot exact device GNSS coordinates; shaded rings show actual horizontal accuracy radius (±m).</div>
           </div>
           <div class="map-side panel-body" id="mapSide">${mapSideList()}</div>
         </div>
@@ -1029,7 +1305,7 @@ const pages={
             <tbody>
               ${rows.map(u=>`
                 <tr>
-                  <td style="white-space:nowrap"><div style="display:flex;align-items:center;gap:8px"><span class="green-badge sm solid" style="width:28px;height:28px;font-size:10.5px">${initials(u.name)}</span><strong>${esc(u.name)}</strong></div></td>
+                  <td><div style="display:flex;align-items:center;gap:8px"><span class="green-badge sm solid" style="width:28px;height:28px;font-size:10.5px">${initials(u.name)}</span><strong>${esc(u.name)}</strong></div></td>
                   <td><span class="pill ${u.role==='supervisor'?'forest':'lime'}">${roleName(u.role)}</span></td>
                   <td>${esc(dept(u.dept))}</td>
                   <td>${u.supervisor?esc(user(u.supervisor)?.name||'—'):'—'}</td>
@@ -1074,7 +1350,7 @@ const pages={
     let acts=db.activities.filter(a=>current.role==='employee'?a.userId===current.id:current.role==='supervisor'?teamForSupervisor(current.id).some(e=>e.id===a.userId):true).sort((a,b)=>b.created-a.created);
     return `
       <div class="page-head">
-        <div><h2>Activity Updates</h2><p>Real-time work reports, live camera captures, and checkpoints.</p></div>
+        <div><h2>Activity Updates</h2><p>Real-time work reports, live camera captures, and GNSS checkpoints.</p></div>
         ${current.role==='employee'?`<button class="btn primary" onclick="openActivity()">${ico('camera')} New Update</button>`:''}
       </div>
       <div class="panel"><div class="panel-body">${acts.length?acts.map(activityCard).join(''):'<div class="empty">No updates available.</div>'}</div></div>
@@ -1086,52 +1362,33 @@ const pages={
     let todayStr=new Date().toDateString();
     return `
       <div class="page-head">
-        <div><h2>Attendance & Photo Verification</h2><p>Timestamped Time In & Time Out records with live camera & GPS proof.</p></div>
+        <div><h2>Attendance & GNSS Photo Verification</h2><p>Verified live photo documentation, full-precision coordinates, GPS fix timestamps, and action timestamps.</p></div>
         ${current.role==='employee'?attendanceActions():''}
       </div>
       <div class="panel">
         <div class="panel-head">
-          <h3><span class="green-badge sm solid">${ico('shield-check')}</span> ${current.role==='employee'?'My Verified Time-In Record':'Team Verified Attendance Today'}</h3>
-          <span class="pill forest">${fmtDateShort(Date.now())}</span>
+          <h3><span class="green-badge sm solid">${ico('shield-check')}</span> ${current.role==='employee'?'My Verified Shift Record':'Team Attendance & GNSS Verification'}</h3>
+          <span class="pill forest">${new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</span>
         </div>
         <div class="table-wrap">
           <table class="tbl">
-            <thead>
-              <tr>
-                <th>Employee</th>
-                <th>Time In (Timestamp & Location)</th>
-                <th>Time Out (Timestamp & Location)</th>
-                <th>Photo Proof</th>
-                <th>Status</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Employee</th><th>Time In (Action, GNSS Fix & Location)</th><th>Time Out (Action, GNSS Fix & Location)</th><th>Status</th><th>Proof</th></tr></thead>
             <tbody>
               ${people.map(e=>{
                 let rec=db.attendance.filter(a=>a.userId===e.id&&a.date===todayStr);
                 let inn=rec.find(a=>a.type==='in'),out=rec.find(a=>a.type==='out');
                 return `
                   <tr>
-                    <td style="white-space:nowrap">
+                    <td>
                       <div style="display:flex;align-items:center;gap:8px">
                         <span class="green-badge sm solid" style="width:28px;height:28px;font-size:10.5px">${initials(e.name)}</span>
-                        <div>
-                          <strong style="display:block">${esc(e.name)}</strong>
-                          <span class="small muted">${esc(dept(e.dept))}</span>
-                        </div>
+                        <div><strong>${esc(e.name)}</strong><div class="small muted">${esc(dept(e.dept))}</div></div>
                       </div>
                     </td>
-                    <td>${renderAttCell(inn)}</td>
-                    <td>${renderAttCell(out)}</td>
-                    <td>
-                      <div style="display:flex;align-items:center;gap:6px">
-                        ${inn?.photo?`<img class="proof-thumb" src="${inn.photo}" alt="Time In Proof" title="View Time In Proof" style="cursor:pointer" onclick="viewAttendanceProof('${e.id}','${esc(todayStr)}')">`:''}
-                        ${out?.photo?`<img class="proof-thumb" src="${out.photo}" alt="Time Out Proof" title="View Time Out Proof" style="cursor:pointer" onclick="viewAttendanceProof('${e.id}','${esc(todayStr)}')">`:''}
-                        ${(inn||out)?`<button class="btn subtle" style="padding:5px 10px;font-size:11px" onclick="viewAttendanceProof('${e.id}','${esc(todayStr)}')">${ico('eye')} Proof</button>`:'<span class="small muted">—</span>'}
-                      </div>
-                    </td>
-                    <td style="white-space:nowrap">
-                      <span class="pill ${out?'forest':inn?'green':''}">${out?'Timed Out':inn?'Timed In':'No Time In'}</span>
-                    </td>
+                    <td>${renderAttendanceStamp(inn)}</td>
+                    <td>${renderAttendanceStamp(out)}</td>
+                    <td><span class="pill ${inn&&!out?'green':''}">${out?'Timed Out':inn?'Timed In':'No Time In'}</span></td>
+                    <td>${(inn||out)?`<button class="btn subtle" style="padding:6px 11px;font-size:11.5px" onclick="viewAttendanceProof('${e.id}')">${ico('eye')} Proof</button>`:'<span class="small muted">—</span>'}</td>
                   </tr>
                 `;
               }).join('')}
@@ -1169,7 +1426,7 @@ const pages={
 
   settings(){
     return `
-      <div class="page-head"><div><h2>Company Settings</h2><p>Configure organization name and headquarters GPS anchor.</p></div></div>
+      <div class="page-head"><div><h2>Company Settings</h2><p>Configure organization name and headquarters GNSS anchor.</p></div></div>
       <div class="panel">
         <div class="panel-head"><h3><span class="green-badge sm solid">${ico('settings')}</span> Organization & Headquarters</h3></div>
         <div class="panel-body">
@@ -1189,50 +1446,59 @@ const pages={
   }
 };
 
-function renderAttCell(entry){
-  if(!entry)return '<span class="small muted">Not recorded</span>';
-  let locText=entry.location?.address||'Location unavailable';
-  let coordsText=(typeof entry.location?.lat==='number')
-    ? `${entry.location.lat.toFixed(5)}, ${entry.location.lng.toFixed(5)}${entry.location.accuracy?` (±${Math.round(entry.location.accuracy)}m)`:''}`
-    : '';
+function renderAttendanceStamp(rec){
+  if(!rec)return '<span class="small muted">—</span>';
+  let loc=rec.location;
+  let cls=loc?classifyAccuracy(loc.accuracy):classifyAccuracy(null);
+  let acc=loc&&typeof loc.accuracy==='number'?`±${Math.round(loc.accuracy)}m`:'';
+  let badgeClass=cls.rank>=3?'':cls.rank===2?'warn':'bad';
+  let gpsTimeStr=loc?.acquiredAt?fmtTime(loc.acquiredAt):fmtTime(rec.time);
   return `
-    <div class="att-cell">
-      <span class="att-ts">${fmtDate(entry.time)}</span>
-      <span class="att-loc">${ico('map-pin')}<span>${esc(locText)}</span></span>
-      ${coordsText?`<span class="att-coords">${coordsText}</span>`:''}
+    <div class="att-cell-stack">
+      <strong>Action: ${fmtTime(rec.time)} · <span class="small muted">${new Date(rec.time).toLocaleDateString('en-PH')}</span></strong>
+      ${loc?`<div class="att-loc-line">${ico('map-pin')}<span>${esc(loc.address||fmtCoordPair(loc.lat,loc.lng,8))}</span></div>`:''}
+      ${loc?`<span class="att-acc-badge ${badgeClass}">${fmtCoordPair(loc.lat,loc.lng,8)} · ${cls.tier} (${acc}) · Fix ${gpsTimeStr}</span>`:''}
     </div>
   `;
 }
 
-function myTodaySummaryCard(){
+function viewAttendanceProof(userId){
+  let emp=user(userId)||{name:'Employee'};
   let todayStr=new Date().toDateString();
-  let rec=db.attendance.filter(a=>a.userId===current.id&&a.date===todayStr);
+  let rec=db.attendance.filter(a=>a.userId===userId&&a.date===todayStr);
   let inn=rec.find(a=>a.type==='in'),out=rec.find(a=>a.type==='out');
-  return `
-    <div style="display:grid;gap:10px">
-      ${attendanceActions()}
-      ${inn?`
-        <div class="list-row" style="margin-bottom:0">
-          <span class="green-badge sm solid">${ico('log-in')}</span>
-          <div class="list-main">
-            <strong>Time In: ${fmtDate(inn.time)}</strong>
-            <span>${esc(inn.location?.address||'GPS verified')}</span>
-          </div>
-          ${inn.photo?`<button class="btn subtle" style="padding:5px 9px;font-size:11px" onclick="viewAttendanceProof('${current.id}','${esc(todayStr)}')">${ico('camera')} View</button>`:''}
+
+  const cardHtml=(label,item)=>{
+    if(!item)return `<div class="proof-card"><strong>${label}</strong><div class="small muted" style="margin-top:6px">Not recorded yet.</div></div>`;
+    let loc=item.location;
+    let cls=loc?classifyAccuracy(loc.accuracy):classifyAccuracy(null);
+    return `
+      <div class="proof-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+          <strong>${label}</strong>
+          <span class="pill ${cls.pill}">${ico('shield-check')} ${cls.tier}</span>
         </div>
-      `:''}
-      ${out?`
-        <div class="list-row" style="margin-bottom:0">
-          <span class="green-badge sm solid">${ico('log-out')}</span>
-          <div class="list-main">
-            <strong>Time Out: ${fmtDate(out.time)}</strong>
-            <span>${esc(out.location?.address||'GPS verified')}</span>
+        <div class="small" style="font-weight:750;margin-top:4px;color:var(--olive-deep)">Action Time: ${fmtDate(item.time)}</div>
+        ${item.photo?`<img src="${item.photo}" alt="${label} live photo">`:'<div class="small muted" style="margin:8px 0">No photo attached.</div>'}
+        ${loc?`
+          <div class="att-loc-line" style="margin-top:4px">${ico('map-pin')}<span><strong>${esc(loc.address||'GNSS Coordinates')}</strong></span></div>
+          <div class="gps-coords-tag">${fmtCoordPair(loc.lat,loc.lng,8)}</div>
+          <div class="proof-meta-list">
+            <div>Accuracy: <strong>±${Math.round(loc.accuracy)}m</strong> (${cls.tier} · ${loc.verified?'Verified':'Degraded'})</div>
+            <div>GNSS Fix Time: <strong>${fmtDate(loc.acquiredAt||item.time)}</strong></div>
+            <div>Source: <strong>${esc(loc.source||'browser GNSS')}</strong></div>
           </div>
-          ${out.photo?`<button class="btn subtle" style="padding:5px 9px;font-size:11px" onclick="viewAttendanceProof('${current.id}','${esc(todayStr)}')">${ico('camera')} View</button>`:''}
-        </div>
-      `:''}
+        `:''}
+      </div>
+    `;
+  };
+
+  modal(`Attendance Verification — ${esc(emp.name)}`,`
+    <div class="proof-grid">
+      ${cardHtml('TIME IN PROOF',inn)}
+      ${cardHtml('TIME OUT PROOF',out)}
     </div>
-  `;
+  `,`<button class="btn primary" onclick="closeModal()">Close</button>`);
 }
 
 function todayStatus(id){
@@ -1241,157 +1507,205 @@ function todayStatus(id){
 }
 function attendanceActions(){
   let status=todayStatus(current.id);
+  let todayStr=new Date().toDateString();
+  let rec=db.attendance.filter(a=>a.userId===current.id&&a.date===todayStr);
+  let inn=rec.find(a=>a.type==='in'),out=rec.find(a=>a.type==='out');
+
   return `
-    <div class="toolbar">
-      <span class="pill ${status==='Timed In'?'green':''}">${status}</span>
-      ${status==='No Time In'?`<button class="btn primary" onclick="openTimeLogModal('in')">${ico('camera')} Time In (Photo + GPS)</button>`:status==='Timed In'?`<button class="btn primary" onclick="openTimeLogModal('out')">${ico('camera')} Time Out (Photo + GPS)</button>`:''}
+    <div style="display:grid;gap:10px;width:100%">
+      <div class="toolbar">
+        <span class="pill ${status==='Timed In'?'green':''}">${status}</span>
+        ${status==='No Time In'?`<button class="btn primary" onclick="openClockModal('in')">${ico('camera')} Time In (Photo + GPS)</button>`:status==='Timed In'?`<button class="btn" onclick="openClockModal('out')">${ico('camera')} Time Out (Photo + GPS)</button>`:''}
+        ${(inn||out)?`<button class="btn subtle" onclick="viewAttendanceProof('${current.id}')">${ico('eye')} View Proof</button>`:''}
+      </div>
+      ${inn?`<div class="small muted"><strong>Time In:</strong> ${fmtTime(inn.time)} · ${fmtCoordPair(inn.location?.lat,inn.location?.lng,8)} (±${Math.round(inn.location?.accuracy||0)}m)</div>`:''}
+      ${out?`<div class="small muted"><strong>Time Out:</strong> ${fmtTime(out.time)} · ${fmtCoordPair(out.location?.lat,out.location?.lng,8)} (±${Math.round(out.location?.accuracy||0)}m)</div>`:''}
     </div>
   `;
 }
 
-/* =====================================================================
-   STRICT PHOTO + HIGH-ACCURACY GPS VERIFICATION FOR TIME IN & TIME OUT
-   ===================================================================== */
-function openTimeLogModal(type){
-  const label=type==='in'?'Time In':'Time Out';
+/* === MANDATORY PHOTO + HIGH-ACCURACY GNSS TIME-IN / TIME-OUT FLOW === */
+function openClockModal(type){
   if(type==='in'&&todayStatus(current.id)!=='No Time In'){toast('Already timed in today.');return}
-  if(type==='out'&&todayStatus(current.id)!=='Timed In'){toast('Time in first before timing out.');return}
+  if(type==='out'&&todayStatus(current.id)!=='Timed In'){toast('Time in first.');return}
 
+  activeClockModalType=type;
   capturedPhotoData=null;
-  lockedTimeLogGPS=null;
-  lockedCaptureTimestamp=null;
-  camFacing='user'; // Default to front selfie camera for identity verification
+  verifiedClockLoc=null;
+  verifiedPhotoTime=null;
 
-  modal(`Verified ${label} — Photo & GPS Required`,`
+  const title=type==='in'?'Verify Time In (Live Photo + GNSS)':'Verify Time Out (Live Photo + GNSS)';
+  const submitLabel=type==='in'?'Confirm Time In':'Confirm Time Out';
+
+  modal(title,`
     <div class="field" style="margin-top:0">
-      <label>Step 1 · High-Accuracy GPS Location Lock</label>
-      <div class="gps-lock-card" id="gpsLockCard">
-        <span class="green-badge sm solid" id="gpsLockIcon">${ico('crosshair')}</span>
-        <div class="gps-lock-info">
-          <strong id="gpsLockTitle">Acquiring high-precision GPS fix…</strong>
-          <span id="gpsLockSub">Keep location services enabled. Sampling satellite coordinates…</span>
+      <label>1. Continuous GNSS Stabilization & Accuracy Gate (≤ ${GPS_CONFIG.ATTENDANCE_TARGET_ACCURACY_M}m Required)</label>
+      <div class="gps-verify-box" id="clockGpsBox">
+        <span class="green-badge sm solid">${ico('map-pin')}</span>
+        <div class="gps-verify-info">
+          <strong id="clockGpsStatus">Initializing continuous GNSS satellite acquisition…</strong>
+          <span id="clockGpsAddress">Collecting consecutive fixes until horizontal error ≤ ${GPS_CONFIG.ATTENDANCE_TARGET_ACCURACY_M}m</span>
+          <div id="clockGpsCoords" class="hidden"></div>
+          <div id="clockGpsTelemetry" class="gps-telemetry-grid hidden"></div>
         </div>
-        <button type="button" class="btn subtle" style="padding:6px 10px;font-size:11px" onclick="acquireAccurateGPS()">${ico('refresh-cw')} Refresh</button>
+        <button type="button" class="btn subtle" style="padding:6px 10px;font-size:11px" onclick="restartClockGps()">${ico('crosshair')} Re-acquire</button>
       </div>
     </div>
 
     <div class="field">
-      <label>Step 2 · Live Camera Photo Proof (Gallery Disabled)</label>
+      <label>2. Real-Time Camera Photo Documentation (Required)</label>
       <div class="cam-box" id="camBox">
         <div id="camPlaceholder" style="padding:20px 14px;text-align:center;color:#D5E2CE;font-size:12px">
-          Starting live camera for ${label} verification…
+          Gallery uploads are blocked. Tap <strong>Open Camera</strong> to capture a live timestamped photo.
         </div>
         <div id="camLiveWrap" class="hidden">
-          <span class="cam-badge"><span class="radar-dot red"></span>LIVE · ${label.toUpperCase()}</span>
+          <span class="cam-badge"><span class="radar-dot red"></span>LIVE · ${type==='in'?'TIME IN':'TIME OUT'}</span>
           <video id="camVideo" autoplay playsinline muted></video>
         </div>
-        <img id="camPreview" class="hidden" alt="Verified ${label} photo">
+        <img id="camPreview" class="hidden" alt="Verified live capture">
         <div class="cam-controls">
           <button type="button" class="btn subtle" id="btnStartCam" onclick="startCamera()">${ico('camera')} Open Camera</button>
-          <button type="button" class="btn primary hidden" id="btnSnapCam" onclick="captureTimeLogPhoto('${type}')">${ico('aperture')} Snap & Lock ${label}</button>
-          <button type="button" class="btn hidden" id="btnSwitchCam" onclick="switchCamera()">${ico('refresh-cw')} Flip Camera</button>
-          <button type="button" class="btn hidden" id="btnRetakeCam" onclick="retakeTimeLogPhoto()">${ico('rotate-ccw')} Retake Photo</button>
+          <button type="button" class="btn primary hidden" id="btnSnapCam" onclick="captureClockPhoto()">${ico('aperture')} Snap Photo</button>
+          <button type="button" class="btn hidden" id="btnSwitchCam" onclick="switchCamera()">${ico('refresh-cw')} Flip</button>
+          <button type="button" class="btn hidden" id="btnRetakeCam" onclick="retakeClockPhoto()">${ico('rotate-ccw')} Retake</button>
         </div>
       </div>
     </div>
 
     <div class="field" style="margin-bottom:0">
-      <label>Optional Shift Note</label>
-      <input id="timeLogNote" placeholder="e.g. Arrived at San Marcelino HQ / Starting field dispatch">
+      <label>3. Shift Note (Optional)</label>
+      <input id="clockNote" placeholder="${type==='in'?'e.g. Arrived at site / starting morning route':'e.g. Completed field tasks / signing off'}">
     </div>
   `,`
     <button class="btn" onclick="closeModal()">Cancel</button>
-    <button class="btn primary" id="btnConfirmTimeLog" disabled onclick="submitVerifiedTimeLog('${type}')">${ico('shield-check')} Confirm ${label}</button>
+    <button class="btn primary" id="btnConfirmClock" disabled onclick="submitVerifiedClock()">${ico('shield-check')} ${submitLabel}</button>
   `);
 
-  acquireAccurateGPS();
+  if(modalGpsUnsub){modalGpsUnsub();modalGpsUnsub=null}
+  modalGpsUnsub=gpsEngine.subscribe(updateClockModalGpsUI);
+  gpsEngine.startContinuousWatch();
+  updateClockModalGpsUI(gpsEngine);
   startCamera();
 }
 
-function acquireAccurateGPS(){
-  const card=$('#gpsLockCard'),title=$('#gpsLockTitle'),sub=$('#gpsLockSub');
-  if(!card)return;
-  if(!navigator.geolocation){
-    card.className='gps-lock-card error';
-    title.textContent='GPS Not Supported';
-    sub.textContent='Your browser does not support Geolocation.';
-    return;
-  }
-
-  if(gpsWatchLockId!==null){navigator.geolocation.clearWatch(gpsWatchLockId);gpsWatchLockId=null}
-  card.className='gps-lock-card';
-  title.textContent='Locking exact coordinates…';
-  sub.textContent='Filtering low-accuracy readings for maximum precision…';
-
-  let bestCoords=null;
-  let sampleCount=0;
-  const startedAt=Date.now();
-
-  const finalizeCoords=async (coords)=>{
-    if(gpsWatchLockId!==null){navigator.geolocation.clearWatch(gpsWatchLockId);gpsWatchLockId=null}
-    const lat=coords.latitude,lng=coords.longitude,acc=coords.accuracy;
-    if(title)title.textContent=`GPS Locked (±${Math.round(acc)}m) · Resolving address…`;
-    if(sub)sub.textContent=`Lat ${lat.toFixed(6)}, Lng ${lng.toFixed(6)}`;
-
-    const address=await reverseAddress(lat,lng);
-    lockedTimeLogGPS={
-      lat,
-      lng,
-      accuracy:acc,
-      address,
-      lockedAt:Date.now()
-    };
-
-    if($('#gpsLockCard')){
-      $('#gpsLockCard').className='gps-lock-card locked';
-      $('#gpsLockTitle').textContent=`Verified Location (±${Math.round(acc)}m accuracy)`;
-      $('#gpsLockSub').textContent=`${address} (${lat.toFixed(6)}, ${lng.toFixed(6)})`;
-    }
-    updateTimeLogSubmitState();
-  };
-
-  gpsWatchLockId=navigator.geolocation.watchPosition(
-    pos=>{
-      sampleCount++;
-      const c=pos.coords;
-      if(!bestCoords||c.accuracy<bestCoords.accuracy){
-        bestCoords=c;
-      }
-      if(title)title.textContent=`Refining GPS fix… (±${Math.round(bestCoords.accuracy)}m)`;
-      // Lock immediately once accuracy <= 35m or after 3 samples / 5 seconds
-      if(bestCoords.accuracy<=35||sampleCount>=3||(Date.now()-startedAt)>5000){
-        finalizeCoords(bestCoords);
-      }
-    },
-    err=>{
-      if(bestCoords){finalizeCoords(bestCoords);return}
-      if($('#gpsLockCard')){
-        $('#gpsLockCard').className='gps-lock-card error';
-        $('#gpsLockTitle').textContent='Location Permission Required';
-        $('#gpsLockSub').textContent=err.code===1
-          ? 'Allow Location access in Safari/Browser Settings, then tap Refresh.'
-          : 'Unable to get GPS signal. Move near an open area and tap Refresh.';
-      }
-      updateTimeLogSubmitState();
-    },
-    {enableHighAccuracy:true,maximumAge:0,timeout:15000}
-  );
+function restartClockGps(){
+  gpsEngine.stopContinuousWatch();
+  gpsEngine.bestReading=null;
+  gpsEngine.startContinuousWatch();
+  updateClockModalGpsUI(gpsEngine);
+  toast('Restarted GNSS satellite acquisition');
 }
 
-function captureTimeLogPhoto(type){
-  if(!lockedTimeLogGPS){
-    toast('Wait for GPS location lock before snapping your photo.');
+function updateClockModalGpsUI(engine){
+  const box=$('#clockGpsBox'),st=$('#clockGpsStatus'),addrEl=$('#clockGpsAddress'),coordEl=$('#clockGpsCoords'),telEl=$('#clockGpsTelemetry');
+  if(!st||!box)return;
+
+  if(engine.signalState==='error'&&!engine.getFreshestAny(GPS_CONFIG.STALE_THRESHOLD_MS)){
+    const err=engine.lastError;
+    box.classList.remove('warn');
+    box.classList.add('error');
+    st.textContent=err?.code===1?'Location Permission Denied':!window.isSecureContext?'HTTPS Required for GNSS':'GNSS Signal Unavailable';
+    addrEl.textContent=err?.code===1
+      ?'Allow Location access in Safari/Chrome settings and tap Re-acquire.'
+      :'Move to an open area with clear sky view and ensure Location Services are enabled.';
+    coordEl.classList.add('hidden');
+    telEl.classList.add('hidden');
+    updateClockSubmitState();
     return;
   }
+
+  // Always check the freshest valid reading in the continuous buffer
+  const candidate=engine.getFreshestAny(GPS_CONFIG.STALE_THRESHOLD_MS);
+  if(!candidate){
+    box.classList.remove('error','warn');
+    st.textContent=`Acquiring GNSS satellite lock… (${engine.sampleCount} sample${engine.sampleCount===1?'':'s'})`;
+    addrEl.textContent=`Waiting for fresh fix ≤ ${GPS_CONFIG.ATTENDANCE_TARGET_ACCURACY_M}m`;
+    coordEl.classList.add('hidden');
+    telEl.classList.add('hidden');
+    updateClockSubmitState();
+    return;
+  }
+
+  const cls=classifyAccuracy(candidate.accuracy);
+  const ageSec=Math.max(0,Math.round((Date.now()-candidate.acquiredAt)/1000));
+
+  coordEl.className='gps-coords-tag';
+  coordEl.textContent=`${fmtCoordPair(candidate.lat,candidate.lng,8)}`;
+
+  telEl.className='gps-telemetry-grid';
+  telEl.innerHTML=`
+    <div class="gps-tel-pill"><span>Accuracy</span>±${Math.round(candidate.accuracy)}m (${cls.tier})</div>
+    <div class="gps-tel-pill"><span>Fix Age</span>${ageSec}s ago</div>
+    <div class="gps-tel-pill"><span>Samples</span>${engine.buffer.length} buffered</div>
+  `;
+
+  if(cls.verified){
+    box.classList.remove('error','warn');
+    st.textContent=`GNSS Verified (${cls.tier} · ±${Math.round(candidate.accuracy)}m)${candidate.isStabilized?' · Stabilized':''}`;
+    addrEl.textContent=candidate.address||'Resolving street address in background…';
+    if(!candidate.address)resolveAddressForReading(candidate);
+  }else{
+    box.classList.remove('error');
+    box.classList.add('warn');
+    st.textContent=`Accuracy Too Low: ${cls.tier} (±${Math.round(candidate.accuracy)}m) — Refining…`;
+    addrEl.textContent=`Requires ≤ ${GPS_CONFIG.ATTENDANCE_TARGET_ACCURACY_M}m (${cls.desc}). Keep device steady in open sky.`;
+    if(!candidate.address)resolveAddressForReading(candidate);
+  }
+
+  updateClockSubmitState();
+}
+
+async function resolveAddressForReading(reading){
+  if(reading._resolving||reading.address)return;
+  reading._resolving=true;
+  const addr=await reverseAddress(reading.lat,reading.lng);
+  reading.address=addr;
+  reading._resolving=false;
+  // Refresh modal address display without altering coordinates
+  const addrEl=$('#clockGpsAddress');
+  if(addrEl&&activeClockModalType)addrEl.textContent=addr;
+}
+
+function updateClockSubmitState(){
+  const btn=$('#btnConfirmClock');
+  if(!btn)return;
+  const hasFreshVerifiedGps=Boolean(gpsEngine.getFreshestReliable(GPS_CONFIG.STALE_THRESHOLD_MS));
+  const hasLockedVerifiedPhoto=Boolean(capturedPhotoData&&verifiedClockLoc&&!camStream);
+  btn.disabled=!(hasFreshVerifiedGps||hasLockedVerifiedPhoto)||!capturedPhotoData||Boolean(camStream);
+}
+
+async function captureClockPhoto(){
   let video=$('#camVideo');
   if(!video||!video.videoWidth)return;
 
-  // Lock atomic timestamp at the exact moment the shutter is pressed
-  lockedCaptureTimestamp=Date.now();
-  const label=type==='in'?'TIME IN':'TIME OUT';
-  const timeStampStr=fmtDate(lockedCaptureTimestamp);
-  const coordStr=`${lockedTimeLogGPS.lat.toFixed(6)}, ${lockedTimeLogGPS.lng.toFixed(6)} (±${Math.round(lockedTimeLogGPS.accuracy)}m)`;
-  const addrStr=lockedTimeLogGPS.address;
+  // Select the freshest verified GNSS reading at the exact moment of photo capture
+  const freshFix=gpsEngine.getFreshestReliable(GPS_CONFIG.STALE_THRESHOLD_MS);
+  if(!freshFix){
+    const latest=gpsEngine.getFreshestAny(GPS_CONFIG.STALE_THRESHOLD_MS);
+    if(latest){
+      const cls=classifyAccuracy(latest.accuracy);
+      toast(`Cannot capture yet: GNSS accuracy is ±${Math.round(latest.accuracy)}m (${cls.tier}). Waiting for ≤ ${GPS_CONFIG.ATTENDANCE_TARGET_ACCURACY_M}m.`);
+    }else{
+      toast('Cannot capture yet: Waiting for fresh GNSS fix.');
+    }
+    return;
+  }
+
+  verifiedPhotoTime=Date.now();
+  // Resolve address if not yet cached, without mutating coordinates
+  const resolvedAddr=freshFix.address||await reverseAddress(freshFix.lat,freshFix.lng);
+  freshFix.address=resolvedAddr;
+
+  verifiedClockLoc={
+    lat:freshFix.lat,
+    lng:freshFix.lng,
+    accuracy:freshFix.accuracy,
+    acquiredAt:freshFix.acquiredAt,
+    classification:freshFix.classification,
+    verified:freshFix.verified,
+    source:freshFix.source,
+    address:resolvedAddr
+  };
 
   let canvas=document.createElement('canvas');
   canvas.width=video.videoWidth;
@@ -1399,27 +1713,31 @@ function captureTimeLogPhoto(type){
   let ctx=canvas.getContext('2d');
   ctx.drawImage(video,0,0,canvas.width,canvas.height);
 
-  // Burn multi-line tamper-evident telemetry watermark onto bottom of image
-  let pad=Math.max(12,Math.round(canvas.width*0.018));
-  let fontSize=Math.max(13,Math.round(canvas.width*0.02));
-  let lineH=Math.round(fontSize*1.35);
-  let barH=lineH*3+pad*1.6;
+  const labelType=activeClockModalType==='in'?'TIME IN':'TIME OUT';
+  const line1=`${labelType} · ${current.name} · Action: ${fmtDate(verifiedPhotoTime)}`;
+  const line2=`GNSS: ${fmtCoordPair(verifiedClockLoc.lat,verifiedClockLoc.lng,8)} · ±${Math.round(verifiedClockLoc.accuracy)}m (${verifiedClockLoc.classification}) · Fix: ${fmtTime(verifiedClockLoc.acquiredAt)}`;
+  const line3=`LOC: ${(verifiedClockLoc.address||'').slice(0,72)}`;
 
-  ctx.fillStyle='rgba(16, 26, 12, 0.86)';
-  ctx.fillRect(0,canvas.height-barH,canvas.width,barH);
+  let pad=Math.max(10,Math.round(canvas.width*0.015));
+  let fontSize=Math.max(12,Math.round(canvas.width*0.018));
+  let boxH=fontSize*3.9+pad*1.8;
 
-  ctx.font=`800 ${fontSize}px -apple-system,BlinkMacSystemFont,sans-serif`;
+  ctx.fillStyle='rgba(20, 32, 16, 0.88)';
+  ctx.fillRect(pad,canvas.height-boxH-pad,canvas.width-pad*2,boxH);
+
+  ctx.font=`800 ${fontSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
   ctx.fillStyle='#A3E635';
-  ctx.fillText(`${label} · ${current.name.toUpperCase()} · ${timeStampStr}`,pad,canvas.height-barH+pad+fontSize*0.8);
+  ctx.fillText(line1,pad*1.8,canvas.height-boxH+fontSize*0.2);
 
-  ctx.font=`600 ${Math.round(fontSize*0.92)}px -apple-system,BlinkMacSystemFont,sans-serif`;
-  ctx.fillStyle='#FFFFFF';
-  ctx.fillText(`LOC: ${addrStr.slice(0,68)}`,pad,canvas.height-barH+pad+lineH+fontSize*0.8);
+  ctx.font=`700 ${Math.round(fontSize*0.86)}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  ctx.fillStyle='#ECFCCB';
+  ctx.fillText(line2,pad*1.8,canvas.height-boxH+fontSize*1.45);
 
-  ctx.fillStyle='#D9F99D';
-  ctx.fillText(`GPS: ${coordStr}`,pad,canvas.height-barH+pad+lineH*2+fontSize*0.8);
+  ctx.font=`600 ${Math.round(fontSize*0.82)}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  ctx.fillStyle='#D5E2CE';
+  ctx.fillText(line3,pad*1.8,canvas.height-pad*1.2);
 
-  capturedPhotoData=canvas.toDataURL('image/jpeg',0.82);
+  capturedPhotoData=canvas.toDataURL('image/jpeg',0.88);
   stopCamera();
 
   let prev=$('#camPreview');
@@ -1429,131 +1747,113 @@ function captureTimeLogPhoto(type){
   $('#btnSnapCam').classList.add('hidden');
   $('#btnSwitchCam').classList.add('hidden');
   $('#btnRetakeCam').classList.remove('hidden');
-  updateTimeLogSubmitState();
-  toast(`${label} photo & GPS timestamp locked`);
+  updateClockSubmitState();
+  toast(`${labelType} photo stamped with exact GNSS (${fmtCoordPair(verifiedClockLoc.lat,verifiedClockLoc.lng,6)})`);
 }
 
-function retakeTimeLogPhoto(){
+function retakeClockPhoto(){
   capturedPhotoData=null;
-  lockedCaptureTimestamp=null;
-  updateTimeLogSubmitState();
+  verifiedPhotoTime=null;
+  verifiedClockLoc=null;
+  updateClockSubmitState();
   startCamera();
 }
 
-function updateTimeLogSubmitState(){
-  let btn=$('#btnConfirmTimeLog');
-  if(!btn)return;
-  btn.disabled=!(capturedPhotoData&&lockedTimeLogGPS&&lockedCaptureTimestamp);
-}
+async function submitVerifiedClock(){
+  if(!capturedPhotoData||camStream){toast('Capture a live photo first.');return}
+  if(!verifiedClockLoc){toast('Verified GNSS lock is required.');return}
 
-function submitVerifiedTimeLog(type){
-  if(!capturedPhotoData||!lockedTimeLogGPS||!lockedCaptureTimestamp){
-    toast('Both live photo and verified GPS lock are required.');
+  // Re-validate freshness at confirmation time
+  const now=Date.now();
+  const latestFresh=gpsEngine.getFreshestReliable(GPS_CONFIG.STALE_THRESHOLD_MS);
+  if(!latestFresh&&(now-verifiedClockLoc.acquiredAt)>60000){
+    toast('GNSS reading became outdated (>60s). Please retake photo with a fresh GNSS lock.');
     return;
   }
-  const date=new Date(lockedCaptureTimestamp).toDateString();
-  const label=type==='in'?'Time In':'Time Out';
-  const note=$('#timeLogNote')?.value.trim();
 
-  if(type==='in'&&todayStatus(current.id)!=='No Time In'){toast('Already timed in today.');return}
-  if(type==='out'&&todayStatus(current.id)!=='Timed In'){toast('Time in first.');return}
+  // Keep photo-embedded coordinates & saved attendance coordinates 100% synchronized
+  const finalLoc={
+    ...verifiedClockLoc,
+    freshnessMs:Math.max(0,now-verifiedClockLoc.acquiredAt)
+  };
 
-  const record={
-    id:'att'+lockedCaptureTimestamp,
+  const type=activeClockModalType;
+  const actionTimestamp=now;
+  const dateStr=new Date(actionTimestamp).toDateString();
+  const note=($('#clockNote')?.value||'').trim();
+  const labelText=type==='in'?'TIME IN':'TIME OUT';
+
+  db.attendance.push({
     userId:current.id,
     type,
-    time:lockedCaptureTimestamp,
-    date,
+    time:actionTimestamp,
+    date:dateStr,
+    location:finalLoc,
     photo:capturedPhotoData,
-    location:{...lockedTimeLogGPS},
-    note:note||''
-  };
-  db.attendance.push(record);
+    note
+  });
 
-  // Also log verified checkpoint to Activity Feed & OSRM Route Map
+  // Log synchronized checkpoint in Field Updates so OSRM Route Trace plots exact Time In / Time Out coordinates
   db.activities.unshift({
-    id:'act'+lockedCaptureTimestamp,
+    id:'att_'+actionTimestamp,
     userId:current.id,
-    text:`[VERIFIED ${label.toUpperCase()}]${note?' '+note:''}`,
-    created:lockedCaptureTimestamp,
-    location:{...lockedTimeLogGPS},
+    text:`[${labelText} VERIFIED · ±${Math.round(finalLoc.accuracy)}m ${finalLoc.classification}] ${note||(type==='in'?'Started shift with live photo & GNSS verification.':'Completed shift with live photo & GNSS verification.')}`,
+    created:actionTimestamp,
+    location:{...finalLoc},
     photo:capturedPhotoData
   });
 
-  // Update active GPS tracker pin
-  let oldLoc=db.locations.find(x=>x.userId===current.id);
-  let locEntry={
-    userId:current.id,
-    lat:lockedTimeLogGPS.lat,
-    lng:lockedTimeLogGPS.lng,
-    accuracy:lockedTimeLogGPS.accuracy,
-    address:lockedTimeLogGPS.address,
-    updated:lockedCaptureTimestamp,
-    active:type==='in',
-    source:'verified photo GPS'
-  };
-  if(oldLoc)Object.assign(oldLoc,locEntry);else db.locations.push(locEntry);
+  if(type==='in'){
+    let old=db.locations.find(x=>x.userId===current.id);
+    let item={
+      userId:current.id,
+      lat:finalLoc.lat,
+      lng:finalLoc.lng,
+      accuracy:finalLoc.accuracy,
+      classification:finalLoc.classification,
+      verified:finalLoc.verified,
+      address:finalLoc.address,
+      updated:finalLoc.acquiredAt,
+      active:true,
+      source:finalLoc.source
+    };
+    if(old)Object.assign(old,item);else db.locations.push(item);
+    startLiveTrackingSession(true);
+  }else{
+    stopLocation();
+  }
 
   capturedPhotoData=null;
-  lockedTimeLogGPS=null;
-  lockedCaptureTimestamp=null;
+  verifiedClockLoc=null;
+  verifiedPhotoTime=null;
   saveDB();
   closeModal();
   render();
-  toast(`${label} recorded at ${fmtTime(record.time)}`);
+  toast(`${labelText} verified at ${fmtTime(actionTimestamp)} (±${Math.round(finalLoc.accuracy)}m)`);
 }
 
-function viewAttendanceProof(userId,dateStr){
-  let u=user(userId)||{name:'Employee'};
-  let rec=db.attendance.filter(a=>a.userId===userId&&a.date===dateStr);
-  let inn=rec.find(a=>a.type==='in'),out=rec.find(a=>a.type==='out');
-
-  const renderCard=(title,entry)=>{
-    if(!entry)return `<div class="proof-card"><strong>${title}</strong><p class="small muted" style="margin:8px 0 0">No ${title.toLowerCase()} recorded yet.</p></div>`;
-    return `
-      <div class="proof-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
-          <strong>${title}</strong>
-          <span class="pill green">${fmtTime(entry.time)}</span>
-        </div>
-        ${entry.photo?`<img src="${entry.photo}" alt="${title} Photo Proof">`:'<div class="small muted" style="margin:10px 0">No photo attached</div>'}
-        <div class="small" style="font-weight:750;color:var(--ink)">${fmtDate(entry.time)}</div>
-        <div class="small muted" style="margin-top:3px">${esc(entry.location?.address||'Location unavailable')}</div>
-        ${typeof entry.location?.lat==='number'?`<div class="att-coords" style="margin-top:3px">Lat ${entry.location.lat.toFixed(6)}, Lng ${entry.location.lng.toFixed(6)} (±${Math.round(entry.location.accuracy||0)}m)</div>`:''}
-        ${entry.note?`<div class="small" style="margin-top:5px;font-style:italic">"${esc(entry.note)}"</div>`:''}
-      </div>
-    `;
-  };
-
-  modal(`${esc(u.name)} — Verified Attendance Proof`,`
-    <div class="proof-grid">
-      ${renderCard('Time In',inn)}
-      ${renderCard('Time Out',out)}
-    </div>
-  `,`
-    <button class="btn subtle" onclick="closeModal();selectedTraceUser='${userId}';go('${current.role==='employee'?'location':'map'}')">${ico('route')} View Route on Map</button>
-    <button class="btn primary" onclick="closeModal()">Close</button>
-  `);
-}
-
+/* === ACTIVITY CARD & MAP === */
 function activityCard(a){
   let u=user(a.userId)||{name:'Unknown'};
+  let loc=a.location;
+  let cls=loc&&typeof loc.accuracy==='number'?classifyAccuracy(loc.accuracy):null;
   return `
     <article class="activity">
       <div class="activity-top">
         <span class="green-badge sm solid">${initials(u.name)}</span>
         <div class="list-main"><strong>${esc(u.name)}</strong><span>${esc(dept(u.dept))} · ${ago(a.created)}</span></div>
         ${a.photo?`<span class="pill forest">${ico('camera')} Live</span>`:''}
-        ${a.location?`<span class="pill lime">${ico('map-pin')} GPS</span>`:''}
+        ${loc?`<span class="pill ${cls?cls.pill:'lime'}">${ico('map-pin')} ${cls?`${cls.tier} ±${Math.round(loc.accuracy)}m`:'GPS'}</span>`:''}
       </div>
       <div class="activity-text">${esc(a.text)}</div>
       ${a.photo?`<img class="activity-photo" src="${a.photo}" alt="Real-time camera capture">`:''}
       <div class="activity-meta">
         <div class="meta-stack">
           <span class="meta-item">${ico('clock')} <strong>${fmtDate(a.created)}</strong></span>
-          ${a.location?`<span class="meta-item">${ico('map-pin')} ${esc(a.location.address||'Coordinates attached')}</span>`:''}
+          ${loc?`<span class="meta-item">${ico('map-pin')} ${esc(loc.address||'GNSS Fix')}</span>`:''}
+          ${loc&&typeof loc.lat==='number'&&typeof loc.lng==='number'?`<span class="meta-item" style="font-variant-numeric:tabular-nums;color:var(--olive-deep)"><strong>${fmtCoordPair(loc.lat,loc.lng,8)}</strong>${loc.acquiredAt?` · Fix ${fmtTime(loc.acquiredAt)}`:''}</span>`:''}
         </div>
-        ${a.location?`<button class="btn subtle" style="padding:6px 11px;font-size:11.5px;flex:none" onclick="showTrace('${a.id}')">${ico('route')} Trace</button>`:''}
+        ${loc?`<button class="btn subtle" style="padding:6px 11px;font-size:11.5px;flex:none" onclick="showTrace('${a.id}')">${ico('route')} Trace</button>`:''}
       </div>
     </article>
   `;
@@ -1576,11 +1876,16 @@ function mapSideList(routeStats=null){
     <div class="small muted" style="font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Headquarters Anchor</div>
     <div class="list-row">
       <span class="green-badge sm solid">${ico('building-2')}</span>
-      <div class="list-main"><strong>${esc(db.office.name)}</strong><span>${esc(db.office.address)}</span></div>
+      <div class="list-main">
+        <strong>${esc(db.office.name)}</strong>
+        <span>${esc(db.office.address)}</span>
+        <span style="font-variant-numeric:tabular-nums;color:var(--olive-deep)">${fmtCoordPair(db.office.lat,db.office.lng,8)}</span>
+      </div>
     </div>
-    <div class="small muted" style="font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px">Personnel & Route Trace</div>
+    <div class="small muted" style="font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px">Personnel & Live GNSS Status</div>
     ${people.map(e=>{
       let l=db.locations.find(x=>x.userId===e.id&&x.active);
+      let st=getLiveLocationStatus(l);
       let d=l?distance(db.office.lat,db.office.lng,l.lat,l.lng):null;
       let actCount=db.activities.filter(a=>a.userId===e.id&&a.location).length;
       return `
@@ -1588,20 +1893,16 @@ function mapSideList(routeStats=null){
           <span class="green-badge sm solid">${initials(e.name)}</span>
           <div class="list-main">
             <strong>${esc(e.name)}</strong>
-            <span>${l?esc(l.address||'Resolving address…'):`<strong>${actCount}</strong> recorded checkpoint(s)`}</span>
+            ${l?`
+              <span style="font-variant-numeric:tabular-nums;color:var(--ink)">${fmtCoordPair(l.lat,l.lng,8)}</span>
+              <span>${esc(st.detail)} · ${d.toFixed(2)} km from HQ</span>
+            `:`<span><strong>${actCount}</strong> recorded checkpoint(s) · Offline</span>`}
           </div>
-          ${l?`<span class="pill green">${d.toFixed(2)} km</span>`:`<span class="pill lime">${ico('route')} Trace</span>`}
+          ${l?`<span class="pill ${st.pill}">${esc(st.label)}</span>`:`<span class="pill lime">${ico('route')} Trace</span>`}
         </div>
       `;
     }).join('')}
   `;
-}
-
-function distance(lat1,lon1,lat2,lon2){
-  const R=6371,toRad=x=>x*Math.PI/180;
-  let dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1);
-  let a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
 function changeTraceFilter(userId){
@@ -1647,7 +1948,7 @@ async function traceEmployeeHistory(){
 
   L.marker([db.office.lat,db.office.lng],{icon:pinIcon('office')})
     .addTo(roadLayer)
-    .bindPopup(`<b>${esc(db.office.name)}</b><br>${esc(db.office.address)}`);
+    .bindPopup(`<b>${esc(db.office.name)}</b><br>${esc(db.office.address)}<br><small>${fmtCoordPair(db.office.lat,db.office.lng,8)}</small>`);
   pathCoordinates.push([db.office.lat,db.office.lng]);
 
   const scoped=current.role==='employee'?[current]:scopedEmployees();
@@ -1655,11 +1956,34 @@ async function traceEmployeeHistory(){
 
   targetUsers.forEach(e=>{
     const l=db.locations.find(x=>x.userId===e.id&&x.active);
-    if(l){
+    if(l&&typeof l.lat==='number'&&typeof l.lng==='number'){
       const km=distance(db.office.lat,db.office.lng,l.lat,l.lng);
-      L.marker([l.lat,l.lng],{icon:pinIcon('employee')})
+      const st=getLiveLocationStatus(l);
+      const cls=classifyAccuracy(l.accuracy);
+      const isStale=st.state==='outdated';
+      const ringColor=isStale?'#737373':cls.verified?'#4B7A18':'#D97706';
+
+      // Honest horizontal accuracy radius circle in meters
+      if(typeof l.accuracy==='number'&&l.accuracy>0){
+        L.circle([l.lat,l.lng],{
+          radius:l.accuracy,
+          color:ringColor,
+          weight:1.5,
+          fillColor:ringColor,
+          fillOpacity:0.14
+        }).addTo(roadLayer);
+      }
+
+      L.marker([l.lat,l.lng],{icon:pinIcon(isStale?'stale':'employee')})
         .addTo(roadLayer)
-        .bindPopup(`<b>${esc(e.name)} (Live GPS)</b><br>${esc(l.address||'Address unavailable')}<br>${km.toFixed(2)} km from office`);
+        .bindPopup(`
+          <b>${esc(e.name)} (${esc(st.label)})</b><br>
+          <b>Coords:</b> ${fmtCoordPair(l.lat,l.lng,8)}<br>
+          <b>Accuracy:</b> ±${Math.round(l.accuracy||0)}m (${cls.tier})<br>
+          <b>Fix Time:</b> ${fmtDate(l.updated)} (${ago(l.updated)})<br>
+          ${esc(l.address||'')}<br>
+          <small>${km.toFixed(2)} km from HQ</small>
+        `);
       pathCoordinates.push([l.lat,l.lng]);
     }
   });
@@ -1673,6 +1997,7 @@ async function traceEmployeeHistory(){
       .sort((a,b)=>a.created-b.created);
 
     const resolvedActs=await Promise.all(empActs.map(async (act)=>{
+      // Always prefer actual numeric GNSS coordinates; never replace with geocoded address
       if(typeof act.location.lat==='number'&&typeof act.location.lng==='number'){
         return {act,pt:[act.location.lat,act.location.lng]};
       }
@@ -1699,19 +2024,27 @@ async function traceEmployeeHistory(){
       const isLast=i===validStops.length-1;
       const markerColor=isLast?'#2F4F0E':(isFirst?'#56861C':'#146C43');
       const borderColor=isLast?'#A3E635':'#ffffff';
+      const accInfo=typeof act.location.accuracy==='number'?` · ±${Math.round(act.location.accuracy)}m`:'';
 
       L.circleMarker(pt,{
         radius:isLast?10:7,color:borderColor,weight:2.5,fillColor:markerColor,fillOpacity:1
       })
         .addTo(roadLayer)
-        .bindPopup(`<b>${esc(emp.name)} · Stop #${i+1}</b><br>${esc(act.text)}<br><small>${esc(act.location.address||'')}<br>${fmtDate(act.created)}</small>`);
+        .bindPopup(`
+          <b>${esc(emp.name)} · Stop #${i+1}</b><br>
+          ${esc(act.text)}<br>
+          <b>Coords:</b> ${fmtCoordPair(pt[0],pt[1],8)}${accInfo}<br>
+          <small>${esc(act.location.address||'')}<br>${fmtDate(act.created)}</small>
+        `);
 
       empWaypoints.push(pt);
       pathCoordinates.push(pt);
     });
 
     const live=db.locations.find(x=>x.userId===emp.id&&x.active);
-    if(live&&empWaypoints.length>0)empWaypoints.push([live.lat,live.lng]);
+    if(live&&typeof live.lat==='number'&&typeof live.lng==='number'&&empWaypoints.length>0){
+      empWaypoints.push([live.lat,live.lng]);
+    }
 
     if(empWaypoints.length>=2){
       const coordString=empWaypoints.map(p=>`${p[1]},${p[0]}`).join(';');
@@ -1750,8 +2083,8 @@ async function traceEmployeeHistory(){
 
 function locateRoute(){
   if(!map||pathCoordinates.length===0)return;
-  if(pathCoordinates.length===1)map.setView(pathCoordinates[0],14);
-  else map.fitBounds(L.latLngBounds(pathCoordinates).pad(0.18),{maxZoom:15});
+  if(pathCoordinates.length===1)map.setView(pathCoordinates[0],16);
+  else map.fitBounds(L.latLngBounds(pathCoordinates).pad(0.18),{maxZoom:17});
 }
 
 function pinIcon(type){
@@ -1764,9 +2097,12 @@ function showTrace(id){
   selectedTraceUser=a.userId;
   go(current.role==='employee'?'location':'map');
   setTimeout(()=>{
-    if(map&&a.location.lat&&a.location.lng){
-      map.setView([a.location.lat,a.location.lng],15);
-      L.popup().setLatLng([a.location.lat,a.location.lng]).setContent(`<b>Activity Checkpoint</b><br>${esc(a.text)}<br><small>${esc(a.location.address||'')}</small>`).openOn(map);
+    if(map&&typeof a.location.lat==='number'&&typeof a.location.lng==='number'){
+      map.setView([a.location.lat,a.location.lng],17);
+      L.popup()
+        .setLatLng([a.location.lat,a.location.lng])
+        .setContent(`<b>Activity Checkpoint</b><br>${esc(a.text)}<br><b>Coords:</b> ${fmtCoordPair(a.location.lat,a.location.lng,8)}<br><small>${esc(a.location.address||'')}</small>`)
+        .openOn(map);
     }
   },450);
 }
@@ -1784,15 +2120,18 @@ function modal(title,body,foot){
 }
 function closeModal(){
   stopCamera();
-  if(gpsWatchLockId!==null&&navigator.geolocation){navigator.geolocation.clearWatch(gpsWatchLockId);gpsWatchLockId=null}
+  if(modalGpsUnsub){modalGpsUnsub();modalGpsUnsub=null}
+  if(activityModalGpsUnsub){activityModalGpsUnsub();activityModalGpsUnsub=null}
+  if(!locShare)gpsEngine.stopContinuousWatch();
+  activeClockModalType=null;
   $('#modalRoot').innerHTML='';
 }
 
 function openActivity(){
+  activeClockModalType=null;
   capturedPhotoData=null;
-  camFacing='environment';
   modal('Post Activity Update',`
-    <div class="field">
+    <div class="field" style="margin-top:0">
       <label>What are you working on?</label>
       <textarea id="actText" placeholder="Describe your site progress or field condition..."></textarea>
     </div>
@@ -1817,21 +2156,36 @@ function openActivity(){
       </div>
     </div>
     <label class="small" style="display:flex;align-items:center;gap:8px;font-weight:700;margin-top:6px">
-      <input id="actAttachLoc" type="checkbox" checked> Attach GPS coordinates for OSRM route tracing
+      <input id="actAttachLoc" type="checkbox" checked> Attach continuous GNSS coordinates for OSRM route tracing
     </label>
+    <div class="small muted" id="actLiveGpsReadout" style="margin-top:6px;font-variant-numeric:tabular-nums">Acquiring continuous GNSS telemetry…</div>
   `,`
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" onclick="submitActivity()">${ico('send')} Submit Update</button>
   `);
+
+  gpsEngine.startContinuousWatch();
+  if(activityModalGpsUnsub){activityModalGpsUnsub();activityModalGpsUnsub=null}
+  activityModalGpsUnsub=gpsEngine.subscribe(eng=>{
+    const el=$('#actLiveGpsReadout');
+    if(!el)return;
+    const f=eng.getFreshestAny(GPS_CONFIG.STALE_THRESHOLD_MS);
+    if(f){
+      const cls=classifyAccuracy(f.accuracy);
+      el.textContent=`GNSS Ready: ${fmtCoordPair(f.lat,f.lng,8)} · ±${Math.round(f.accuracy)}m (${cls.tier})`;
+    }else{
+      el.textContent='Acquiring GNSS satellite fix…';
+    }
+  });
 }
 
 async function startCamera(){
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast('Camera unavailable. Serve via localhost or HTTPS.');return}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast('Camera unavailable. Serve via HTTPS.');return}
   stopCamera();
   try{
     camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:camFacing},width:{ideal:1280},height:{ideal:720}},audio:false});
     let video=$('#camVideo');
-    if(!video)return;
+    if(!video){stopCamera();return}
     video.srcObject=camStream;
     $('#camPlaceholder')?.classList.add('hidden');
     $('#camPreview')?.classList.add('hidden');
@@ -1841,6 +2195,7 @@ async function startCamera(){
     $('#btnSwitchCam')?.classList.remove('hidden');
     $('#btnRetakeCam')?.classList.add('hidden');
     $('#btnRemoveCam')?.classList.add('hidden');
+    updateClockSubmitState();
   }catch(err){toast('Camera access denied or unavailable.')}
 }
 function switchCamera(){camFacing=camFacing==='environment'?'user':'environment';startCamera()}
@@ -1851,15 +2206,19 @@ function captureCamera(){
   canvas.width=video.videoWidth;canvas.height=video.videoHeight;
   let ctx=canvas.getContext('2d');
   ctx.drawImage(video,0,0,canvas.width,canvas.height);
-  let stamp=`LIVE · ${current.name} · ${fmtDate(Date.now())}`;
-  let pad=12,fontSize=Math.max(14,Math.round(canvas.width*0.022));
+
+  const freshFix=gpsEngine.getFreshestAny(GPS_CONFIG.STALE_THRESHOLD_MS);
+  const coordNote=freshFix?` · GNSS: ${fmtCoordPair(freshFix.lat,freshFix.lng,8)} (±${Math.round(freshFix.accuracy)}m)`:'';
+  let stamp=`LIVE · ${current.name} · ${fmtDate(Date.now())}${coordNote}`;
+  let pad=12,fontSize=Math.max(12,Math.round(canvas.width*0.017));
   ctx.font=`700 ${fontSize}px sans-serif`;
-  let textW=ctx.measureText(stamp).width;
-  ctx.fillStyle='rgba(24,36,20,0.82)';
+  let textW=Math.min(canvas.width-pad*3,ctx.measureText(stamp).width);
+  ctx.fillStyle='rgba(24,36,20,0.84)';
   ctx.fillRect(pad,canvas.height-fontSize-pad*2.2,textW+pad*1.6,fontSize+pad*1.2);
   ctx.fillStyle='#A3E635';
-  ctx.fillText(stamp,pad*1.8,canvas.height-pad*1.4);
-  capturedPhotoData=canvas.toDataURL('image/jpeg',0.82);
+  ctx.fillText(stamp,pad*1.8,canvas.height-pad*1.4,canvas.width-pad*3.4);
+
+  capturedPhotoData=canvas.toDataURL('image/jpeg',0.86);
   stopCamera();
   let prev=$('#camPreview');
   prev.src=capturedPhotoData;prev.classList.remove('hidden');
@@ -1883,52 +2242,218 @@ async function submitActivity(){
   let loc=null;
   if($('#actAttachLoc').checked){
     try{
-      let p=await getPosition(),c=p.coords;
-      loc={lat:c.latitude,lng:c.longitude,accuracy:c.accuracy,address:await reverseAddress(c.latitude,c.longitude)};
-    }catch(e){toast('GPS unavailable. Submitting without coordinates.')}
+      const fix=await getHighAccuracyPosition({targetAccuracy:25,maxWaitMs:12000});
+      const address=fix.address||await reverseAddress(fix.lat,fix.lng);
+      loc={
+        lat:fix.lat,
+        lng:fix.lng,
+        accuracy:fix.accuracy,
+        classification:fix.classification,
+        verified:fix.verified,
+        acquiredAt:fix.acquiredAt,
+        source:fix.source,
+        address
+      };
+    }catch(e){toast('GNSS unavailable. Submitting without coordinates.')}
   }
   db.activities.unshift({id:'a'+Date.now(),userId:current.id,text,created:Date.now(),location:loc,photo:capturedPhotoData});
   capturedPhotoData=null;saveDB();closeModal();render();toast('Activity update published');
 }
 
-function getPosition(){return new Promise((resolve,reject)=>{if(!navigator.geolocation)return reject(new Error('unsupported'));navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:18000,maximumAge:0})})}
+/* === REBUILT STABILIZED MULTI-SAMPLE GNSS ACQUISITION === */
+function getHighAccuracyPosition(options={}){
+  const targetAccuracy=options.targetAccuracy??GPS_CONFIG.ATTENDANCE_TARGET_ACCURACY_M;
+  const maxWaitMs=options.maxWaitMs??18000;
+
+  return new Promise((resolve,reject)=>{
+    if(!navigator.geolocation)return reject(new Error('Geolocation API unsupported'));
+
+    // Check if continuous engine already holds a very fresh stabilized fix
+    const existingFresh=gpsEngine.getFreshestReliable(8000);
+    if(existingFresh&&existingFresh.accuracy<=targetAccuracy&&existingFresh.isStabilized){
+      return resolve(existingFresh);
+    }
+
+    let bestSample=null;
+    let settled=false;
+    let sampleCount=0;
+
+    const cleanup=()=>{
+      if(localWatchId!==null)navigator.geolocation.clearWatch(localWatchId);
+      clearTimeout(maxTimer);
+    };
+
+    const finish=(sample)=>{
+      if(settled)return;
+      settled=true;
+      cleanup();
+      resolve(sample);
+    };
+
+    const localWatchId=navigator.geolocation.watchPosition(pos=>{
+      const evaluated=gpsEngine.ingest(pos,'GNSS high-accuracy stabilization');
+      if(!evaluated)return;
+      sampleCount++;
+
+      if(!bestSample||evaluated.accuracy<bestSample.accuracy||(evaluated.accuracy<=bestSample.accuracy*1.15&&evaluated.isStabilized)){
+        bestSample=evaluated;
+      }
+
+      // Resolve immediately once we have a verified, stabilized reading meeting target accuracy
+      if(evaluated.accuracy<=targetAccuracy&&(evaluated.isStabilized||sampleCount>=2)){
+        finish(evaluated);
+      }
+    },err=>{
+      gpsEngine.handleError(err);
+      if(!bestSample&&!settled){
+        settled=true;
+        cleanup();
+        reject(err);
+      }
+    },{enableHighAccuracy:true,maximumAge:0,timeout:maxWaitMs});
+
+    const maxTimer=setTimeout(()=>{
+      if(bestSample){
+        finish(bestSample);
+      }else if(!settled){
+        settled=true;
+        cleanup();
+        reject(new Error('GNSS stabilization timeout without valid reading'));
+      }
+    },maxWaitMs);
+  });
+}
+
 async function reverseAddress(lat,lng){
+  // Cache reverse geocode if within 12 meters of last resolved coordinate to avoid redundant network delays
+  if(lastGeocodeCoord&&lastGeocodeAddress&&distanceMeters(lastGeocodeCoord.lat,lastGeocodeCoord.lng,lat,lng)<12){
+    return lastGeocodeAddress;
+  }
   try{
     let r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
     if(!r.ok)throw 0;
     let j=await r.json(),a=j.address||{};
     let street=[a.house_number,a.road||a.pedestrian||a.footway].filter(Boolean).join(' ');
     let parts=[street,a.neighbourhood||a.suburb||a.quarter||a.village,a.barangay,a.city_district||a.town||a.city||a.municipality,a.state,a.country].filter(Boolean);
-    return parts.length?parts.join(', '):j.display_name||'Address unavailable';
-  }catch(e){return `GPS: ${lat.toFixed(6)}, ${lng.toFixed(6)}`}
+    const resolved=parts.length?parts.join(', '):j.display_name||fmtCoordPair(lat,lng,8);
+    lastGeocodeCoord={lat,lng};
+    lastGeocodeAddress=resolved;
+    return resolved;
+  }catch(e){return fmtCoordPair(lat,lng,8)}
 }
 
+/* === CONTINUOUS LIVE LOCATION TRACKING === */
 async function toggleShare(){
-  if(locShare){stopLocation();toast('Location sharing stopped');render();return}
-  if(!navigator.geolocation){toast('GPS not supported.');return}
-  try{
-    let p=await getPosition();
-    await saveCurrentLocation(p);
-    locShare=true;
-    watchId=navigator.geolocation.watchPosition(async pos=>{await saveCurrentLocation(pos)},err=>toast('GPS stopped: '+err.message),{enableHighAccuracy:true,maximumAge:10000,timeout:20000});
-    toast('Live location sharing started');render();
-  }catch(e){toast(e.code===1?'Location permission denied.':'Could not retrieve GPS.')}
+  if(locShare){stopLocation();toast('Live location sharing stopped');render();return}
+  if(!navigator.geolocation){toast('GNSS not supported by this browser.');return}
+  await startLiveTrackingSession(false);
+  render();
 }
 
-async function saveCurrentLocation(pos){
-  let c=pos.coords,old=db.locations.find(x=>x.userId===current.id);
-  let address=await reverseAddress(c.latitude,c.longitude);
-  let item={userId:current.id,lat:c.latitude,lng:c.longitude,accuracy:c.accuracy,address,updated:Date.now(),active:true,source:'browser GPS'};
+async function startLiveTrackingSession(silent=false){
+  if(!navigator.geolocation)return;
+  if(watchId!==null){
+    navigator.geolocation.clearWatch(watchId);
+    watchId=null;
+  }
+  locShare=true;
+  gpsEngine.startContinuousWatch();
+
+  // Mark existing record active immediately while awaiting fresh fix
+  let existing=db.locations.find(x=>x.userId===current.id);
+  if(existing){existing.active=true;saveDB()}
+
+  watchId=navigator.geolocation.watchPosition(
+    async pos=>{
+      const evaluated=gpsEngine.ingest(pos,'GNSS live watchPosition');
+      if(evaluated)await saveCurrentLocation(evaluated);
+    },
+    err=>{
+      gpsEngine.handleError(err);
+      if(err.code===1){
+        stopLocation();
+        toast('Location permission denied. Live sharing stopped.');
+      }else if(!silent){
+        toast('GNSS signal temporarily weak/unavailable. Retrying automatically…');
+      }
+    },
+    {enableHighAccuracy:true,maximumAge:0,timeout:25000}
+  );
+  if(!silent)toast('Continuous GNSS live tracking active');
+}
+
+async function saveCurrentLocation(evaluated){
+  if(!current||!evaluated)return;
+
+  // Reject coarse readings (>50m) from overwriting a reliable live location
+  if(evaluated.accuracy>GPS_CONFIG.LIVE_MAX_ACCEPTED_ACCURACY_M){
+    return;
+  }
+
+  let old=db.locations.find(x=>x.userId===current.id);
+  if(old&&old.active&&typeof old.lat==='number'&&typeof old.lng==='number'){
+    const movedM=distanceMeters(old.lat,old.lng,evaluated.lat,evaluated.lng);
+    const ageMs=evaluated.acquiredAt-(old.updated||0);
+    const oldAcc=typeof old.accuracy==='number'?old.accuracy:999;
+
+    // Prevent a worse reading from replacing a fresher, much more accurate reading unless employee actually moved
+    if(evaluated.accuracy>oldAcc*1.6&&movedM<oldAcc&&ageMs<GPS_CONFIG.LIVE_SIGNAL_LOSS_MS){
+      return;
+    }
+
+    // Avoid redundant database writes if employee has not meaningfully moved (<5m) and accuracy did not improve by >=3m
+    if(movedM<GPS_CONFIG.MIN_MEANINGFUL_MOVE_M&&(oldAcc-evaluated.accuracy)<3&&ageMs<20000){
+      return;
+    }
+  }
+
+  // Persist exact coordinates & accuracy immediately before reverse geocoding so address lookup never delays or alters coordinates
+  let item={
+    userId:current.id,
+    lat:evaluated.lat,
+    lng:evaluated.lng,
+    accuracy:evaluated.accuracy,
+    classification:evaluated.classification,
+    verified:evaluated.verified,
+    address:old?.address||fmtCoordPair(evaluated.lat,evaluated.lng,8),
+    updated:evaluated.acquiredAt,
+    active:true,
+    source:evaluated.source
+  };
   if(old)Object.assign(old,item);else db.locations.push(item);
   saveDB();
   if(activePage==='map'||activePage==='location')traceEmployeeHistory();
+
+  // Enrich human-readable address asynchronously without modifying lat/lng
+  const resolvedAddr=await reverseAddress(evaluated.lat,evaluated.lng);
+  const currentRecord=db.locations.find(x=>x.userId===current.id);
+  if(currentRecord&&currentRecord.updated===evaluated.acquiredAt){
+    currentRecord.address=resolvedAddr;
+    saveDB();
+    if(activePage==='map'||activePage==='location'){
+      const side=$('#mapSide');
+      if(side)side.innerHTML=mapSideList();
+    }
+  }
 }
 
 function stopLocation(){
   if(watchId!==null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId);
   watchId=null;locShare=false;
+  gpsEngine.stopContinuousWatch();
   let l=db.locations.find(x=>x.userId===current?.id);
   if(l){l.active=false;l.updated=Date.now();saveDB()}
+}
+
+function startLiveFreshnessMonitor(){
+  if(liveMonitorInterval)clearInterval(liveMonitorInterval);
+  liveMonitorInterval=setInterval(()=>{
+    if(!current)return;
+    if(activePage==='map'||activePage==='location'){
+      const side=$('#mapSide');
+      if(side)side.innerHTML=mapSideList();
+    }
+  },15000);
 }
 
 function openUser(id=null){
@@ -1996,7 +2521,7 @@ function resetOffice(){db.office={...OFFICE_DEFAULT};saveDB();render();toast('De
 
 initStaticIcons();
 setInterval(()=>{let el=$('#liveClock');if(el)el.textContent=fmtTime(Date.now())},1000);
-window.addEventListener('beforeunload',()=>{stopLocation();stopCamera()});
+window.addEventListener('beforeunload',()=>{stopCamera();if(watchId!==null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId)});
 </script>
 </body>
 </html>
