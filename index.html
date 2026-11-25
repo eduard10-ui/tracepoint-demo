@@ -34,7 +34,7 @@
   --shadow-xs:0 2px 6px rgba(20,38,14,.05);
   --shadow-sm:0 6px 16px rgba(20,38,14,.07);
   --shadow-md:0 12px 28px rgba(20,38,14,.10);
-  --shadow-lg:0 20px 50px rgba(18,32,12,.16);
+  --shadow-lg:0 22px 54px rgba(18,32,12,.18);
   --spring:cubic-bezier(.34,1.56,.64,1);
   --smooth:cubic-bezier(.22,1,.36,1);
   --pill:999px;
@@ -44,7 +44,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
   margin:0;
-  background:linear-gradient(180deg,#E0E9DB 0%,#E7EFE2 50%,#DEE7D8 100%);
+  background:radial-gradient(circle at 12% 8%,#D7E5CD 0%,transparent 42%),linear-gradient(180deg,#E0E9DB 0%,#E7EFE2 50%,#DEE7D8 100%);
   color:var(--ink);
   font-size:13.5px;
   line-height:1.35;
@@ -52,8 +52,12 @@ body{
   min-height:100vh;
 }
 button,input,select,textarea{font:inherit}
-button{cursor:pointer;transition:transform .2s var(--spring),background-color .16s var(--smooth),box-shadow .18s var(--smooth),border-color .16s}
-button:active{transform:scale(.96)}
+button{
+  cursor:pointer;
+  transition:transform .2s var(--spring),background-color .16s var(--smooth),box-shadow .2s var(--smooth),border-color .16s,filter .16s;
+}
+button:hover:not(:disabled){transform:translateY(-1px)}
+button:active:not(:disabled){transform:scale(.96)}
 button:disabled{opacity:.52;cursor:not-allowed;transform:none}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
 .ico{width:17px;height:17px;flex:none;display:block}
@@ -95,6 +99,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   0%{box-shadow:0 0 0 0 rgba(163,230,53,.65)}
   70%{box-shadow:0 0 0 7px rgba(163,230,53,0)}
   100%{box-shadow:0 0 0 0 rgba(163,230,53,0)}
+}
+@keyframes modalPopIn{
+  0%{opacity:0;transform:translateY(14px) scale(.97)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
 }
 .radar-dot{
   width:7px;height:7px;border-radius:50%;
@@ -153,6 +161,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .pill-input-wrap{
   display:flex;align-items:center;gap:10px;background:var(--surface-inner);
   border:1.5px solid var(--line);border-radius:var(--pill);padding:5px 14px 5px 7px;margin-bottom:12px;
+  transition:border-color .18s var(--smooth),box-shadow .18s var(--smooth),background-color .18s;
+}
+.pill-input-wrap:focus-within{
+  border-color:var(--olive);
+  background:var(--surface-pure);
+  box-shadow:0 0 0 3px rgba(75,122,24,.14);
 }
 .pill-input-wrap select{width:100%;border:0;background:transparent;padding:8px 0;font-weight:700;font-size:13px;color:var(--ink);outline:none}
 .login-meta-row{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--muted);margin:0 4px 16px;font-weight:600}
@@ -196,9 +210,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   width:100%;text-align:left;border:1px solid transparent;background:transparent;color:#3A4B34;
   padding:9px 11px;border-radius:14px;font-weight:700;display:flex;align-items:center;gap:10px;
 }
-.nav-icon-pill{width:30px;height:30px;border-radius:10px;background:var(--surface-deep);color:var(--olive-deep);display:grid;place-items:center}
+.nav-icon-pill{width:30px;height:30px;border-radius:10px;background:var(--surface-deep);color:var(--olive-deep);display:grid;place-items:center;transition:background-color .18s,color .18s}
 .nav-icon-pill .ico{width:15px;height:15px}
-.nav button:hover{background:var(--surface);border-color:var(--line-soft);color:var(--ink)}
+.nav button:hover{background:var(--surface);border-color:var(--line-soft);color:var(--ink);transform:translateX(2px)}
 .nav button.active{background:var(--surface-pure);color:var(--olive-deep);font-weight:800;border-color:var(--lime-border);box-shadow:var(--shadow-xs)}
 .nav button.active .nav-icon-pill{background:var(--olive);color:#fff}
 .sidebar-bottom{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:8px}
@@ -208,19 +222,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .main{margin-left:254px;min-width:0;padding-bottom:36px}
 .ios-top-banner{
   background:linear-gradient(148deg,#33520F 0%,#54831B 58%,#7AB02E 100%);
-  color:#fff;padding:14px 26px 18px;border-bottom-left-radius:26px;border-bottom-right-radius:26px;
+  color:#fff;padding:calc(14px + env(safe-area-inset-top)) 26px 18px;border-bottom-left-radius:26px;border-bottom-right-radius:26px;
   box-shadow:0 8px 22px rgba(51,82,15,.15);
 }
 .ios-top-bar{max-width:1340px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.ios-loc-pill{display:flex;align-items:center;gap:11px;min-width:0}
+.ios-loc-pill{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
 .top-avatar-pill{
   width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.18);
   border:1.5px solid rgba(255,255,255,.36);color:#fff;font-weight:850;font-size:13px;display:grid;place-items:center;flex:none;
 }
-.ios-loc-text{min-width:0}
-.ios-loc-label{font-size:11px;color:#ECFCCB;display:flex;align-items:center;gap:4px;font-weight:700;line-height:1.15}
+.ios-loc-text{min-width:0;flex:1}
+.ios-loc-label{font-size:11px;color:#ECFCCB;display:flex;align-items:center;gap:4px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ios-loc-label .ico{width:12px;height:12px;color:var(--lime-neon)}
-.ios-loc-main{font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em;margin-top:1px}
+.ios-loc-main{font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em;margin-top:2px}
 .ios-top-right{display:flex;align-items:center;gap:8px;flex:none}
 .clock-chip{
   background:rgba(22,38,10,.26);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.22);
@@ -277,7 +291,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;
   box-shadow:var(--shadow-xs);
 }
-.qa-tile:hover{border-color:var(--olive);background:var(--surface-pure);transform:translateY(-2px)}
+.qa-tile:hover{border-color:var(--olive);background:var(--surface-pure);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
 .qa-tile span{
   font-size:11.5px;font-weight:800;color:var(--ink);letter-spacing:-.015em;
   line-height:1.1;white-space:nowrap;
@@ -288,7 +302,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .checkpoint-mini-card{
   background:var(--surface);border:1px solid var(--line);border-radius:18px;
   padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-xs);
+  transition:border-color .18s,box-shadow .18s,transform .18s var(--smooth);
 }
+.checkpoint-mini-card:hover{border-color:var(--lime-border);box-shadow:var(--shadow-sm);transform:translateY(-1px)}
 .checkpoint-mini-info{min-width:0;flex:1}
 .checkpoint-mini-info strong{display:block;font-size:13px;font-weight:800;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .checkpoint-mini-info span{display:block;font-size:11.5px;font-weight:600;color:var(--muted);line-height:1.2;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -303,18 +319,23 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   border:1.5px solid var(--line);background:var(--surface-pure);border-radius:var(--pill);
   padding:8px 14px;font-weight:750;font-size:12.5px;color:var(--ink);line-height:1.1;
   display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;
+  box-shadow:0 1px 2px rgba(20,38,14,.04);
 }
 .btn .ico{width:15px;height:15px}
-.btn:hover{background:var(--surface-deep)}
+.btn:hover:not(:disabled){background:var(--surface-deep);border-color:var(--lime-border);box-shadow:var(--shadow-xs)}
 .btn.primary{
+  position:relative;overflow:hidden;
   background:linear-gradient(135deg,#3A5E12 0%,#639722 100%);
-  border-color:transparent;color:#fff;box-shadow:0 5px 14px rgba(58,94,18,.22);
+  border-color:transparent;color:#fff;box-shadow:0 5px 14px rgba(58,94,18,.22),inset 0 1px 0 rgba(255,255,255,.22);
 }
+.btn.primary:hover:not(:disabled){filter:brightness(1.05);box-shadow:0 8px 18px rgba(58,94,18,.28)}
 .btn.lime{
   background:var(--lime-neon);border-color:transparent;color:#142009;font-weight:850;
   box-shadow:0 5px 16px rgba(163,230,53,.28);
 }
+.btn.lime:hover:not(:disabled){filter:brightness(1.03);box-shadow:0 8px 20px rgba(163,230,53,.36)}
 .btn.subtle{background:var(--lime-soft);border-color:var(--lime-border);color:var(--olive-deep)}
+.btn.subtle:hover:not(:disabled){background:#D2E9B4;border-color:var(--olive)}
 .btn.danger{background:var(--red-soft);border-color:#F2B8B8;color:var(--red)}
 
 .pill{
@@ -325,6 +346,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .pill .ico{width:12px;height:12px}
 .pill.green{background:var(--green-soft);color:var(--green)}
 .pill.lime{background:var(--lime-soft);color:var(--olive-deep);border:1px solid var(--lime-border)}
+.pill.neutral{background:var(--surface-pure);color:var(--muted);border:1px solid var(--line)}
 .pill.orange{background:var(--orange-soft);color:var(--orange)}
 .pill.red{background:var(--red-soft);color:var(--red)}
 .pill.forest{background:var(--olive-deep);color:#ECFCCB}
@@ -334,7 +356,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px}
 .stat{
   border:1px solid var(--line);border-radius:20px;padding:14px 15px;box-shadow:var(--shadow-xs);
+  transition:transform .2s var(--smooth),box-shadow .2s var(--smooth);
 }
+.stat:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
 .stat:nth-child(1){background:linear-gradient(155deg,#F5F9F0 0%,#E5F1D8 100%)}
 .stat:nth-child(2){background:linear-gradient(155deg,#F2F8F3 0%,#DCF0E4 100%)}
 .stat:nth-child(3){background:linear-gradient(155deg,#F6F9EE 0%,#E9F2D4 100%)}
@@ -360,31 +384,205 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .page-head h2{font-size:20px;font-weight:900;letter-spacing:-.03em;margin:0;color:var(--ink);line-height:1.15}
 .page-head p{color:var(--muted);margin:2px 0 0;font-size:12.5px;font-weight:500;line-height:1.25}
 
-/* === LIST ROWS & ACTIVITY CARDS === */
+/* === ACTIVITY FILTER BAR === */
+.filter-bar{
+  background:linear-gradient(180deg,#EEF4E7 0%,#E5EFE0 100%);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:12px 14px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow-xs);
+  display:grid;
+  gap:10px;
+}
+.filter-bar-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.filter-chips{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.filter-chip{
+  border:1px solid var(--line);
+  background:var(--surface-pure);
+  color:var(--muted);
+  border-radius:var(--pill);
+  padding:6px 12px;
+  font-size:11.5px;
+  font-weight:750;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+.filter-chip:hover:not(:disabled){border-color:var(--olive);color:var(--ink)}
+.filter-chip.active{
+  background:var(--olive-deep);
+  border-color:var(--olive-deep);
+  color:#ECFCCB;
+  box-shadow:0 3px 9px rgba(46,78,13,.2);
+}
+.filter-controls-group{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.filter-control{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:var(--surface-pure);
+  border:1.5px solid var(--line);
+  border-radius:var(--pill);
+  padding:5px 12px 5px 10px;
+  transition:border-color .18s var(--smooth),box-shadow .18s var(--smooth);
+}
+.filter-control:focus-within{
+  border-color:var(--olive);
+  box-shadow:0 0 0 3px rgba(75,122,24,.14);
+}
+.filter-control .ico{width:14px;height:14px;color:var(--olive)}
+.filter-control select,.filter-control input[type="date"]{
+  border:0;
+  background:transparent;
+  color:var(--ink);
+  font-size:12px;
+  font-weight:750;
+  outline:none;
+  padding:2px 0;
+}
+
+/* === LIST ROWS & ACTIVITY CARDS (DESKTOP INTELLIGENT SPLIT + MOBILE STACK) === */
 .list-row{
   display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px;
   background:var(--surface-inner);border:1px solid var(--line-soft);border-radius:16px;
+  transition:border-color .18s,background-color .18s;
 }
+.list-row:hover{border-color:var(--lime-border);background:var(--surface-pure)}
 .list-row:last-child{margin-bottom:0}
 .list-main{min-width:0;flex:1}
-.list-main strong{display:block;font-size:13px;font-weight:800;line-height:1.2}
-.list-main span{display:block;color:var(--muted);font-size:11.5px;font-weight:600;line-height:1.25;margin-top:2px;overflow-wrap:anywhere}
+.list-main strong{display:block;font-size:13px;font-weight:800;line-height:1.2;word-break:normal;overflow-wrap:break-word}
+.list-main span{display:block;color:var(--muted);font-size:11.5px;font-weight:600;line-height:1.25;margin-top:2px;word-break:normal;overflow-wrap:break-word}
+
+/* Multi-column feed grid on wide desktop when cards have no photos or mixed updates */
+.activities-feed-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.dashboard-feed-stack{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
 
 .activity{
-  padding:13px 14px;margin-bottom:10px;background:var(--surface-inner);
-  border:1px solid var(--line-soft);border-radius:18px;
+  padding:13px 14px;
+  background:var(--surface-inner);
+  border:1px solid var(--line-soft);
+  border-radius:18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:border-color .2s var(--smooth),box-shadow .2s var(--smooth),transform .2s var(--smooth);
 }
-.activity:last-child{margin-bottom:0}
-.activity-top{display:flex;align-items:center;gap:10px}
-.activity-text{margin:8px 0;line-height:1.38;white-space:pre-wrap;font-size:13px;font-weight:500;color:var(--ink)}
-.activity-photo{width:100%;max-width:380px;border-radius:14px;border:1px solid var(--line);margin:4px 0 8px;display:block}
+.activity:hover{
+  border-color:var(--lime-border);
+  background:var(--surface-pure);
+  box-shadow:var(--shadow-xs);
+}
+.activity-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.activity-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto}
+
+/* Intelligent Desktop Side-by-Side Split inside Activity Card so there is zero wasted whitespace */
+.activity-body-split{
+  display:grid;
+  grid-template-columns:138px minmax(0,1fr);
+  gap:13px;
+  align-items:start;
+  margin:10px 0 8px;
+}
+.activity-body-split.no-photo{
+  grid-template-columns:1fr;
+}
+.activity-details-col{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.activity-text{
+  margin:0;
+  line-height:1.4;
+  white-space:pre-wrap;
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink);
+}
+
+/* === SQUARE 1:1 PHOTO BOX PREVIEW & TAP-TO-EXPAND === */
+.photo-box-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:1 / 1;
+  border-radius:14px;
+  overflow:hidden;
+  border:1.5px solid var(--line);
+  margin:0;
+  background:#1A2416;
+  cursor:pointer;
+  box-shadow:var(--shadow-xs);
+  transition:transform .2s var(--spring),box-shadow .2s var(--smooth),border-color .18s;
+}
+.photo-box-wrap:hover{
+  transform:translateY(-2px);
+  border-color:var(--olive);
+  box-shadow:var(--shadow-sm);
+}
+.photo-box-wrap:active{transform:scale(.98)}
+.activity-photo{
+  width:100%;
+  height:100%;
+  aspect-ratio:1 / 1;
+  object-fit:cover;
+  display:block;
+  margin:0;
+  border:0;
+  border-radius:0;
+}
+.photo-expand-chip{
+  position:absolute;
+  bottom:6px;
+  right:6px;
+  background:rgba(20,23,19,.82);
+  backdrop-filter:blur(6px);
+  color:#ECFCCB;
+  border:1px solid rgba(163,230,53,.38);
+  font-size:10px;
+  font-weight:800;
+  padding:3px 7px;
+  border-radius:var(--pill);
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  pointer-events:none;
+}
+.photo-expand-chip .ico{width:10px;height:10px;color:var(--lime-neon)}
+
 .activity-meta{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
   font-size:11px;font-weight:650;color:var(--muted);padding-top:8px;border-top:1px dashed var(--line);
 }
-.meta-stack{display:grid;gap:3px;min-width:0;flex:1}
-.meta-item{display:flex;align-items:center;gap:4px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.meta-item .ico{width:12px;height:12px;color:var(--olive)}
+.meta-stack{display:grid;gap:4px;min-width:0;flex:1}
+.meta-item{display:flex;align-items:center;gap:5px;line-height:1.25;min-width:0}
+.meta-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta-item .ico{width:12.5px;height:12.5px;color:var(--olive)}
 
 .dept-head-row{
   display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px;
@@ -416,21 +614,89 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .gps-tel-pill span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
 
-/* === ATTENDANCE PROOF CARDS & TABLE === */
-.att-cell-stack{display:grid;gap:3px;white-space:normal;min-width:215px;max-width:290px}
+/* === STRUCTURED GNSS ATTENDANCE TELEMETRY CARD (NO INTIMIDATING RED) === */
+.att-cell-stack{display:grid;gap:5px;white-space:normal;min-width:240px;max-width:320px}
 .att-cell-stack strong{font-size:12.5px;font-weight:850;color:var(--ink);line-height:1.15}
-.att-loc-line{display:flex;align-items:flex-start;gap:4px;font-size:11px;font-weight:600;color:var(--muted);line-height:1.2}
-.att-loc-line .ico{width:11px;height:11px;color:var(--olive);margin-top:1px}
-.att-acc-badge{
-  font-size:10px;font-weight:800;color:var(--olive-deep);background:var(--lime-soft);
-  padding:2px 6px;border-radius:6px;display:inline-block;width:fit-content;font-variant-numeric:tabular-nums;
+.att-loc-line{display:flex;align-items:flex-start;gap:5px;font-size:11px;font-weight:650;color:var(--muted);line-height:1.25}
+.att-loc-line .ico{width:12px;height:12px;color:var(--olive);margin-top:1px}
+.att-gnss-card{
+  background:var(--surface-pure);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:6px 9px;
+  display:grid;
+  gap:4px;
+  box-shadow:0 1px 3px rgba(20,38,14,.04);
 }
-.att-acc-badge.warn{background:var(--orange-soft);color:var(--orange)}
-.att-acc-badge.bad{background:var(--red-soft);color:var(--red)}
+.att-gnss-coord-row{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:11px;
+  font-weight:800;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.att-gnss-coord-row .ico{width:12px;height:12px;color:var(--olive)}
+.att-gnss-meta-row{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  flex-wrap:wrap;
+}
+.att-mini-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:2px 7px;
+  border-radius:var(--pill);
+  font-size:10px;
+  font-weight:750;
+  background:var(--surface-inner);
+  color:var(--muted);
+  border:1px solid var(--line-soft);
+  font-variant-numeric:tabular-nums;
+}
+.att-mini-chip .ico{width:10.5px;height:10.5px;color:var(--olive)}
+.att-mini-chip.verified{
+  background:var(--lime-soft);
+  color:var(--olive-deep);
+  border-color:var(--lime-border);
+}
+
 .proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
 .proof-card{background:var(--surface-inner);border:1px solid var(--line);border-radius:16px;padding:12px}
-.proof-card img{width:100%;border-radius:12px;border:1px solid var(--line);margin:8px 0;display:block}
+.proof-card .photo-box-wrap{max-width:100%;margin:8px 0}
 .proof-meta-list{display:grid;gap:4px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-size:11px;font-weight:650;color:var(--ink)}
+
+/* === FULL-RATIO ORIGINAL IMAGE LIGHTBOX MODAL === */
+.lightbox-backdrop{
+  position:fixed;inset:0;background:rgba(12,18,10,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  z-index:70;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:16px;
+}
+.lightbox-card{
+  width:min(860px,100%);max-height:92vh;background:var(--obsidian);color:#fff;
+  border:1px solid rgba(163,230,53,.32);border-radius:22px;overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.55);
+  animation:modalPopIn .24s var(--spring);
+}
+.lightbox-head{
+  padding:12px 16px;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.lightbox-head-title{min-width:0;flex:1}
+.lightbox-head-title strong{display:block;font-size:13.5px;font-weight:850;color:#ECFCCB;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lightbox-head-title span{display:block;font-size:11px;color:#A3B899;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lightbox-stage{
+  flex:1;min-height:0;background:#0B0F0A;display:grid;place-items:center;padding:10px;overflow:auto;
+}
+.lightbox-stage img{
+  width:auto;height:auto;max-width:100%;max-height:70vh;object-fit:contain;border-radius:10px;display:block;
+}
+.lightbox-foot{
+  padding:10px 16px;background:rgba(255,255,255,.05);border-top:1px solid rgba(255,255,255,.12);
+  font-size:11.5px;color:#D5E2CE;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+}
 
 /* === TABLES === */
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -447,7 +713,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .map-select{
   border:1.5px solid var(--line);background:var(--surface-pure);border-radius:var(--pill);
   padding:8px 13px;font-size:12px;font-weight:750;color:var(--ink);outline:none;flex:1;min-width:170px;
+  transition:border-color .18s,box-shadow .18s;
 }
+.map-select:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,122,24,.14)}
 .route-summary-banner{
   background:linear-gradient(135deg,#2F4F0E 0%,#4B7A18 100%);
   color:#fff;padding:11px 14px;border-radius:16px;margin-bottom:10px;
@@ -459,9 +727,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .map-box{height:480px;border-radius:0 0 22px 22px;overflow:hidden;position:relative;z-index:1}
 .map-side{max-height:480px;overflow:auto;background:var(--surface)}
 .map-note{
-  padding:9px 14px;background:var(--surface-deep);border-top:1px solid var(--line);
-  font-size:11px;color:var(--olive-deep);display:flex;align-items:center;gap:6px;font-weight:700;line-height:1.25;
+  padding:10px 14px;background:var(--surface-deep);border-top:1px solid var(--line);
+  font-size:11px;color:var(--olive-deep);display:flex;align-items:flex-start;gap:6px;font-weight:700;line-height:1.35;
 }
+.map-note .ico{margin-top:1px}
 .map-pin{
   width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
   background:var(--olive);border:2.5px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.28);
@@ -470,36 +739,111 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .map-pin.office{background:var(--olive-deep);border-color:var(--lime-neon)}
 .map-pin.stale{background:#737373;border-color:#E5E5E5}
 
-/* === FORMS & MODALS === */
-.field{display:grid;gap:5px;margin:12px 0}
-.field label{font-size:11px;color:var(--olive-deep);font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+/* === ELEVATED MODERN FORMS & MODALS === */
+.field{display:grid;gap:6px;margin:13px 0}
+.field label{font-size:11px;color:var(--olive-deep);font-weight:850;letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:5px}
 .field input,.field select,.field textarea{
-  width:100%;border:1.5px solid var(--line);border-radius:14px;padding:10px 13px;background:var(--surface-inner);color:var(--ink);font-weight:600;
+  width:100%;border:1.5px solid var(--line);border-radius:14px;padding:10px 13px;
+  background:var(--surface-pure);color:var(--ink);font-weight:650;
+  box-shadow:inset 0 1px 2px rgba(20,38,14,.04);
+  transition:border-color .18s var(--smooth),box-shadow .18s var(--smooth),background-color .18s;
+}
+.field input:hover,.field select:hover,.field textarea:hover{
+  border-color:var(--lime-border);
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--olive);
+  background:#fff;
+  box-shadow:0 0 0 3.5px rgba(75,122,24,.15),inset 0 1px 2px rgba(20,38,14,.03);
+  outline:none;
 }
 .field textarea{min-height:84px;resize:vertical}
-.modal-backdrop{position:fixed;inset:0;background:rgba(18,32,12,.56);backdrop-filter:blur(6px);z-index:40;display:grid;place-items:center;padding:14px}
-.modal{background:var(--surface);border-radius:24px;width:min(540px,100%);max-height:92vh;overflow:auto;box-shadow:var(--shadow-lg);border:1px solid var(--line)}
-.modal-head{padding:14px 18px;background:var(--surface-deep);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-.modal-head h3{margin:0;font-size:15.5px;font-weight:850}
-.modal-body{padding:15px 18px;background:var(--surface)}
-.modal-foot{padding:12px 18px;background:var(--surface-inner);border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:radial-gradient(circle at 50% 20%,rgba(46,78,13,.38),rgba(14,22,10,.68));
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:40;display:grid;place-items:center;padding:14px;
+}
+.modal{
+  background:var(--surface);
+  border-radius:26px;
+  width:min(540px,100%);
+  max-height:92vh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 28px 64px rgba(12,22,8,.34),0 0 0 1px rgba(163,230,53,.22);
+  border:1px solid var(--lime-border);
+  animation:modalPopIn .24s var(--spring);
+}
+.modal-head{
+  padding:16px 20px;
+  background:linear-gradient(135deg,#243B0B 0%,#3E6414 58%,#598A1F 100%);
+  color:#fff;
+  border-bottom:1px solid rgba(163,230,53,.28);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  position:relative;overflow:hidden;
+}
+.modal-head::after{
+  content:"";position:absolute;right:-24px;top:-28px;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(163,230,53,.25) 0%,transparent 70%);pointer-events:none;
+}
+.modal-head-left{display:flex;align-items:center;gap:11px;min-width:0;z-index:1}
+.modal-head-icon{
+  width:38px;height:38px;border-radius:12px;
+  background:rgba(163,230,53,.18);
+  border:1px solid rgba(163,230,53,.42);
+  color:var(--lime-neon);
+  display:grid;place-items:center;flex:none;
+}
+.modal-head-icon .ico{width:18px;height:18px}
+.modal-head-titles{min-width:0}
+.modal-head-eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--lime-neon);line-height:1.1;margin-bottom:2px;
+}
+.modal-head h3{
+  margin:0;font-size:16px;font-weight:850;color:#fff;letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.modal-close-btn{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.26);
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  display:grid;place-items:center;flex:none;z-index:1;
+}
+.modal-close-btn:hover:not(:disabled){background:rgba(255,255,255,.26);transform:rotate(90deg)}
+.modal-body{
+  padding:16px 20px;
+  background:linear-gradient(180deg,#F5F9F1 0%,#EEF4E8 100%);
+  overflow-y:auto;
+  flex:1;
+}
+.modal-foot{
+  padding:13px 20px;
+  background:var(--surface-deep);
+  border-top:1px solid var(--line);
+  display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;
+}
 
 /* === LIVE CAMERA BOX === */
-.cam-box{border:1.5px solid var(--line);border-radius:18px;background:#1A2416;overflow:hidden;position:relative}
+.cam-box{border:1.5px solid var(--line);border-radius:18px;background:#1A2416;overflow:hidden;position:relative;box-shadow:var(--shadow-xs)}
 .cam-box video,.cam-box img{width:100%;max-height:240px;object-fit:cover;display:block}
 .cam-controls{display:flex;gap:7px;padding:10px;background:var(--surface-deep);border-top:1px solid var(--line);flex-wrap:wrap;align-items:center}
 .cam-badge{position:absolute;top:10px;left:10px;background:rgba(24,36,20,.82);color:#fff;font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:var(--pill);display:inline-flex;align-items:center;gap:5px}
 
-.empty{padding:24px 12px;text-align:center;color:var(--muted);font-size:12.5px;font-weight:600}
+.empty{padding:28px 14px;text-align:center;color:var(--muted);font-size:12.5px;font-weight:650;background:var(--surface-inner);border:1px dashed var(--line);border-radius:16px}
 .hidden{display:none!important}
 .small{font-size:11.5px}
 .muted{color:var(--muted)}
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
 .toast{
-  position:fixed;bottom:84px;left:50%;transform:translateX(-50%);
+  position:fixed;bottom:calc(86px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
   background:var(--olive-deep);color:#fff;padding:10px 16px;border-radius:var(--pill);
-  z-index:60;box-shadow:var(--shadow-md);font-size:12px;font-weight:750;
+  z-index:80;box-shadow:var(--shadow-md);font-size:12px;font-weight:750;
   display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(163,230,53,.4);max-width:92vw;text-align:center;
 }
 
@@ -521,6 +865,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .ios-tabbar button.active .tab-icon-wrap{background:var(--olive);color:#fff;box-shadow:0 4px 10px rgba(75,122,24,.28)}
 .tab-icon-wrap{width:36px;height:30px;border-radius:10px;display:grid;place-items:center}
 
+@media(max-width:1040px){
+  .activities-feed-grid{grid-template-columns:1fr}
+}
 @media(max-width:960px){
   .sidebar{width:220px}
   .main{margin-left:220px}
@@ -532,11 +879,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 @media(max-width:720px){
   .sidebar{display:none}
-  .main{margin-left:0;padding-bottom:84px}
+  .main{margin-left:0;padding-bottom:calc(104px + env(safe-area-inset-bottom))}
   .ios-tabbar{display:flex}
-  .ios-top-banner{padding:12px 14px 16px;border-bottom-left-radius:24px;border-bottom-right-radius:24px}
+  .ios-top-banner{padding:calc(12px + env(safe-area-inset-top)) 14px 15px;border-bottom-left-radius:24px;border-bottom-right-radius:24px}
   .clock-chip{display:none}
-  .content{margin-top:14px;padding:0 14px 28px}
+  .content{margin-top:14px;padding:0 14px 36px}
   .spotlight-card{flex-direction:column;align-items:flex-start;padding:16px;border-radius:22px;gap:12px}
   .spotlight-card h2{font-size:17.5px}
   .spotlight-actions{width:100%}
@@ -550,6 +897,62 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .stat{padding:12px 13px;border-radius:18px}
   .stat strong{font-size:22px}
   .page-head{flex-direction:column;align-items:flex-start}
+
+  /* Mobile Activity Card Layout: preserves the clean stacked iPhone card flow */
+  .activity-top{align-items:flex-start}
+  .activity-top .list-main{min-width:calc(100% - 44px)}
+  .activity-badges{margin-left:40px;width:calc(100% - 40px)}
+  .activity-body-split{grid-template-columns:1fr;gap:8px}
+  .photo-box-wrap{max-width:220px}
+
+  /* Responsive Card-Table Transformation for iPhone (Preserves Desktop Table on >720px) */
+  .table-wrap{overflow-x:visible;padding:10px 12px}
+  .tbl{min-width:0;display:block}
+  .tbl thead{display:none}
+  .tbl tbody{display:grid;gap:10px}
+  .tbl tr{
+    display:block;
+    background:var(--surface-inner);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:12px 13px;
+    box-shadow:var(--shadow-xs);
+  }
+  .tbl td{
+    display:block;
+    white-space:normal;
+    padding:7px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .tbl td:first-child{
+    padding-top:0;
+    padding-bottom:9px;
+    border-bottom:1px solid var(--line);
+  }
+  .tbl td:last-child{
+    border-bottom:0;
+    padding-bottom:0;
+    padding-top:9px;
+  }
+  .tbl td[data-label]::before{
+    content:attr(data-label);
+    display:block;
+    font-size:10px;
+    font-weight:850;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--olive-deep);
+    margin-bottom:4px;
+  }
+  .tbl td.td-inline{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .tbl td.td-inline::before{margin-bottom:0}
+  .att-cell-stack{min-width:0;max-width:100%}
+  .tbl td .btn{width:100%;justify-content:center}
 }
 </style>
 </head>
@@ -668,6 +1071,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 
 <div id="modalRoot"></div>
+<div id="lightboxRoot"></div>
 <div id="toastRoot"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -690,26 +1094,26 @@ function fmtCoordPair(lat,lng,decimals=8){
 
 /* === GEOLOCATION ENGINE CONFIGURATION & QUALITY TIERS === */
 const GPS_CONFIG={
-  ATTENDANCE_TARGET_ACCURACY_M:20,   // Excellent (<=5m), Good (5-10m), Acceptable (10-20m)
-  ATTENDANCE_HARD_MAX_ACCURACY_M:35, // Above 35m is Poor and rejected for standard verification
-  LIVE_MAX_ACCEPTED_ACCURACY_M:50,   // Reject erratic cell-tower jumps (>50m) during live tracking
-  STALE_THRESHOLD_MS:25000,          // Reading older than 25s is considered stale for action capture
-  LIVE_SIGNAL_LOSS_MS:45000,         // Flag live tracking as signal-lost/outdated after 45s without fix
-  MIN_MEANINGFUL_MOVE_M:5,           // Avoid redundant DB writes when stationary (<5m) unless accuracy improved significantly
-  MAX_PLAUSIBLE_SPEED_MPS:55,        // ~198 km/h ceiling to catch impossible teleportation spikes
-  MIN_STABILITY_READINGS:2,          // Require >=2 consistent consecutive fixes when accuracy is 10-20m
+  ATTENDANCE_TARGET_ACCURACY_M:20,
+  ATTENDANCE_HARD_MAX_ACCURACY_M:35,
+  LIVE_MAX_ACCEPTED_ACCURACY_M:50,
+  STALE_THRESHOLD_MS:25000,
+  LIVE_SIGNAL_LOSS_MS:45000,
+  MIN_MEANINGFUL_MOVE_M:5,
+  MAX_PLAUSIBLE_SPEED_MPS:55,
+  MIN_STABILITY_READINGS:2,
   BUFFER_MAX_SIZE:20
 };
 
 function classifyAccuracy(accuracyM){
   if(typeof accuracyM!=='number'||!Number.isFinite(accuracyM)||accuracyM<=0){
-    return {tier:'Unavailable',rank:0,pill:'red',verified:false,desc:'No valid horizontal accuracy'};
+    return {tier:'Unavailable',rank:0,pill:'neutral',verified:false,desc:'No valid horizontal accuracy'};
   }
   if(accuracyM<=5)return {tier:'Excellent',rank:5,pill:'green',verified:true,desc:'≤ 5m high-precision GNSS fix'};
   if(accuracyM<=10)return {tier:'Good',rank:4,pill:'green',verified:true,desc:'5–10m strong GNSS fix'};
   if(accuracyM<=20)return {tier:'Acceptable',rank:3,pill:'lime',verified:true,desc:'10–20m verified field fix'};
   if(accuracyM<=35)return {tier:'Weak',rank:2,pill:'orange',verified:false,desc:'20–35m degraded signal'};
-  return {tier:'Poor',rank:1,pill:'red',verified:false,desc:'> 35m coarse / network estimate'};
+  return {tier:'Poor',rank:1,pill:'neutral',verified:false,desc:'> 35m coarse / network estimate'};
 }
 
 /* === HAVERSINE DISTANCE IN METERS & KILOMETERS === */
@@ -725,12 +1129,12 @@ function distance(lat1,lon1,lat2,lon2){
 
 /* === CONTINUOUS GPS TELEMETRY ENGINE === */
 const gpsEngine={
-  buffer:[],               // Recent valid Position objects normalized with metadata
-  bestReading:null,        // Highest-score valid reading in current session
-  activeWatchId:null,      // Dedicated acquisition watcher
-  subscribers:new Set(),   // UI listeners notified on every sample
+  buffer:[],
+  bestReading:null,
+  activeWatchId:null,
+  subscribers:new Set(),
   lastError:null,
-  signalState:'idle',      // 'idle' | 'acquiring' | 'locked' | 'weak' | 'error'
+  signalState:'idle',
   sampleCount:0,
 
   isValidCoords(c){
@@ -749,9 +1153,9 @@ const gpsEngine={
     const acquiredAt=typeof pos.timestamp==='number'&&pos.timestamp>0?pos.timestamp:Date.now();
     const cls=classifyAccuracy(c.accuracy);
     return {
-      lat:c.latitude,                         // Full IEEE-754 float preserved
-      lng:c.longitude,                        // Full IEEE-754 float preserved
-      accuracy:c.accuracy,                    // Horizontal accuracy in meters
+      lat:c.latitude,
+      lng:c.longitude,
+      accuracy:c.accuracy,
       altitude:typeof c.altitude==='number'?c.altitude:null,
       altitudeAccuracy:typeof c.altitudeAccuracy==='number'?c.altitudeAccuracy:null,
       heading:typeof c.heading==='number'?c.heading:null,
@@ -775,14 +1179,12 @@ const gpsEngine={
       jumpMeters=distanceMeters(prev.lat,prev.lng,candidate.lat,candidate.lng);
       const dtSec=Math.max(0.5,(candidate.acquiredAt-prev.acquiredAt)/1000);
       impliedSpeedMps=jumpMeters/dtSec;
-      // Reject wild teleportation spikes if jump exceeds combined error radii + physical travel envelope
       const allowedEnvelope=(prev.accuracy+candidate.accuracy)*1.5+(GPS_CONFIG.MAX_PLAUSIBLE_SPEED_MPS*dtSec);
       if(jumpMeters>allowedEnvelope&&candidate.accuracy>15){
         consistent=false;
       }
     }
 
-    // Check consecutive stability across recent readings
     const recent=this.buffer.slice(-3);
     let maxSpreadM=0;
     if(recent.length>=1){
@@ -810,7 +1212,6 @@ const gpsEngine={
     const raw=this.normalizePosition(pos,sourceLabel);
     const evaluated=this.evaluateReading(raw);
 
-    // Ignore inconsistent outlier jumps when we already have a much better fresh fix
     if(!evaluated.consistent&&this.bestReading&&(Date.now()-this.bestReading.acquiredAt)<GPS_CONFIG.STALE_THRESHOLD_MS&&this.bestReading.accuracy<evaluated.accuracy){
       this.notify();
       return this.bestReading;
@@ -819,7 +1220,6 @@ const gpsEngine={
     this.buffer.push(evaluated);
     if(this.buffer.length>GPS_CONFIG.BUFFER_MAX_SIZE)this.buffer.shift();
 
-    // Update bestReading: prefer fresher reading if accuracy is better or comparable; never let poor overwrite good unless previous is stale
     if(!this.bestReading){
       this.bestReading=evaluated;
     }else{
@@ -847,7 +1247,6 @@ const gpsEngine={
     const now=Date.now();
     const fresh=this.buffer.filter(r=>(now-r.acquiredAt)<=maxAgeMs&&r.consistent);
     if(!fresh.length)return null;
-    // Sort by verified status first, then lowest accuracy (meters), then most recent timestamp
     fresh.sort((a,b)=>{
       if(a.verified!==b.verified)return a.verified?-1:1;
       if(Math.abs(a.accuracy-b.accuracy)>2)return a.accuracy-b.accuracy;
@@ -938,7 +1337,11 @@ const ICONS={
   'save':'<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
   'square':'<rect x="3" y="3" width="18" height="18" rx="2"/>',
   'shield-check':'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',
-  'eye':'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+  'eye':'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+  'maximize-2':'<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>',
+  'calendar':'<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  'filter':'<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
+  'compass':'<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>'
 };
 function ico(name){
   return `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||ICONS['route']}</svg>`;
@@ -973,6 +1376,12 @@ let db=loadDB(),current=null,map=null,roadLayer=null,pathCoordinates=[],selected
 let camStream=null,capturedPhotoData=null,camFacing='environment';
 let activeClockModalType=null,verifiedClockLoc=null,verifiedPhotoTime=null,modalGpsUnsub=null,activityModalGpsUnsub=null,liveMonitorInterval=null;
 let lastGeocodeCoord=null,lastGeocodeAddress='';
+let lightboxItems=[];
+
+/* === ACTIVITY FEED FILTER STATE === */
+let actFilterUser='all';
+let actFilterPreset='all'; // 'all' | 'today' | 'week' | 'month' | 'specific'
+let actFilterSpecificDate='';
 
 function initStaticIcons(){
   $('#loginBrandIcon').innerHTML=ico('route');
@@ -1005,15 +1414,56 @@ function toast(msg){
   setTimeout(()=>el.remove(),3200);
 }
 
+/* === SQUARE 1:1 BOX THUMBNAIL + ORIGINAL-RATIO LIGHTBOX === */
+function registerLightboxItem(src,title,subtitle,meta){
+  let idx=lightboxItems.push({src,title,subtitle,meta})-1;
+  return idx;
+}
+function openPhotoLightbox(idx){
+  let item=lightboxItems[idx];
+  if(!item)return;
+  $('#lightboxRoot').innerHTML=`
+    <div class="lightbox-backdrop" onclick="if(event.target===this)closePhotoLightbox()">
+      <div class="lightbox-card" role="dialog" aria-modal="true" aria-label="Full Ratio Photo Preview">
+        <div class="lightbox-head">
+          <div class="lightbox-head-title">
+            <strong>${esc(item.title||'Live Field Capture')}</strong>
+            <span>${esc(item.subtitle||'Original Aspect Ratio')}</span>
+          </div>
+          <button type="button" class="btn" style="padding:6px 11px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.24);color:#fff" onclick="closePhotoLightbox()">${ico('x')} Close</button>
+        </div>
+        <div class="lightbox-stage">
+          <img src="${item.src}" alt="${esc(item.title||'Original ratio photo')}">
+        </div>
+        <div class="lightbox-foot">
+          <span>${esc(item.meta||'Original uncropped ratio')}</span>
+          <span class="pill lime">${ico('maximize-2')} Original Ratio</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function closePhotoLightbox(){
+  $('#lightboxRoot').innerHTML='';
+}
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if($('#lightboxRoot')?.innerHTML)closePhotoLightbox();
+    else if($('#modalRoot')?.innerHTML)closeModal();
+  }
+});
+
 function quickLogin(id){$('#loginUser').value=id;login()}
 function login(){
   current=user($('#loginUser').value);
   selectedTraceUser=current.role==='employee'?current.id:'all';
+  actFilterUser='all';
+  actFilterPreset='all';
+  actFilterSpecificDate='';
   activePage='dashboard';
   $('#login').style.display='none';
   $('#app').style.display='block';
 
-  // Restore continuous live tracking if employee had an active shift/sharing session before reload
   if(current.role==='employee'){
     const existingLive=db.locations.find(x=>x.userId===current.id&&x.active);
     if(existingLive||todayStatus(current.id)==='Timed In'){
@@ -1026,6 +1476,7 @@ function login(){
 function logout(){
   stopLocation();
   stopCamera();
+  closePhotoLightbox();
   gpsEngine.stopContinuousWatch();
   if(liveMonitorInterval){clearInterval(liveMonitorInterval);liveMonitorInterval=null}
   current=null;
@@ -1077,6 +1528,7 @@ function renderNav(){
 function go(p){activePage=p;render();window.scrollTo({top:0,behavior:'smooth'})}
 
 function render(){
+  lightboxItems=[];
   renderNav();
   $('#sideName').textContent=current.name;
   $('#sideRole').textContent=roleName(current.role);
@@ -1104,6 +1556,64 @@ function getLiveLocationStatus(locRecord){
     return {state:'weak',label:`Weak (${cls.tier} · ±${Math.round(locRecord.accuracy)}m)`,pill:'orange',dot:'amber',detail:`${cls.desc} · ${ago(locRecord.updated)}`};
   }
   return {state:'current',label:`Current (${cls.tier} · ±${Math.round(locRecord.accuracy)}m)`,pill:'green',dot:'',detail:`Verified fix · ${ago(locRecord.updated)}`};
+}
+
+/* === DATE RANGE & USER FILTER HELPERS FOR ACTIVITY UPDATES === */
+function toLocalISODate(ts){
+  const d=new Date(ts);
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function matchesDateFilter(ts){
+  if(actFilterPreset==='all')return true;
+  const itemDate=new Date(ts);
+  const now=new Date();
+
+  if(actFilterPreset==='today'){
+    return itemDate.toDateString()===now.toDateString();
+  }
+  if(actFilterPreset==='week'){
+    const startOfWeek=new Date(now);
+    const day=startOfWeek.getDay(); // 0 = Sun
+    const diffToMon=day===0?6:day-1;
+    startOfWeek.setDate(now.getDate()-diffToMon);
+    startOfWeek.setHours(0,0,0,0);
+    const endOfWeek=new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate()+7);
+    return itemDate>=startOfWeek&&itemDate<endOfWeek;
+  }
+  if(actFilterPreset==='month'){
+    return itemDate.getFullYear()===now.getFullYear()&&itemDate.getMonth()===now.getMonth();
+  }
+  if(actFilterPreset==='specific'){
+    if(!actFilterSpecificDate)return true;
+    return toLocalISODate(ts)===actFilterSpecificDate;
+  }
+  return true;
+}
+
+function setActivityUserFilter(val){
+  actFilterUser=val;
+  render();
+}
+function setActivityDatePreset(preset){
+  actFilterPreset=preset;
+  if(preset!=='specific')actFilterSpecificDate='';
+  render();
+}
+function setActivitySpecificDate(val){
+  actFilterSpecificDate=val;
+  actFilterPreset=val?'specific':'all';
+  render();
+}
+function resetActivityFilters(){
+  actFilterUser='all';
+  actFilterPreset='all';
+  actFilterSpecificDate='';
+  render();
 }
 
 const pages={
@@ -1217,7 +1727,11 @@ const pages={
             <h3><span class="green-badge sm solid">${ico('activity')}</span> Latest Field Updates</h3>
             <button class="link-btn" onclick="go('activities')">See All ${ico('chevron-right')}</button>
           </div>
-          <div class="panel-body">${recent.length?recent.map(activityCard).join(''):'<div class="empty">No activity updates yet.</div>'}</div>
+          <div class="panel-body">
+            <div class="dashboard-feed-stack">
+              ${recent.length?recent.map(activityCard).join(''):'<div class="empty">No activity updates yet.</div>'}
+            </div>
+          </div>
         </section>
 
         <section class="panel">
@@ -1281,7 +1795,7 @@ const pages={
         <div class="map-layout">
           <div>
             <div id="map" class="map-box"></div>
-            <div class="map-note">${ico('info')} Markers plot exact device GNSS coordinates; shaded rings show actual horizontal accuracy radius (±m).</div>
+            <div class="map-note">${ico('info')} <span>Markers plot exact device GNSS coordinates; shaded rings show actual horizontal accuracy radius (±m).</span></div>
           </div>
           <div class="map-side panel-body" id="mapSide">${mapSideList()}</div>
         </div>
@@ -1306,10 +1820,10 @@ const pages={
               ${rows.map(u=>`
                 <tr>
                   <td><div style="display:flex;align-items:center;gap:8px"><span class="green-badge sm solid" style="width:28px;height:28px;font-size:10.5px">${initials(u.name)}</span><strong>${esc(u.name)}</strong></div></td>
-                  <td><span class="pill ${u.role==='supervisor'?'forest':'lime'}">${roleName(u.role)}</span></td>
-                  <td>${esc(dept(u.dept))}</td>
-                  <td>${u.supervisor?esc(user(u.supervisor)?.name||'—'):'—'}</td>
-                  <td>${esc(u.phone||'—')}</td>
+                  <td class="td-inline" data-label="Role"><span class="pill ${u.role==='supervisor'?'forest':'lime'}">${roleName(u.role)}</span></td>
+                  <td class="td-inline" data-label="Department">${esc(dept(u.dept))}</td>
+                  <td class="td-inline" data-label="Supervisor">${u.supervisor?esc(user(u.supervisor)?.name||'—'):'—'}</td>
+                  <td class="td-inline" data-label="Contact">${esc(u.phone||'—')}</td>
                   <td><button class="btn" style="padding:6px 11px" onclick="editUser('${u.id}')">${ico('edit-2')} Edit</button></td>
                 </tr>
               `).join('')}
@@ -1327,7 +1841,7 @@ const pages={
             let sups=db.users.filter(u=>u.role==='supervisor'&&u.dept===d.id);
             let emps=db.users.filter(u=>u.role==='employee'&&u.dept===d.id);
             return `
-              <div class="activity">
+              <div class="activity" style="margin-bottom:10px">
                 <div class="dept-head-row">
                   <strong>${esc(d.name)}</strong>
                   <span class="pill lime">${sups.length} sup · ${emps.length} emp</span>
@@ -1347,13 +1861,68 @@ const pages={
   },
 
   activities(){
-    let acts=db.activities.filter(a=>current.role==='employee'?a.userId===current.id:current.role==='supervisor'?teamForSupervisor(current.id).some(e=>e.id===a.userId):true).sort((a,b)=>b.created-a.created);
+    // Role-based visible pool (Admin/HR sees all users including HR, Supervisors, and Employees)
+    let allowedUsers=current.role==='employee'
+      ?[current]
+      :current.role==='supervisor'
+        ?[current,...teamForSupervisor(current.id)]
+        :db.users;
+
+    let baseActs=db.activities.filter(a=>allowedUsers.some(u=>u.id===a.userId));
+    let filteredActs=baseActs
+      .filter(a=>actFilterUser==='all'||a.userId===actFilterUser)
+      .filter(a=>matchesDateFilter(a.created))
+      .sort((a,b)=>b.created-a.created);
+
+    let hasActiveFilter=actFilterUser!=='all'||actFilterPreset!=='all';
+
     return `
       <div class="page-head">
         <div><h2>Activity Updates</h2><p>Real-time work reports, live camera captures, and GNSS checkpoints.</p></div>
         ${current.role==='employee'?`<button class="btn primary" onclick="openActivity()">${ico('camera')} New Update</button>`:''}
       </div>
-      <div class="panel"><div class="panel-body">${acts.length?acts.map(activityCard).join(''):'<div class="empty">No updates available.</div>'}</div></div>
+
+      <div class="filter-bar">
+        <div class="filter-bar-row">
+          <div class="filter-chips" role="group" aria-label="Date range presets">
+            <button type="button" class="filter-chip ${actFilterPreset==='all'?'active':''}" onclick="setActivityDatePreset('all')">All Dates</button>
+            <button type="button" class="filter-chip ${actFilterPreset==='today'?'active':''}" onclick="setActivityDatePreset('today')">Today Only</button>
+            <button type="button" class="filter-chip ${actFilterPreset==='week'?'active':''}" onclick="setActivityDatePreset('week')">This Week</button>
+            <button type="button" class="filter-chip ${actFilterPreset==='month'?'active':''}" onclick="setActivityDatePreset('month')">This Month</button>
+          </div>
+
+          <div class="filter-controls-group">
+            ${current.role!=='employee'?`
+              <label class="filter-control" title="Filter by person">
+                ${ico('users')}
+                <select onchange="setActivityUserFilter(this.value)" aria-label="Filter by employee or HR">
+                  <option value="all" ${actFilterUser==='all'?'selected':''}>All Users (${allowedUsers.length})</option>
+                  ${allowedUsers.map(u=>`<option value="${u.id}" ${actFilterUser===u.id?'selected':''}>${esc(u.name)} · ${roleName(u.role)}</option>`).join('')}
+                </select>
+              </label>
+            `:''}
+
+            <label class="filter-control" title="Pick a specific date">
+              ${ico('calendar')}
+              <input type="date" value="${esc(actFilterSpecificDate)}" onchange="setActivitySpecificDate(this.value)" aria-label="Filter by specific date">
+            </label>
+
+            ${hasActiveFilter?`<button type="button" class="btn subtle" style="padding:6px 11px;font-size:11.5px" onclick="resetActivityFilters()">${ico('rotate-ccw')} Reset</button>`:''}
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3><span class="green-badge sm solid">${ico('activity')}</span> Field & Shift Activity Feed</h3>
+          <span class="pill forest">${filteredActs.length} report${filteredActs.length===1?'':'s'}</span>
+        </div>
+        <div class="panel-body">
+          ${filteredActs.length
+            ? `<div class="activities-feed-grid">${filteredActs.map(activityCard).join('')}</div>`
+            : `<div class="empty">No activity updates match the selected filter criteria.</div>`}
+        </div>
+      </div>
     `;
   },
 
@@ -1385,10 +1954,10 @@ const pages={
                         <div><strong>${esc(e.name)}</strong><div class="small muted">${esc(dept(e.dept))}</div></div>
                       </div>
                     </td>
-                    <td>${renderAttendanceStamp(inn)}</td>
-                    <td>${renderAttendanceStamp(out)}</td>
-                    <td><span class="pill ${inn&&!out?'green':''}">${out?'Timed Out':inn?'Timed In':'No Time In'}</span></td>
-                    <td>${(inn||out)?`<button class="btn subtle" style="padding:6px 11px;font-size:11.5px" onclick="viewAttendanceProof('${e.id}')">${ico('eye')} Proof</button>`:'<span class="small muted">—</span>'}</td>
+                    <td data-label="Time In (Action, GNSS Fix & Location)">${renderAttendanceStamp(inn)}</td>
+                    <td data-label="Time Out (Action, GNSS Fix & Location)">${renderAttendanceStamp(out)}</td>
+                    <td class="td-inline" data-label="Shift Status"><span class="pill ${inn&&!out?'green':''}">${out?'Timed Out':inn?'Timed In':'No Time In'}</span></td>
+                    <td>${(inn||out)?`<button class="btn subtle" style="padding:7px 12px;font-size:11.5px" onclick="viewAttendanceProof('${e.id}')">${ico('eye')} View Photo & GNSS Proof</button>`:'<span class="small muted">No proof recorded</span>'}</td>
                   </tr>
                 `;
               }).join('')}
@@ -1451,13 +2020,23 @@ function renderAttendanceStamp(rec){
   let loc=rec.location;
   let cls=loc?classifyAccuracy(loc.accuracy):classifyAccuracy(null);
   let acc=loc&&typeof loc.accuracy==='number'?`±${Math.round(loc.accuracy)}m`:'';
-  let badgeClass=cls.rank>=3?'':cls.rank===2?'warn':'bad';
   let gpsTimeStr=loc?.acquiredAt?fmtTime(loc.acquiredAt):fmtTime(rec.time);
   return `
     <div class="att-cell-stack">
       <strong>Action: ${fmtTime(rec.time)} · <span class="small muted">${new Date(rec.time).toLocaleDateString('en-PH')}</span></strong>
       ${loc?`<div class="att-loc-line">${ico('map-pin')}<span>${esc(loc.address||fmtCoordPair(loc.lat,loc.lng,8))}</span></div>`:''}
-      ${loc?`<span class="att-acc-badge ${badgeClass}">${fmtCoordPair(loc.lat,loc.lng,8)} · ${cls.tier} (${acc}) · Fix ${gpsTimeStr}</span>`:''}
+      ${loc?`
+        <div class="att-gnss-card">
+          <div class="att-gnss-coord-row">
+            ${ico('compass')}
+            <span>${fmtCoordPair(loc.lat,loc.lng,8)}</span>
+          </div>
+          <div class="att-gnss-meta-row">
+            <span class="att-mini-chip ${cls.verified?'verified':''}">${ico('shield-check')} ${cls.tier} (${acc})</span>
+            <span class="att-mini-chip">${ico('clock')} Fix ${gpsTimeStr}</span>
+          </div>
+        </div>
+      `:''}
     </div>
   `;
 }
@@ -1472,6 +2051,17 @@ function viewAttendanceProof(userId){
     if(!item)return `<div class="proof-card"><strong>${label}</strong><div class="small muted" style="margin-top:6px">Not recorded yet.</div></div>`;
     let loc=item.location;
     let cls=loc?classifyAccuracy(loc.accuracy):classifyAccuracy(null);
+    let photoHtml='<div class="small muted" style="margin:8px 0">No photo attached.</div>';
+    if(item.photo){
+      let coordSubtitle=loc?`${fmtCoordPair(loc.lat,loc.lng,8)} · ±${Math.round(loc.accuracy)}m`:'Verified Shift Capture';
+      let lbIdx=registerLightboxItem(item.photo,`${label} — ${emp.name}`,`Action: ${fmtDate(item.time)}`,coordSubtitle);
+      photoHtml=`
+        <div class="photo-box-wrap" onclick="openPhotoLightbox(${lbIdx})" title="Tap to view original photo ratio">
+          <img class="activity-photo" src="${item.photo}" alt="${label} live photo">
+          <span class="photo-expand-chip">${ico('maximize-2')} Full Ratio</span>
+        </div>
+      `;
+    }
     return `
       <div class="proof-card">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
@@ -1479,12 +2069,12 @@ function viewAttendanceProof(userId){
           <span class="pill ${cls.pill}">${ico('shield-check')} ${cls.tier}</span>
         </div>
         <div class="small" style="font-weight:750;margin-top:4px;color:var(--olive-deep)">Action Time: ${fmtDate(item.time)}</div>
-        ${item.photo?`<img src="${item.photo}" alt="${label} live photo">`:'<div class="small muted" style="margin:8px 0">No photo attached.</div>'}
+        ${photoHtml}
         ${loc?`
           <div class="att-loc-line" style="margin-top:4px">${ico('map-pin')}<span><strong>${esc(loc.address||'GNSS Coordinates')}</strong></span></div>
-          <div class="gps-coords-tag">${fmtCoordPair(loc.lat,loc.lng,8)}</div>
+          <div class="gps-coords-tag">${ico('compass')} ${fmtCoordPair(loc.lat,loc.lng,8)}</div>
           <div class="proof-meta-list">
-            <div>Accuracy: <strong>±${Math.round(loc.accuracy)}m</strong> (${cls.tier} · ${loc.verified?'Verified':'Degraded'})</div>
+            <div>Accuracy: <strong>±${Math.round(loc.accuracy)}m</strong> (${cls.tier} · ${loc.verified?'Verified':'Coarse'})</div>
             <div>GNSS Fix Time: <strong>${fmtDate(loc.acquiredAt||item.time)}</strong></div>
             <div>Source: <strong>${esc(loc.source||'browser GNSS')}</strong></div>
           </div>
@@ -1498,7 +2088,7 @@ function viewAttendanceProof(userId){
       ${cardHtml('TIME IN PROOF',inn)}
       ${cardHtml('TIME OUT PROOF',out)}
     </div>
-  `,`<button class="btn primary" onclick="closeModal()">Close</button>`);
+  `,`<button class="btn primary" onclick="closeModal()">Close</button>`,{icon:'shield-check',eyebrow:'Shift Verification Record'});
 }
 
 function todayStatus(id){
@@ -1579,7 +2169,7 @@ function openClockModal(type){
   `,`
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" id="btnConfirmClock" disabled onclick="submitVerifiedClock()">${ico('shield-check')} ${submitLabel}</button>
-  `);
+  `,{icon:'camera',eyebrow:type==='in'?'Shift Clock-In Gate':'Shift Clock-Out Gate'});
 
   if(modalGpsUnsub){modalGpsUnsub();modalGpsUnsub=null}
   modalGpsUnsub=gpsEngine.subscribe(updateClockModalGpsUI);
@@ -1614,7 +2204,6 @@ function updateClockModalGpsUI(engine){
     return;
   }
 
-  // Always check the freshest valid reading in the continuous buffer
   const candidate=engine.getFreshestAny(GPS_CONFIG.STALE_THRESHOLD_MS);
   if(!candidate){
     box.classList.remove('error','warn');
@@ -1630,7 +2219,7 @@ function updateClockModalGpsUI(engine){
   const ageSec=Math.max(0,Math.round((Date.now()-candidate.acquiredAt)/1000));
 
   coordEl.className='gps-coords-tag';
-  coordEl.textContent=`${fmtCoordPair(candidate.lat,candidate.lng,8)}`;
+  coordEl.innerHTML=`${ico('compass')} ${fmtCoordPair(candidate.lat,candidate.lng,8)}`;
 
   telEl.className='gps-telemetry-grid';
   telEl.innerHTML=`
@@ -1661,7 +2250,6 @@ async function resolveAddressForReading(reading){
   const addr=await reverseAddress(reading.lat,reading.lng);
   reading.address=addr;
   reading._resolving=false;
-  // Refresh modal address display without altering coordinates
   const addrEl=$('#clockGpsAddress');
   if(addrEl&&activeClockModalType)addrEl.textContent=addr;
 }
@@ -1678,7 +2266,6 @@ async function captureClockPhoto(){
   let video=$('#camVideo');
   if(!video||!video.videoWidth)return;
 
-  // Select the freshest verified GNSS reading at the exact moment of photo capture
   const freshFix=gpsEngine.getFreshestReliable(GPS_CONFIG.STALE_THRESHOLD_MS);
   if(!freshFix){
     const latest=gpsEngine.getFreshestAny(GPS_CONFIG.STALE_THRESHOLD_MS);
@@ -1692,7 +2279,6 @@ async function captureClockPhoto(){
   }
 
   verifiedPhotoTime=Date.now();
-  // Resolve address if not yet cached, without mutating coordinates
   const resolvedAddr=freshFix.address||await reverseAddress(freshFix.lat,freshFix.lng);
   freshFix.address=resolvedAddr;
 
@@ -1763,7 +2349,6 @@ async function submitVerifiedClock(){
   if(!capturedPhotoData||camStream){toast('Capture a live photo first.');return}
   if(!verifiedClockLoc){toast('Verified GNSS lock is required.');return}
 
-  // Re-validate freshness at confirmation time
   const now=Date.now();
   const latestFresh=gpsEngine.getFreshestReliable(GPS_CONFIG.STALE_THRESHOLD_MS);
   if(!latestFresh&&(now-verifiedClockLoc.acquiredAt)>60000){
@@ -1771,7 +2356,6 @@ async function submitVerifiedClock(){
     return;
   }
 
-  // Keep photo-embedded coordinates & saved attendance coordinates 100% synchronized
   const finalLoc={
     ...verifiedClockLoc,
     freshnessMs:Math.max(0,now-verifiedClockLoc.acquiredAt)
@@ -1793,7 +2377,6 @@ async function submitVerifiedClock(){
     note
   });
 
-  // Log synchronized checkpoint in Field Updates so OSRM Route Trace plots exact Time In / Time Out coordinates
   db.activities.unshift({
     id:'att_'+actionTimestamp,
     userId:current.id,
@@ -1832,26 +2415,52 @@ async function submitVerifiedClock(){
   toast(`${labelText} verified at ${fmtTime(actionTimestamp)} (±${Math.round(finalLoc.accuracy)}m)`);
 }
 
-/* === ACTIVITY CARD & MAP === */
+/* === ACTIVITY CARD (INTELLIGENT SPLIT ON DESKTOP + ICON ON COORDINATES + NEUTRAL POOR BADGE) === */
 function activityCard(a){
   let u=user(a.userId)||{name:'Unknown'};
   let loc=a.location;
   let cls=loc&&typeof loc.accuracy==='number'?classifyAccuracy(loc.accuracy):null;
+  let photoBoxHtml='';
+  if(a.photo){
+    let metaLine=loc?`${fmtCoordPair(loc.lat,loc.lng,8)} · ±${Math.round(loc.accuracy||0)}m`:fmtDate(a.created);
+    let lbIdx=registerLightboxItem(a.photo,`${u.name} — ${dept(u.dept)}`,fmtDate(a.created),metaLine);
+    photoBoxHtml=`
+      <div class="photo-box-wrap" onclick="openPhotoLightbox(${lbIdx})" title="Tap to view original photo ratio">
+        <img class="activity-photo" src="${a.photo}" alt="Real-time camera capture">
+        <span class="photo-expand-chip">${ico('maximize-2')} Full Ratio</span>
+      </div>
+    `;
+  }
   return `
     <article class="activity">
-      <div class="activity-top">
-        <span class="green-badge sm solid">${initials(u.name)}</span>
-        <div class="list-main"><strong>${esc(u.name)}</strong><span>${esc(dept(u.dept))} · ${ago(a.created)}</span></div>
-        ${a.photo?`<span class="pill forest">${ico('camera')} Live</span>`:''}
-        ${loc?`<span class="pill ${cls?cls.pill:'lime'}">${ico('map-pin')} ${cls?`${cls.tier} ±${Math.round(loc.accuracy)}m`:'GPS'}</span>`:''}
+      <div>
+        <div class="activity-top">
+          <span class="green-badge sm solid">${initials(u.name)}</span>
+          <div class="list-main"><strong>${esc(u.name)}</strong><span>${esc(dept(u.dept))} · ${ago(a.created)}</span></div>
+          ${(a.photo||loc)?`<div class="activity-badges">
+            ${a.photo?`<span class="pill forest">${ico('camera')} Live</span>`:''}
+            ${loc?`<span class="pill ${cls?cls.pill:'lime'}">${ico('map-pin')} ${cls?`${cls.tier} ±${Math.round(loc.accuracy)}m`:'GPS'}</span>`:''}
+          </div>`:''}
+        </div>
+
+        <div class="activity-body-split ${a.photo?'':'no-photo'}">
+          ${photoBoxHtml}
+          <div class="activity-details-col">
+            <div class="activity-text">${esc(a.text)}</div>
+          </div>
+        </div>
       </div>
-      <div class="activity-text">${esc(a.text)}</div>
-      ${a.photo?`<img class="activity-photo" src="${a.photo}" alt="Real-time camera capture">`:''}
+
       <div class="activity-meta">
         <div class="meta-stack">
-          <span class="meta-item">${ico('clock')} <strong>${fmtDate(a.created)}</strong></span>
-          ${loc?`<span class="meta-item">${ico('map-pin')} ${esc(loc.address||'GNSS Fix')}</span>`:''}
-          ${loc&&typeof loc.lat==='number'&&typeof loc.lng==='number'?`<span class="meta-item" style="font-variant-numeric:tabular-nums;color:var(--olive-deep)"><strong>${fmtCoordPair(loc.lat,loc.lng,8)}</strong>${loc.acquiredAt?` · Fix ${fmtTime(loc.acquiredAt)}`:''}</span>`:''}
+          <span class="meta-item">${ico('clock')} <span><strong>${fmtDate(a.created)}</strong></span></span>
+          ${loc?`<span class="meta-item">${ico('map-pin')} <span>${esc(loc.address||'GNSS Fix')}</span></span>`:''}
+          ${loc&&typeof loc.lat==='number'&&typeof loc.lng==='number'?`
+            <span class="meta-item" style="font-variant-numeric:tabular-nums;color:var(--olive-deep)">
+              ${ico('compass')}
+              <span><strong>${fmtCoordPair(loc.lat,loc.lng,8)}</strong>${loc.acquiredAt?` · Fix ${fmtTime(loc.acquiredAt)}`:''}</span>
+            </span>
+          `:''}
         </div>
         ${loc?`<button class="btn subtle" style="padding:6px 11px;font-size:11.5px;flex:none" onclick="showTrace('${a.id}')">${ico('route')} Trace</button>`:''}
       </div>
@@ -1963,7 +2572,6 @@ async function traceEmployeeHistory(){
       const isStale=st.state==='outdated';
       const ringColor=isStale?'#737373':cls.verified?'#4B7A18':'#D97706';
 
-      // Honest horizontal accuracy radius circle in meters
       if(typeof l.accuracy==='number'&&l.accuracy>0){
         L.circle([l.lat,l.lng],{
           radius:l.accuracy,
@@ -1997,7 +2605,6 @@ async function traceEmployeeHistory(){
       .sort((a,b)=>a.created-b.created);
 
     const resolvedActs=await Promise.all(empActs.map(async (act)=>{
-      // Always prefer actual numeric GNSS coordinates; never replace with geocoded address
       if(typeof act.location.lat==='number'&&typeof act.location.lng==='number'){
         return {act,pt:[act.location.lat,act.location.lng]};
       }
@@ -2107,11 +2714,23 @@ function showTrace(id){
   },450);
 }
 
-function modal(title,body,foot){
+/* === ELEVATED MODERN MODAL SHELL === */
+function modal(title,body,foot,opts={}){
+  const iconName=opts.icon||'layers';
+  const eyebrow=opts.eyebrow||'TRACEPOINT Workspace';
   $('#modalRoot').innerHTML=`
     <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
-      <div class="modal">
-        <div class="modal-head"><h3>${title}</h3><button class="btn" style="padding:5px 9px" onclick="closeModal()">${ico('x')}</button></div>
+      <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+        <div class="modal-head">
+          <div class="modal-head-left">
+            <span class="modal-head-icon">${ico(iconName)}</span>
+            <div class="modal-head-titles">
+              <div class="modal-head-eyebrow">${esc(eyebrow)}</div>
+              <h3>${title}</h3>
+            </div>
+          </div>
+          <button type="button" class="modal-close-btn" title="Close" onclick="closeModal()">${ico('x')}</button>
+        </div>
         <div class="modal-body">${body}</div>
         <div class="modal-foot">${foot||'<button class="btn" onclick="closeModal()">Cancel</button>'}</div>
       </div>
@@ -2162,7 +2781,7 @@ function openActivity(){
   `,`
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" onclick="submitActivity()">${ico('send')} Submit Update</button>
-  `);
+  `,{icon:'camera',eyebrow:'Field Report & GNSS Checkpoint'});
 
   gpsEngine.startContinuousWatch();
   if(activityModalGpsUnsub){activityModalGpsUnsub();activityModalGpsUnsub=null}
@@ -2268,7 +2887,6 @@ function getHighAccuracyPosition(options={}){
   return new Promise((resolve,reject)=>{
     if(!navigator.geolocation)return reject(new Error('Geolocation API unsupported'));
 
-    // Check if continuous engine already holds a very fresh stabilized fix
     const existingFresh=gpsEngine.getFreshestReliable(8000);
     if(existingFresh&&existingFresh.accuracy<=targetAccuracy&&existingFresh.isStabilized){
       return resolve(existingFresh);
@@ -2299,7 +2917,6 @@ function getHighAccuracyPosition(options={}){
         bestSample=evaluated;
       }
 
-      // Resolve immediately once we have a verified, stabilized reading meeting target accuracy
       if(evaluated.accuracy<=targetAccuracy&&(evaluated.isStabilized||sampleCount>=2)){
         finish(evaluated);
       }
@@ -2325,7 +2942,6 @@ function getHighAccuracyPosition(options={}){
 }
 
 async function reverseAddress(lat,lng){
-  // Cache reverse geocode if within 12 meters of last resolved coordinate to avoid redundant network delays
   if(lastGeocodeCoord&&lastGeocodeAddress&&distanceMeters(lastGeocodeCoord.lat,lastGeocodeCoord.lng,lat,lng)<12){
     return lastGeocodeAddress;
   }
@@ -2359,7 +2975,6 @@ async function startLiveTrackingSession(silent=false){
   locShare=true;
   gpsEngine.startContinuousWatch();
 
-  // Mark existing record active immediately while awaiting fresh fix
   let existing=db.locations.find(x=>x.userId===current.id);
   if(existing){existing.active=true;saveDB()}
 
@@ -2385,7 +3000,6 @@ async function startLiveTrackingSession(silent=false){
 async function saveCurrentLocation(evaluated){
   if(!current||!evaluated)return;
 
-  // Reject coarse readings (>50m) from overwriting a reliable live location
   if(evaluated.accuracy>GPS_CONFIG.LIVE_MAX_ACCEPTED_ACCURACY_M){
     return;
   }
@@ -2396,18 +3010,15 @@ async function saveCurrentLocation(evaluated){
     const ageMs=evaluated.acquiredAt-(old.updated||0);
     const oldAcc=typeof old.accuracy==='number'?old.accuracy:999;
 
-    // Prevent a worse reading from replacing a fresher, much more accurate reading unless employee actually moved
     if(evaluated.accuracy>oldAcc*1.6&&movedM<oldAcc&&ageMs<GPS_CONFIG.LIVE_SIGNAL_LOSS_MS){
       return;
     }
 
-    // Avoid redundant database writes if employee has not meaningfully moved (<5m) and accuracy did not improve by >=3m
     if(movedM<GPS_CONFIG.MIN_MEANINGFUL_MOVE_M&&(oldAcc-evaluated.accuracy)<3&&ageMs<20000){
       return;
     }
   }
 
-  // Persist exact coordinates & accuracy immediately before reverse geocoding so address lookup never delays or alters coordinates
   let item={
     userId:current.id,
     lat:evaluated.lat,
@@ -2424,7 +3035,6 @@ async function saveCurrentLocation(evaluated){
   saveDB();
   if(activePage==='map'||activePage==='location')traceEmployeeHistory();
 
-  // Enrich human-readable address asynchronously without modifying lat/lng
   const resolvedAddr=await reverseAddress(evaluated.lat,evaluated.lng);
   const currentRecord=db.locations.find(x=>x.userId===current.id);
   if(currentRecord&&currentRecord.updated===evaluated.acquiredAt){
@@ -2459,12 +3069,12 @@ function startLiveFreshnessMonitor(){
 function openUser(id=null){
   let u=id?user(id):null;
   modal(u?'Edit Person':'Add Employee or Supervisor',`
-    <div class="field"><label>Full Name</label><input id="personName" value="${esc(u?.name||'')}"></div>
+    <div class="field" style="margin-top:0"><label>Full Name</label><input id="personName" placeholder="e.g. Morgan Rivera" value="${esc(u?.name||'')}"></div>
     <div class="field"><label>Role</label><select id="personRole" onchange="updatePersonForm()"><option value="employee" ${u?.role==='employee'?'selected':''}>Employee</option><option value="supervisor" ${u?.role==='supervisor'?'selected':''}>Supervisor</option></select></div>
     <div class="field"><label>Department</label><select id="personDept">${db.departments.map(d=>`<option value="${d.id}" ${u?.dept===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></div>
     <div class="field" id="supervisorField"><label>Assigned Supervisor</label><select id="personSupervisor"><option value="">Select supervisor</option>${db.users.filter(s=>s.role==='supervisor'&&s.id!==id).map(s=>`<option value="${s.id}" ${u?.supervisor===s.id?'selected':''}>${esc(s.name)} — ${esc(dept(s.dept))}</option>`).join('')}</select></div>
-    <div class="field"><label>Contact Number</label><input id="personPhone" value="${esc(u?.phone||'')}"></div>
-  `,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="savePerson('${id||''}')">Save Person</button>`);
+    <div class="field" style="margin-bottom:0"><label>Contact Number</label><input id="personPhone" placeholder="e.g. 0917 000 0000" value="${esc(u?.phone||'')}"></div>
+  `,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="savePerson('${id||''}')">${ico('save')} Save Person</button>`,{icon:'user-plus',eyebrow:'Team Directory Management'});
   updatePersonForm();
 }
 function updatePersonForm(){$('#supervisorField').classList.toggle('hidden',$('#personRole').value!=='employee')}
@@ -2481,7 +3091,7 @@ function savePerson(id){
 }
 
 function openDept(){
-  modal('Add Department',`<div class="field"><label>Department Name</label><input id="deptName" placeholder="e.g. Logistics"></div>`,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveDept()">Add Department</button>`);
+  modal('Add Department',`<div class="field" style="margin:0"><label>Department Name</label><input id="deptName" placeholder="e.g. Logistics"></div>`,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveDept()">${ico('plus')} Add Department</button>`,{icon:'layers',eyebrow:'Organization Structure'});
 }
 function saveDept(){
   let n=$('#deptName').value.trim();
@@ -2492,10 +3102,10 @@ function saveDept(){
 
 function openTask(){
   modal('Assign Task',`
-    <div class="field"><label>Task Title</label><input id="taskTitle" placeholder="e.g. Inspect Substation B"></div>
-    <div class="field"><label>Assign To</label><select id="taskEmployee">${scopedEmployees().map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
-    <div class="field"><label>Due Date</label><input id="taskDue" type="date"></div>
-  `,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveTask()">Assign Task</button>`);
+    <div class="field" style="margin-top:0"><label>Task Title</label><input id="taskTitle" placeholder="e.g. Inspect Substation B"></div>
+    <div class="field"><label>Assign To</label><select id="taskEmployee">${scopedEmployees().map(e=>`<option value="${e.id}">${esc(e.name)} · ${esc(dept(e.dept))}</option>`).join('')}</select></div>
+    <div class="field" style="margin-bottom:0"><label>Due Date</label><input id="taskDue" type="date"></div>
+  `,`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveTask()">${ico('clipboard-plus')} Assign Task</button>`,{icon:'clipboard-plus',eyebrow:'Field Deliverable Dispatch'});
 }
 function saveTask(){
   let title=$('#taskTitle').value.trim(),assignee=$('#taskEmployee').value;
