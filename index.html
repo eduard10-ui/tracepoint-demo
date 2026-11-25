@@ -384,50 +384,47 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .page-head h2{font-size:20px;font-weight:900;letter-spacing:-.03em;margin:0;color:var(--ink);line-height:1.15}
 .page-head p{color:var(--muted);margin:2px 0 0;font-size:12.5px;font-weight:500;line-height:1.25}
 
-/* === ACTIVITY FILTER BAR === */
+/* === REFINED SEGMENTED ACTIVITY FILTER BAR === */
 .filter-bar{
-  background:linear-gradient(180deg,#EEF4E7 0%,#E5EFE0 100%);
+  background:var(--surface);
   border:1px solid var(--line);
   border-radius:20px;
-  padding:12px 14px;
+  padding:11px 14px;
   margin-bottom:14px;
   box-shadow:var(--shadow-xs);
-  display:grid;
-  gap:10px;
-}
-.filter-bar-row{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
   flex-wrap:wrap;
 }
-.filter-chips{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  flex-wrap:wrap;
-}
-.filter-chip{
-  border:1px solid var(--line);
-  background:var(--surface-pure);
-  color:var(--muted);
-  border-radius:var(--pill);
-  padding:6px 12px;
-  font-size:11.5px;
-  font-weight:750;
+.filter-segmented{
   display:inline-flex;
   align-items:center;
-  gap:5px;
+  background:var(--surface-inner);
+  border:1px solid var(--line-soft);
+  border-radius:var(--pill);
+  padding:3px;
+  gap:2px;
 }
-.filter-chip:hover:not(:disabled){border-color:var(--olive);color:var(--ink)}
-.filter-chip.active{
+.filter-seg-btn{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  border-radius:var(--pill);
+  padding:6px 13px;
+  font-size:12px;
+  font-weight:750;
+  white-space:nowrap;
+  line-height:1.1;
+}
+.filter-seg-btn:hover:not(:disabled){color:var(--ink);transform:none}
+.filter-seg-btn.active{
   background:var(--olive-deep);
-  border-color:var(--olive-deep);
   color:#ECFCCB;
-  box-shadow:0 3px 9px rgba(46,78,13,.2);
+  box-shadow:0 2px 7px rgba(46,78,13,.22);
 }
-.filter-controls-group{
+.filter-inputs-cluster{
   display:flex;
   align-items:center;
   gap:8px;
@@ -437,10 +434,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   display:inline-flex;
   align-items:center;
   gap:7px;
+  height:36px;
   background:var(--surface-pure);
   border:1.5px solid var(--line);
   border-radius:var(--pill);
-  padding:5px 12px 5px 10px;
+  padding:0 13px 0 11px;
   transition:border-color .18s var(--smooth),box-shadow .18s var(--smooth);
 }
 .filter-control:focus-within{
@@ -455,10 +453,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   font-size:12px;
   font-weight:750;
   outline:none;
-  padding:2px 0;
+  height:100%;
 }
 
-/* === LIST ROWS & ACTIVITY CARDS (DESKTOP INTELLIGENT SPLIT + MOBILE STACK) === */
+/* === LIST ROWS & ACTIVITY CARDS === */
 .list-row{
   display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px;
   background:var(--surface-inner);border:1px solid var(--line-soft);border-radius:16px;
@@ -470,7 +468,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .list-main strong{display:block;font-size:13px;font-weight:800;line-height:1.2;word-break:normal;overflow-wrap:break-word}
 .list-main span{display:block;color:var(--muted);font-size:11.5px;font-weight:600;line-height:1.25;margin-top:2px;word-break:normal;overflow-wrap:break-word}
 
-/* Multi-column feed grid on wide desktop when cards have no photos or mixed updates */
 .activities-feed-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -500,7 +497,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .activity-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .activity-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto}
 
-/* Intelligent Desktop Side-by-Side Split inside Activity Card so there is zero wasted whitespace */
 .activity-body-split{
   display:grid;
   grid-template-columns:138px minmax(0,1fr);
@@ -580,9 +576,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   font-size:11px;font-weight:650;color:var(--muted);padding-top:8px;border-top:1px dashed var(--line);
 }
 .meta-stack{display:grid;gap:4px;min-width:0;flex:1}
-.meta-item{display:flex;align-items:center;gap:5px;line-height:1.25;min-width:0}
+.meta-item{display:flex;align-items:center;gap:6px;line-height:1.25;min-width:0}
 .meta-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.meta-item .ico{width:12.5px;height:12.5px;color:var(--olive)}
+.meta-item .ico{width:13px;height:13px;color:var(--olive);flex:none}
 
 .dept-head-row{
   display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px;
@@ -614,50 +610,67 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .gps-tel-pill span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
 
-/* === STRUCTURED GNSS ATTENDANCE TELEMETRY CARD (NO INTIMIDATING RED) === */
-.att-cell-stack{display:grid;gap:5px;white-space:normal;min-width:240px;max-width:320px}
-.att-cell-stack strong{font-size:12.5px;font-weight:850;color:var(--ink);line-height:1.15}
-.att-loc-line{display:flex;align-items:flex-start;gap:5px;font-size:11px;font-weight:650;color:var(--muted);line-height:1.25}
-.att-loc-line .ico{width:12px;height:12px;color:var(--olive);margin-top:1px}
-.att-gnss-card{
-  background:var(--surface-pure);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:6px 9px;
-  display:grid;
-  gap:4px;
-  box-shadow:0 1px 3px rgba(20,38,14,.04);
+/* === CLEAN BOX-FREE & STRICTLY LEFT-ALIGNED ICON TELEMETRY IN ATTENDANCE === */
+.att-cell-stack{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  white-space:normal;
+  min-width:240px;
+  max-width:340px;
 }
-.att-gnss-coord-row{
+.att-action-row{
   display:flex;
   align-items:center;
-  gap:5px;
-  font-size:11px;
+  gap:7px;
+  font-size:12.5px;
+  font-weight:850;
+  color:var(--ink);
+  line-height:1.2;
+}
+.att-action-row .ico{width:14px;height:14px;color:var(--olive);flex:none}
+.att-icon-row{
+  display:flex;
+  align-items:flex-start;
+  gap:7px;
+  font-size:11.5px;
+  font-weight:650;
+  color:var(--muted);
+  line-height:1.3;
+}
+.att-icon-row .ico{
+  width:14px;
+  height:14px;
+  color:var(--olive);
+  flex:none;
+  margin-top:1px;
+}
+.att-coord-text{
   font-weight:800;
   color:var(--ink);
   font-variant-numeric:tabular-nums;
 }
-.att-gnss-coord-row .ico{width:12px;height:12px;color:var(--olive)}
-.att-gnss-meta-row{
+.att-chips-row{
   display:flex;
   align-items:center;
-  gap:5px;
+  gap:6px;
   flex-wrap:wrap;
+  padding-left:21px; /* Aligns precisely under the text column beside the 14px icon + 7px gap */
 }
 .att-mini-chip{
   display:inline-flex;
   align-items:center;
   gap:4px;
-  padding:2px 7px;
+  padding:2px 8px;
   border-radius:var(--pill);
-  font-size:10px;
+  font-size:10.5px;
   font-weight:750;
   background:var(--surface-inner);
   color:var(--muted);
   border:1px solid var(--line-soft);
   font-variant-numeric:tabular-nums;
 }
-.att-mini-chip .ico{width:10.5px;height:10.5px;color:var(--olive)}
+.att-mini-chip .ico{width:11px;height:11px;color:var(--olive)}
 .att-mini-chip.verified{
   background:var(--lime-soft);
   color:var(--olive-deep);
@@ -705,10 +718,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   text-align:left;font-size:10.5px;font-weight:850;letter-spacing:.05em;text-transform:uppercase;
   color:var(--olive-deep);background:var(--surface-deep);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;
 }
-.tbl td{padding:10px 12px;border-bottom:1px solid var(--line-soft);font-size:12.5px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.tbl td{padding:11px 12px;border-bottom:1px solid var(--line-soft);font-size:12.5px;font-weight:600;vertical-align:top;white-space:nowrap}
 .tbl tr:last-child td{border-bottom:0}
 
-/* === MAP & OSRM ROUTE TRACING === */
+/* === MAP & OSRM ROUTE TRACING WITH COLOR-CODED EMPLOYEE INITIAL PINS === */
 .map-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%}
 .map-select{
   border:1.5px solid var(--line);background:var(--surface-pure);border-radius:var(--pill);
@@ -731,13 +744,36 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   font-size:11px;color:var(--olive-deep);display:flex;align-items:flex-start;gap:6px;font-weight:700;line-height:1.35;
 }
 .map-note .ico{margin-top:1px}
-.map-pin{
-  width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
-  background:var(--olive);border:2.5px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.28);
+
+/* Distinct Map Pins: HQ Teardrop & Modern Circular Initial Badges */
+.hq-pin{
+  width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  background:#182414;border:2.5px solid var(--lime-neon);box-shadow:0 5px 14px rgba(0,0,0,.35);
+  display:grid;place-items:center;
 }
-.map-pin span{display:block;transform:rotate(45deg);color:#fff;text-align:center;line-height:25px;font-weight:850;font-size:10px}
-.map-pin.office{background:var(--olive-deep);border-color:var(--lime-neon)}
-.map-pin.stale{background:#737373;border-color:#E5E5E5}
+.hq-pin span{
+  display:block;transform:rotate(45deg);color:var(--lime-neon);
+  font-weight:900;font-size:10px;letter-spacing:-.02em;
+}
+.emp-avatar-pin{
+  width:34px;height:34px;border-radius:50%;
+  border:3px solid #ffffff;
+  color:#ffffff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:11px;letter-spacing:-.02em;
+  box-shadow:0 4px 12px rgba(0,0,0,.32),0 0 0 2px rgba(20,32,16,.24);
+  position:relative;
+}
+.emp-avatar-pin::after{
+  content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #ffffff;
+}
+.emp-avatar-pin.stale{opacity:.82;filter:saturate(.55)}
+
+.color-swatch{
+  width:10px;height:10px;border-radius:50%;display:inline-block;flex:none;
+  border:1.5px solid rgba(255,255,255,.8);box-shadow:0 0 0 1px rgba(0,0,0,.15);
+}
 
 /* === ELEVATED MODERN FORMS & MODALS === */
 .field{display:grid;gap:6px;margin:13px 0}
@@ -898,7 +934,16 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .stat strong{font-size:22px}
   .page-head{flex-direction:column;align-items:flex-start}
 
-  /* Mobile Activity Card Layout: preserves the clean stacked iPhone card flow */
+  /* Responsive Compact Filter Bar on Mobile */
+  .filter-bar{padding:10px;border-radius:18px;gap:8px}
+  .filter-segmented{width:100%;display:grid;grid-template-columns:repeat(4,1fr)}
+  .filter-seg-btn{padding:7px 4px;font-size:11px;text-align:center}
+  .filter-inputs-cluster{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .filter-inputs-cluster.single-col{grid-template-columns:1fr}
+  .filter-control{width:100%;min-width:0;padding:0 10px}
+  .filter-control select,.filter-control input[type="date"]{width:100%;min-width:0;font-size:11.5px}
+
+  /* Mobile Activity Card Layout */
   .activity-top{align-items:flex-start}
   .activity-top .list-main{min-width:calc(100% - 44px)}
   .activity-badges{margin-left:40px;width:calc(100% - 40px)}
@@ -1081,8 +1126,24 @@ const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=
 const fmtTime=d=>new Date(d).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 const fmtDate=d=>new Date(d).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'medium'});
 const ago=d=>{let m=Math.max(0,Math.floor((Date.now()-new Date(d))/60000));return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h ago'};
-const initials=n=>n.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();
+const initials=n=>n.trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase();
 const OFFICE_DEFAULT={name:'Main Office',address:'San Marcelino, Zambales, Philippines',lat:14.9792,lng:120.0897};
+
+/* === DISTINCT EMPLOYEE ROUTE & AVATAR COLOR PALETTE === */
+const EMPLOYEE_PALETTE=[
+  {hex:'#DC2626',dark:'#991B1B',name:'Crimson Red'},
+  {hex:'#2563EB',dark:'#1E40AF',name:'Cobalt Blue'},
+  {hex:'#D97706',dark:'#92400E',name:'Amber Gold'},
+  {hex:'#7C3AED',dark:'#5B21B6',name:'Royal Violet'},
+  {hex:'#0891B2',dark:'#155E75',name:'Ocean Teal'},
+  {hex:'#DB2777',dark:'#9D174D',name:'Magenta Rose'},
+  {hex:'#059669',dark:'#065F46',name:'Emerald'}
+];
+function getEmployeeColor(userId){
+  const idx=db.users.findIndex(u=>u.id===userId);
+  const safeIdx=idx>=0?idx:Math.abs(String(userId).split('').reduce((a,c)=>a+c.charCodeAt(0),0));
+  return EMPLOYEE_PALETTE[safeIdx%EMPLOYEE_PALETTE.length];
+}
 
 /* === FULL PRECISION COORDINATE FORMATTER (8 DECIMAL PLACES WITHOUT MUTATING RAW FLOAT) === */
 function fmtCoord(val,decimals=8){
@@ -1380,7 +1441,7 @@ let lightboxItems=[];
 
 /* === ACTIVITY FEED FILTER STATE === */
 let actFilterUser='all';
-let actFilterPreset='all'; // 'all' | 'today' | 'week' | 'month' | 'specific'
+let actFilterPreset='all';
 let actFilterSpecificDate='';
 
 function initStaticIcons(){
@@ -1577,7 +1638,7 @@ function matchesDateFilter(ts){
   }
   if(actFilterPreset==='week'){
     const startOfWeek=new Date(now);
-    const day=startOfWeek.getDay(); // 0 = Sun
+    const day=startOfWeek.getDay();
     const diffToMon=day===0?6:day-1;
     startOfWeek.setDate(now.getDate()-diffToMon);
     startOfWeek.setHours(0,0,0,0);
@@ -1774,13 +1835,13 @@ const pages={
       <div class="page-head">
         <div>
           <h2>${current.role==='employee'?'My Route & Live GNSS':'Employee Route & Live GNSS Map'}</h2>
-          <p>Exact WGS84 coordinates, horizontal accuracy circles, and OSRM road-snapped checkpoints.</p>
+          <p>Latest employee locations with initial pins, distinct HQ-to-employee route colors, and full history tracing.</p>
         </div>
         <div class="map-toolbar">
           ${current.role!=='employee'?`
             <select id="traceEmployeeSelect" class="map-select" onchange="changeTraceFilter(this.value)">
-              <option value="all" ${selectedTraceUser==='all'?'selected':''}>All Employees (Overview)</option>
-              ${people.map(e=>`<option value="${e.id}" ${selectedTraceUser===e.id?'selected':''}>Trace: ${esc(e.name)}</option>`).join('')}
+              <option value="all" ${selectedTraceUser==='all'?'selected':''}>All Users — Latest Positions & HQ Routes</option>
+              ${people.map(e=>`<option value="${e.id}" ${selectedTraceUser===e.id?'selected':''}>Trace Full History: ${esc(e.name)} (${initials(e.name)})</option>`).join('')}
             </select>
           `:''}
           <button class="btn subtle" onclick="locateRoute()">${ico('crosshair')} Re-center</button>
@@ -1795,7 +1856,7 @@ const pages={
         <div class="map-layout">
           <div>
             <div id="map" class="map-box"></div>
-            <div class="map-note">${ico('info')} <span>Markers plot exact device GNSS coordinates; shaded rings show actual horizontal accuracy radius (±m).</span></div>
+            <div class="map-note">${ico('info')} <span>In "All Users" mode, each employee's latest location is pinned by initials with a distinct color route from HQ. Select an employee to trace their full checkpoint path.</span></div>
           </div>
           <div class="map-side panel-body" id="mapSide">${mapSideList()}</div>
         </div>
@@ -1861,7 +1922,6 @@ const pages={
   },
 
   activities(){
-    // Role-based visible pool (Admin/HR sees all users including HR, Supervisors, and Employees)
     let allowedUsers=current.role==='employee'
       ?[current]
       :current.role==='supervisor'
@@ -1883,32 +1943,30 @@ const pages={
       </div>
 
       <div class="filter-bar">
-        <div class="filter-bar-row">
-          <div class="filter-chips" role="group" aria-label="Date range presets">
-            <button type="button" class="filter-chip ${actFilterPreset==='all'?'active':''}" onclick="setActivityDatePreset('all')">All Dates</button>
-            <button type="button" class="filter-chip ${actFilterPreset==='today'?'active':''}" onclick="setActivityDatePreset('today')">Today Only</button>
-            <button type="button" class="filter-chip ${actFilterPreset==='week'?'active':''}" onclick="setActivityDatePreset('week')">This Week</button>
-            <button type="button" class="filter-chip ${actFilterPreset==='month'?'active':''}" onclick="setActivityDatePreset('month')">This Month</button>
-          </div>
+        <div class="filter-segmented" role="group" aria-label="Date range presets">
+          <button type="button" class="filter-seg-btn ${actFilterPreset==='all'?'active':''}" onclick="setActivityDatePreset('all')">All</button>
+          <button type="button" class="filter-seg-btn ${actFilterPreset==='today'?'active':''}" onclick="setActivityDatePreset('today')">Today</button>
+          <button type="button" class="filter-seg-btn ${actFilterPreset==='week'?'active':''}" onclick="setActivityDatePreset('week')">This Week</button>
+          <button type="button" class="filter-seg-btn ${actFilterPreset==='month'?'active':''}" onclick="setActivityDatePreset('month')">This Month</button>
+        </div>
 
-          <div class="filter-controls-group">
-            ${current.role!=='employee'?`
-              <label class="filter-control" title="Filter by person">
-                ${ico('users')}
-                <select onchange="setActivityUserFilter(this.value)" aria-label="Filter by employee or HR">
-                  <option value="all" ${actFilterUser==='all'?'selected':''}>All Users (${allowedUsers.length})</option>
-                  ${allowedUsers.map(u=>`<option value="${u.id}" ${actFilterUser===u.id?'selected':''}>${esc(u.name)} · ${roleName(u.role)}</option>`).join('')}
-                </select>
-              </label>
-            `:''}
-
-            <label class="filter-control" title="Pick a specific date">
-              ${ico('calendar')}
-              <input type="date" value="${esc(actFilterSpecificDate)}" onchange="setActivitySpecificDate(this.value)" aria-label="Filter by specific date">
+        <div class="filter-inputs-cluster ${current.role==='employee'?'single-col':''}">
+          ${current.role!=='employee'?`
+            <label class="filter-control" title="Filter by person">
+              ${ico('users')}
+              <select onchange="setActivityUserFilter(this.value)" aria-label="Filter by employee or HR">
+                <option value="all" ${actFilterUser==='all'?'selected':''}>All Users (${allowedUsers.length})</option>
+                ${allowedUsers.map(u=>`<option value="${u.id}" ${actFilterUser===u.id?'selected':''}>${esc(u.name)} · ${roleName(u.role)}</option>`).join('')}
+              </select>
             </label>
+          `:''}
 
-            ${hasActiveFilter?`<button type="button" class="btn subtle" style="padding:6px 11px;font-size:11.5px" onclick="resetActivityFilters()">${ico('rotate-ccw')} Reset</button>`:''}
-          </div>
+          <label class="filter-control" title="Pick a specific date">
+            ${ico('calendar')}
+            <input type="date" value="${esc(actFilterSpecificDate)}" onchange="setActivitySpecificDate(this.value)" aria-label="Filter by specific date">
+          </label>
+
+          ${hasActiveFilter?`<button type="button" class="btn subtle" style="height:36px;padding:0 12px;font-size:11.5px" onclick="resetActivityFilters()">${ico('rotate-ccw')} Reset</button>`:''}
         </div>
       </div>
 
@@ -2015,6 +2073,7 @@ const pages={
   }
 };
 
+/* === BOX-FREE & STRICTLY LEFT-ALIGNED ICON TELEMETRY FOR ATTENDANCE === */
 function renderAttendanceStamp(rec){
   if(!rec)return '<span class="small muted">—</span>';
   let loc=rec.location;
@@ -2023,18 +2082,22 @@ function renderAttendanceStamp(rec){
   let gpsTimeStr=loc?.acquiredAt?fmtTime(loc.acquiredAt):fmtTime(rec.time);
   return `
     <div class="att-cell-stack">
-      <strong>Action: ${fmtTime(rec.time)} · <span class="small muted">${new Date(rec.time).toLocaleDateString('en-PH')}</span></strong>
-      ${loc?`<div class="att-loc-line">${ico('map-pin')}<span>${esc(loc.address||fmtCoordPair(loc.lat,loc.lng,8))}</span></div>`:''}
+      <div class="att-action-row">
+        ${ico('clock')}
+        <span>Action: ${fmtTime(rec.time)} · <span class="small muted">${new Date(rec.time).toLocaleDateString('en-PH')}</span></span>
+      </div>
       ${loc?`
-        <div class="att-gnss-card">
-          <div class="att-gnss-coord-row">
-            ${ico('compass')}
-            <span>${fmtCoordPair(loc.lat,loc.lng,8)}</span>
-          </div>
-          <div class="att-gnss-meta-row">
-            <span class="att-mini-chip ${cls.verified?'verified':''}">${ico('shield-check')} ${cls.tier} (${acc})</span>
-            <span class="att-mini-chip">${ico('clock')} Fix ${gpsTimeStr}</span>
-          </div>
+        <div class="att-icon-row">
+          ${ico('map-pin')}
+          <span>${esc(loc.address||fmtCoordPair(loc.lat,loc.lng,8))}</span>
+        </div>
+        <div class="att-icon-row">
+          ${ico('compass')}
+          <span class="att-coord-text">${fmtCoordPair(loc.lat,loc.lng,8)}</span>
+        </div>
+        <div class="att-chips-row">
+          <span class="att-mini-chip ${cls.verified?'verified':''}">${ico('shield-check')} ${cls.tier} (${acc})</span>
+          <span class="att-mini-chip">${ico('clock')} Fix ${gpsTimeStr}</span>
         </div>
       `:''}
     </div>
@@ -2071,7 +2134,7 @@ function viewAttendanceProof(userId){
         <div class="small" style="font-weight:750;margin-top:4px;color:var(--olive-deep)">Action Time: ${fmtDate(item.time)}</div>
         ${photoHtml}
         ${loc?`
-          <div class="att-loc-line" style="margin-top:4px">${ico('map-pin')}<span><strong>${esc(loc.address||'GNSS Coordinates')}</strong></span></div>
+          <div class="att-icon-row" style="margin-top:4px">${ico('map-pin')}<span><strong>${esc(loc.address||'GNSS Coordinates')}</strong></span></div>
           <div class="gps-coords-tag">${ico('compass')} ${fmtCoordPair(loc.lat,loc.lng,8)}</div>
           <div class="proof-meta-list">
             <div>Accuracy: <strong>±${Math.round(loc.accuracy)}m</strong> (${cls.tier} · ${loc.verified?'Verified':'Coarse'})</div>
@@ -2415,7 +2478,6 @@ async function submitVerifiedClock(){
   toast(`${labelText} verified at ${fmtTime(actionTimestamp)} (±${Math.round(finalLoc.accuracy)}m)`);
 }
 
-/* === ACTIVITY CARD (INTELLIGENT SPLIT ON DESKTOP + ICON ON COORDINATES + NEUTRAL POOR BADGE) === */
 function activityCard(a){
   let u=user(a.userId)||{name:'Unknown'};
   let loc=a.location;
@@ -2468,15 +2530,61 @@ function activityCard(a){
   `;
 }
 
+/* === HELPER TO RESOLVE LATEST KNOWN POINT FOR AN EMPLOYEE === */
+function getEmployeeLatestSnapshot(empId){
+  const live=db.locations.find(x=>x.userId===empId&&x.active&&typeof x.lat==='number'&&typeof x.lng==='number');
+  const latestAct=db.activities
+    .filter(a=>a.userId===empId&&a.location&&typeof a.location.lat==='number'&&typeof a.location.lng==='number')
+    .sort((a,b)=>b.created-a.created)[0]||null;
+
+  if(live&&(!latestAct||live.updated>=latestAct.created)){
+    return {
+      source:'live',
+      lat:live.lat,
+      lng:live.lng,
+      accuracy:live.accuracy,
+      address:live.address,
+      timestamp:live.updated,
+      text:'Live GNSS Position',
+      liveRecord:live
+    };
+  }
+  if(latestAct){
+    return {
+      source:'activity',
+      lat:latestAct.location.lat,
+      lng:latestAct.location.lng,
+      accuracy:latestAct.location.accuracy,
+      address:latestAct.location.address,
+      timestamp:latestAct.created,
+      text:latestAct.text,
+      liveRecord:live||null
+    };
+  }
+  if(live){
+    return {
+      source:'live',
+      lat:live.lat,
+      lng:live.lng,
+      accuracy:live.accuracy,
+      address:live.address,
+      timestamp:live.updated,
+      text:'Live GNSS Position',
+      liveRecord:live
+    };
+  }
+  return null;
+}
+
 function mapSideList(routeStats=null){
   let people=current.role==='employee'?[current]:scopedEmployees();
   let banner=routeStats?`
     <div class="route-summary-banner">
       <div>
         <strong>${esc(routeStats.label)}</strong>
-        <span>${routeStats.stops} stop(s) · ${routeStats.km.toFixed(2)} km · ~${Math.max(1,Math.round(routeStats.mins))} min</span>
+        <span>${routeStats.stops} point(s) · ${routeStats.km.toFixed(2)} km · ~${Math.max(1,Math.round(routeStats.mins))} min</span>
       </div>
-      <span class="pill lime">OSRM Live</span>
+      <span class="pill lime">${selectedTraceUser==='all'?'Latest View':'Full Trace'}</span>
     </div>
   `:'';
 
@@ -2491,23 +2599,27 @@ function mapSideList(routeStats=null){
         <span style="font-variant-numeric:tabular-nums;color:var(--olive-deep)">${fmtCoordPair(db.office.lat,db.office.lng,8)}</span>
       </div>
     </div>
-    <div class="small muted" style="font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px">Personnel & Live GNSS Status</div>
+    <div class="small muted" style="font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px">Personnel & Route Color Legend</div>
     ${people.map(e=>{
-      let l=db.locations.find(x=>x.userId===e.id&&x.active);
-      let st=getLiveLocationStatus(l);
-      let d=l?distance(db.office.lat,db.office.lng,l.lat,l.lng):null;
-      let actCount=db.activities.filter(a=>a.userId===e.id&&a.location).length;
+      const snap=getEmployeeLatestSnapshot(e.id);
+      const col=getEmployeeColor(e.id);
+      const st=getLiveLocationStatus(snap?.liveRecord);
+      const d=snap?distance(db.office.lat,db.office.lng,snap.lat,snap.lng):null;
+      const actCount=db.activities.filter(a=>a.userId===e.id&&a.location).length;
       return `
-        <div class="list-row" style="cursor:pointer" onclick="changeTraceFilter('${e.id}')">
-          <span class="green-badge sm solid">${initials(e.name)}</span>
+        <div class="list-row" style="cursor:pointer;${selectedTraceUser===e.id?'border-color:'+col.hex+';background:var(--surface-pure)':''}" onclick="changeTraceFilter('${e.id}')">
+          <span class="green-badge sm solid" style="background:${col.hex};border-color:transparent">${initials(e.name)}</span>
           <div class="list-main">
-            <strong>${esc(e.name)}</strong>
-            ${l?`
-              <span style="font-variant-numeric:tabular-nums;color:var(--ink)">${fmtCoordPair(l.lat,l.lng,8)}</span>
-              <span>${esc(st.detail)} · ${d.toFixed(2)} km from HQ</span>
-            `:`<span><strong>${actCount}</strong> recorded checkpoint(s) · Offline</span>`}
+            <strong style="display:flex;align-items:center;gap:6px">
+              <span>${esc(e.name)}</span>
+              <span class="color-swatch" style="background:${col.hex}" title="${col.name} trace"></span>
+            </strong>
+            ${snap?`
+              <span style="font-variant-numeric:tabular-nums;color:var(--ink)">${fmtCoordPair(snap.lat,snap.lng,8)}</span>
+              <span>Last update ${ago(snap.timestamp)} · ${d.toFixed(2)} km from HQ</span>
+            `:`<span><strong>${actCount}</strong> recorded checkpoint(s) · No coordinates</span>`}
           </div>
-          ${l?`<span class="pill ${st.pill}">${esc(st.label)}</span>`:`<span class="pill lime">${ico('route')} Trace</span>`}
+          ${snap?.liveRecord?.active?`<span class="pill ${st.pill}">${esc(st.label)}</span>`:`<span class="pill lime">${ico('route')} Trace</span>`}
         </div>
       `;
     }).join('')}
@@ -2547,6 +2659,49 @@ async function geocodeAddress(query){
   return null;
 }
 
+/* === INITIAL-PIN & DISTINCT-COLOR HQ-TO-EMPLOYEE OSRM TRACE ENGINE === */
+function employeeInitialPin(userObj,isStale=false){
+  const col=getEmployeeColor(userObj.id);
+  const code=initials(userObj.name);
+  return L.divIcon({
+    className:'',
+    html:`<div class="emp-avatar-pin ${isStale?'stale':''}" style="background:linear-gradient(145deg,${col.hex} 0%,${col.dark} 100%)">${esc(code)}</div>`,
+    iconSize:[34,40],
+    iconAnchor:[17,39],
+    popupAnchor:[0,-36]
+  });
+}
+
+function hqPinIcon(){
+  return L.divIcon({
+    className:'',
+    html:`<div class="hq-pin"><span>HQ</span></div>`,
+    iconSize:[34,34],
+    iconAnchor:[17,33],
+    popupAnchor:[0,-28]
+  });
+}
+
+async function drawOsrmSegment(waypoints,colorObj,weight=5,opacity=0.92){
+  if(waypoints.length<2)return {km:0,mins:0};
+  const coordString=waypoints.map(p=>`${p[1]},${p[0]}`).join(';');
+  try{
+    const osrmUrl=`https://router.project-osrm.org/route/v1/driving/${coordString}?overview=full&geometries=geojson`;
+    const routeRes=await fetch(osrmUrl);
+    const routeData=await routeRes.json();
+    if(routeData.routes&&routeData.routes[0]){
+      const r0=routeData.routes[0];
+      const coords=r0.geometry.coordinates.map(c=>[c[1],c[0]]);
+      // Crisp dark casing + distinct employee color inner path
+      L.polyline(coords,{color:'#142010',weight:weight+3,opacity:0.36,lineJoin:'round'}).addTo(roadLayer);
+      L.polyline(coords,{color:colorObj.hex,weight:weight,opacity:opacity,lineJoin:'round'}).addTo(roadLayer);
+      return {km:(r0.distance||0)/1000,mins:(r0.duration||0)/60};
+    }
+  }catch(e){}
+  L.polyline(waypoints,{color:colorObj.hex,weight:weight-1,opacity:0.8,dashArray:'7,7'}).addTo(roadLayer);
+  return {km:0,mins:0};
+}
+
 async function traceEmployeeHistory(){
   if(!map||!roadLayer)return;
   roadLayer.clearLayers();
@@ -2555,135 +2710,150 @@ async function traceEmployeeHistory(){
   const pill=$('#osrmStatusPill');
   if(pill)pill.innerHTML='<span class="radar-dot"></span> Tracing…';
 
-  L.marker([db.office.lat,db.office.lng],{icon:pinIcon('office')})
+  // Plot Headquarters Anchor
+  L.marker([db.office.lat,db.office.lng],{icon:hqPinIcon()})
     .addTo(roadLayer)
     .bindPopup(`<b>${esc(db.office.name)}</b><br>${esc(db.office.address)}<br><small>${fmtCoordPair(db.office.lat,db.office.lng,8)}</small>`);
   pathCoordinates.push([db.office.lat,db.office.lng]);
 
   const scoped=current.role==='employee'?[current]:scopedEmployees();
-  const targetUsers=selectedTraceUser==='all'?scoped:scoped.filter(e=>e.id===selectedTraceUser);
+  const isAllOverview=(selectedTraceUser==='all'&&current.role!=='employee');
 
-  targetUsers.forEach(e=>{
-    const l=db.locations.find(x=>x.userId===e.id&&x.active);
-    if(l&&typeof l.lat==='number'&&typeof l.lng==='number'){
-      const km=distance(db.office.lat,db.office.lng,l.lat,l.lng);
-      const st=getLiveLocationStatus(l);
-      const cls=classifyAccuracy(l.accuracy);
-      const isStale=st.state==='outdated';
-      const ringColor=isStale?'#737373':cls.verified?'#4B7A18':'#D97706';
+  let totalRoadKm=0,totalRoadMins=0,totalPoints=0;
 
-      if(typeof l.accuracy==='number'&&l.accuracy>0){
-        L.circle([l.lat,l.lng],{
-          radius:l.accuracy,
-          color:ringColor,
+  if(isAllOverview){
+    // ALL USERS OVERVIEW: Show ONLY each user's LAST UPDATE / LATEST GNSS POINT with initials (e.g., CD) + distinct color HQ-to-user trace
+    const overviewTasks=scoped.map(async (emp)=>{
+      const snap=getEmployeeLatestSnapshot(emp.id);
+      if(!snap)return;
+      totalPoints++;
+      const col=getEmployeeColor(emp.id);
+      const cls=classifyAccuracy(snap.accuracy);
+      const st=getLiveLocationStatus(snap.liveRecord);
+      const isStale=(snap.liveRecord&&st.state==='outdated');
+      const kmFromHq=distance(db.office.lat,db.office.lng,snap.lat,snap.lng);
+
+      if(typeof snap.accuracy==='number'&&snap.accuracy>0){
+        L.circle([snap.lat,snap.lng],{
+          radius:snap.accuracy,
+          color:col.hex,
           weight:1.5,
-          fillColor:ringColor,
-          fillOpacity:0.14
+          fillColor:col.hex,
+          fillOpacity:0.13
         }).addTo(roadLayer);
       }
 
-      L.marker([l.lat,l.lng],{icon:pinIcon(isStale?'stale':'employee')})
+      L.marker([snap.lat,snap.lng],{icon:employeeInitialPin(emp,isStale)})
         .addTo(roadLayer)
         .bindPopup(`
-          <b>${esc(e.name)} (${esc(st.label)})</b><br>
-          <b>Coords:</b> ${fmtCoordPair(l.lat,l.lng,8)}<br>
-          <b>Accuracy:</b> ±${Math.round(l.accuracy||0)}m (${cls.tier})<br>
-          <b>Fix Time:</b> ${fmtDate(l.updated)} (${ago(l.updated)})<br>
-          ${esc(l.address||'')}<br>
-          <small>${km.toFixed(2)} km from HQ</small>
-        `);
-      pathCoordinates.push([l.lat,l.lng]);
-    }
-  });
-
-  let totalRoadKm=0,totalRoadMins=0,totalStops=0;
-
-  const routeTasks=targetUsers.map(async (emp)=>{
-    const empActs=db.activities
-      .filter(a=>a.userId===emp.id&&a.location)
-      .slice()
-      .sort((a,b)=>a.created-b.created);
-
-    const resolvedActs=await Promise.all(empActs.map(async (act)=>{
-      if(typeof act.location.lat==='number'&&typeof act.location.lng==='number'){
-        return {act,pt:[act.location.lat,act.location.lng]};
-      }
-      if(act.location.address){
-        const pt=await geocodeAddress(act.location.address);
-        if(pt){
-          act.location.lat=pt[0];act.location.lng=pt[1];saveDB();
-          return {act,pt};
-        }
-      }
-      return null;
-    }));
-
-    const validStops=resolvedActs.filter(Boolean);
-    const empWaypoints=[];
-
-    if(selectedTraceUser!=='all'&&validStops.length>0){
-      empWaypoints.push([db.office.lat,db.office.lng]);
-    }
-
-    validStops.forEach(({act,pt},i)=>{
-      totalStops++;
-      const isFirst=i===0;
-      const isLast=i===validStops.length-1;
-      const markerColor=isLast?'#2F4F0E':(isFirst?'#56861C':'#146C43');
-      const borderColor=isLast?'#A3E635':'#ffffff';
-      const accInfo=typeof act.location.accuracy==='number'?` · ±${Math.round(act.location.accuracy)}m`:'';
-
-      L.circleMarker(pt,{
-        radius:isLast?10:7,color:borderColor,weight:2.5,fillColor:markerColor,fillOpacity:1
-      })
-        .addTo(roadLayer)
-        .bindPopup(`
-          <b>${esc(emp.name)} · Stop #${i+1}</b><br>
-          ${esc(act.text)}<br>
-          <b>Coords:</b> ${fmtCoordPair(pt[0],pt[1],8)}${accInfo}<br>
-          <small>${esc(act.location.address||'')}<br>${fmtDate(act.created)}</small>
+          <b>${esc(emp.name)} (${initials(emp.name)})</b><br>
+          <span style="color:${col.hex};font-weight:800">● Last Update (${ago(snap.timestamp)})</span><br>
+          ${esc(snap.text)}<br>
+          <b>Coords:</b> ${fmtCoordPair(snap.lat,snap.lng,8)}<br>
+          <b>Accuracy:</b> ±${Math.round(snap.accuracy||0)}m (${cls.tier})<br>
+          <small>${esc(snap.address||'')}<br>${kmFromHq.toFixed(2)} km from HQ</small>
         `);
 
-      empWaypoints.push(pt);
-      pathCoordinates.push(pt);
+      pathCoordinates.push([snap.lat,snap.lng]);
+
+      const seg=await drawOsrmSegment([[db.office.lat,db.office.lng],[snap.lat,snap.lng]],col,5,0.92);
+      totalRoadKm+=seg.km;
+      totalRoadMins+=seg.mins;
     });
 
-    const live=db.locations.find(x=>x.userId===emp.id&&x.active);
-    if(live&&typeof live.lat==='number'&&typeof live.lng==='number'&&empWaypoints.length>0){
-      empWaypoints.push([live.lat,live.lng]);
-    }
+    await Promise.all(overviewTasks);
+  }else{
+    // SINGLE EMPLOYEE FULL HISTORY TRACE: Trace from HQ through every chronological checkpoint to their latest position
+    const targetUsers=selectedTraceUser==='all'?scoped:scoped.filter(e=>e.id===selectedTraceUser);
 
-    if(empWaypoints.length>=2){
-      const coordString=empWaypoints.map(p=>`${p[1]},${p[0]}`).join(';');
-      try{
-        const osrmUrl=`https://router.project-osrm.org/route/v1/driving/${coordString}?overview=full&geometries=geojson`;
-        const routeRes=await fetch(osrmUrl);
-        const routeData=await routeRes.json();
+    const historyTasks=targetUsers.map(async (emp)=>{
+      const col=getEmployeeColor(emp.id);
+      const empActs=db.activities
+        .filter(a=>a.userId===emp.id&&a.location)
+        .slice()
+        .sort((a,b)=>a.created-b.created);
 
-        if(routeData.routes&&routeData.routes[0]){
-          const r0=routeData.routes[0];
-          totalRoadKm+=(r0.distance||0)/1000;
-          totalRoadMins+=(r0.duration||0)/60;
-          const coords=r0.geometry.coordinates.map(c=>[c[1],c[0]]);
-
-          L.polyline(coords,{color:'#2F4F0E',weight:8,opacity:0.42,lineJoin:'round'}).addTo(roadLayer);
-          L.polyline(coords,{color:'#DC2626',weight:5,opacity:0.9,lineJoin:'round'}).addTo(roadLayer);
-        }else{
-          throw new Error('No OSRM route');
+      const resolvedActs=await Promise.all(empActs.map(async (act)=>{
+        if(typeof act.location.lat==='number'&&typeof act.location.lng==='number'){
+          return {act,pt:[act.location.lat,act.location.lng]};
         }
-      }catch(err){
-        L.polyline(empWaypoints,{color:'#DC2626',weight:4,opacity:0.7,dashArray:'8,8'}).addTo(roadLayer);
-      }
-    }
-  });
+        if(act.location.address){
+          const pt=await geocodeAddress(act.location.address);
+          if(pt){
+            act.location.lat=pt[0];act.location.lng=pt[1];saveDB();
+            return {act,pt};
+          }
+        }
+        return null;
+      }));
 
-  await Promise.all(routeTasks);
+      const validStops=resolvedActs.filter(Boolean);
+      const empWaypoints=[[db.office.lat,db.office.lng]];
+
+      validStops.forEach(({act,pt},i)=>{
+        totalPoints++;
+        const accInfo=typeof act.location.accuracy==='number'?` · ±${Math.round(act.location.accuracy)}m`:'';
+
+        L.circleMarker(pt,{
+          radius:7,color:'#ffffff',weight:2.5,fillColor:col.hex,fillOpacity:1
+        })
+          .addTo(roadLayer)
+          .bindPopup(`
+            <b>${esc(emp.name)} · Checkpoint #${i+1}</b><br>
+            ${esc(act.text)}<br>
+            <b>Coords:</b> ${fmtCoordPair(pt[0],pt[1],8)}${accInfo}<br>
+            <small>${esc(act.location.address||'')}<br>${fmtDate(act.created)}</small>
+          `);
+
+        empWaypoints.push(pt);
+        pathCoordinates.push(pt);
+      });
+
+      const snap=getEmployeeLatestSnapshot(emp.id);
+      if(snap){
+        const cls=classifyAccuracy(snap.accuracy);
+        if(typeof snap.accuracy==='number'&&snap.accuracy>0){
+          L.circle([snap.lat,snap.lng],{
+            radius:snap.accuracy,
+            color:col.hex,
+            weight:1.5,
+            fillColor:col.hex,
+            fillOpacity:0.14
+          }).addTo(roadLayer);
+        }
+
+        L.marker([snap.lat,snap.lng],{icon:employeeInitialPin(emp,false)})
+          .addTo(roadLayer)
+          .bindPopup(`
+            <b>${esc(emp.name)} (${initials(emp.name)}) — Latest Point</b><br>
+            <b>Coords:</b> ${fmtCoordPair(snap.lat,snap.lng,8)}<br>
+            <b>Accuracy:</b> ±${Math.round(snap.accuracy||0)}m (${cls.tier})<br>
+            <small>${esc(snap.address||'')}<br>Updated ${ago(snap.timestamp)}</small>
+          `);
+
+        const lastWp=empWaypoints[empWaypoints.length-1];
+        if(!lastWp||distanceMeters(lastWp[0],lastWp[1],snap.lat,snap.lng)>5){
+          empWaypoints.push([snap.lat,snap.lng]);
+        }
+        pathCoordinates.push([snap.lat,snap.lng]);
+      }
+
+      if(empWaypoints.length>=2){
+        const seg=await drawOsrmSegment(empWaypoints,col,5,0.92);
+        totalRoadKm+=seg.km;
+        totalRoadMins+=seg.mins;
+      }
+    });
+
+    await Promise.all(historyTasks);
+  }
+
   locateRoute();
 
   const side=$('#mapSide');
   if(side){
-    const label=selectedTraceUser==='all'?'All Active Field Routes':`${user(selectedTraceUser)?.name||'Employee'} Route`;
-    side.innerHTML=mapSideList({label,stops:totalStops,km:totalRoadKm,mins:totalRoadMins});
+    const label=isAllOverview?'All Users · Latest Positions':`${user(selectedTraceUser)?.name||'Employee'} Full Route`;
+    side.innerHTML=mapSideList({label,stops:totalPoints,km:totalRoadKm,mins:totalRoadMins});
   }
   if(pill)pill.innerHTML=`<span class="radar-dot"></span> ${totalRoadKm.toFixed(1)} km`;
 }
@@ -2692,10 +2862,6 @@ function locateRoute(){
   if(!map||pathCoordinates.length===0)return;
   if(pathCoordinates.length===1)map.setView(pathCoordinates[0],16);
   else map.fitBounds(L.latLngBounds(pathCoordinates).pad(0.18),{maxZoom:17});
-}
-
-function pinIcon(type){
-  return L.divIcon({className:'',html:`<div class="map-pin ${type}"><span>${type==='office'?'HQ':'E'}</span></div>`,iconSize:[30,30],iconAnchor:[15,29],popupAnchor:[0,-26]});
 }
 
 function showTrace(id){
